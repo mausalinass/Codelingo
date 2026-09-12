@@ -1,4 +1,4 @@
-export type LanguageId =
+export type CodingLanguageId =
   | "python"
   | "javascript"
   | "typescript"
@@ -6,7 +6,33 @@ export type LanguageId =
   | "rust"
   | "go"
   | "cpp"
-  | "java";
+  | "java"
+  | "kotlin"
+  | "swift";
+
+export type SpokenLanguageId =
+  | "spanish"
+  | "french"
+  | "german"
+  | "japanese"
+  | "italian"
+  | "portuguese"
+  | "mandarin"
+  | "korean"
+  | "russian"
+  | "arabic";
+
+export type MathTrackId =
+  | "math_basics"
+  | "math_fractions"
+  | "math_algebra"
+  | "math_geometry"
+  | "math_mental";
+
+export type LanguageId = CodingLanguageId | SpokenLanguageId | MathTrackId;
+
+export type SubjectCategory = "coding" | "language" | "math";
+
 export type PersonalityTrait = "ANALYTICAL" | "PRACTICAL" | "VISUAL";
 export type LearningMode = "DEEP_EXPLANATION" | "PRACTICE_FIRST" | "VISUAL_GUIDED";
 export type LessonStatus = "completed" | "current" | "locked";
@@ -53,10 +79,28 @@ export interface AdaptiveLessonResponse {
   showExplanationFirst: boolean;
   exercise: {
     id: string;
-    type: "CODE" | "FILL_BLANK";
+    type: "CODE" | "FILL_BLANK" | "WORD_BANK" | "MATH_INPUT";
     prompt: string;
-    starterCode: string;
+    starterCode?: string;
     placeholder?: string;
+    // Duolingo Spoken Language features
+    targetSentence?: string;
+    translationPrompt?: string;
+    wordBank?: string[];
+    audioText?: string;
+    // Duolingo Math features
+    mathVisual?: {
+      type: "fraction_pie" | "grid_array" | "equation" | "geometry_shape";
+      title?: string;
+      value?: string | number;
+      numerator?: number;
+      denominator?: number;
+      rows?: number;
+      cols?: number;
+      shape?: "triangle" | "rectangle" | "circle";
+      dimensions?: string;
+    };
+    choices?: string[];
   };
 }
 

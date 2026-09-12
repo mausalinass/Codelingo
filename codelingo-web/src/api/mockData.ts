@@ -16,7 +16,7 @@ export interface MockState {
   streakLongest: number;
   activeLanguage: LanguageId;
   personality: PersonalityTrait;
-  completedLessons: Record<LanguageId, string[]>;
+  completedLessons: Partial<Record<LanguageId, string[]>>;
 }
 
 export const mockState: MockState = {
@@ -26,6 +26,7 @@ export const mockState: MockState = {
   activeLanguage: "csharp",
   personality: "ANALYTICAL",
   completedLessons: {
+    // Coding Tracks
     csharp: ["hello"],
     javascript: [],
     typescript: [],
@@ -34,6 +35,25 @@ export const mockState: MockState = {
     go: [],
     cpp: [],
     java: [],
+    kotlin: [],
+    swift: [],
+    // Spoken Language Tracks
+    spanish: ["lang_greetings"],
+    french: [],
+    german: [],
+    japanese: [],
+    italian: [],
+    portuguese: [],
+    mandarin: [],
+    korean: [],
+    russian: [],
+    arabic: [],
+    // Mathematics Tracks
+    math_basics: ["math_addition"],
+    math_fractions: [],
+    math_algebra: [],
+    math_geometry: [],
+    math_mental: [],
   },
 };
 
@@ -104,7 +124,7 @@ interface LectureDetail {
   visualSteps: string[];
   placeholder: string;
   prompts: Record<string, string>;
-  starters: Record<LanguageId, string>;
+  starters: Partial<Record<LanguageId, string>>;
   correctKeyword: string;
 }
 
@@ -135,6 +155,8 @@ const LECTURE_DATABASE: Record<string, LectureDetail> = {
       go: 'fmt.Println("Hello, World!")',
       cpp: 'std::cout << "Hello, World!" << std::endl;',
       java: 'System.out.println("Hello, World!");',
+      kotlin: 'println("Hello, World!")',
+      swift: 'print("Hello, World!")',
     },
     correctKeyword: "Hello",
   },
@@ -164,6 +186,8 @@ const LECTURE_DATABASE: Record<string, LectureDetail> = {
       go: "score := 100",
       cpp: "int score = 100;",
       java: "int score = 100;",
+      kotlin: "val score: Int = 100",
+      swift: "let score: Int = 100",
     },
     correctKeyword: "100",
   },
@@ -193,6 +217,8 @@ const LECTURE_DATABASE: Record<string, LectureDetail> = {
       go: 'age := 20\nif age >= 18 {\n    fmt.Println("Adult")\n}',
       cpp: 'int age = 20;\nif (age >= 18) {\n    std::cout << "Adult" << std::endl;\n}',
       java: 'int age = 20;\nif (age >= 18) {\n    System.out.println("Adult");\n}',
+      kotlin: 'val age = 20\nif (age >= 18) {\n    println("Adult")\n}',
+      swift: 'let age = 20\nif age >= 18 {\n    print("Adult")\n}',
     },
     correctKeyword: "18",
   },
@@ -401,15 +427,418 @@ const LECTURE_DATABASE: Record<string, LectureDetail> = {
   },
 };
 
+// Database of Duolingo-style Spoken Language Lessons
+const LANGUAGE_LECTURES: Record<
+  string,
+  {
+    title: string;
+    topic: string;
+    prompts: Record<string, string>;
+    targets: Record<string, string>;
+    correct: Record<string, string>;
+    wordBanks: Record<string, string[]>;
+    audioTexts: Record<string, string>;
+    explanation: string;
+  }
+> = {
+  lang_greetings: {
+    title: "Greetings & Basics",
+    topic: "Hello, good morning & polite basics",
+    prompts: {
+      spanish: "Translate 'Hello, good morning!' into Spanish",
+      french: "Translate 'Hello, how are you?' into French",
+      german: "Translate 'Good morning, thank you!' into German",
+      japanese: "Translate 'Hello / Good afternoon' into Japanese",
+      italian: "Translate 'Good morning, please!' into Italian",
+      portuguese: "Translate 'Hello, good morning!' into Portuguese",
+      mandarin: "Translate 'Hello, good morning!' into Mandarin",
+      korean: "Translate 'Hello, good morning!' into Korean",
+      russian: "Translate 'Hello, good morning!' into Russian",
+      arabic: "Translate 'Hello, good morning!' into Arabic",
+    },
+    targets: {
+      spanish: "Hello, good morning!",
+      french: "Hello, how are you?",
+      german: "Good morning, thank you!",
+      japanese: "Hello / Good afternoon",
+      italian: "Good morning, please!",
+      portuguese: "Hello, good morning!",
+      mandarin: "Hello, good morning!",
+      korean: "Hello, good morning!",
+      russian: "Hello, good morning!",
+      arabic: "Hello, good morning!",
+    },
+    correct: {
+      spanish: "¡Hola, buenos días!",
+      french: "Bonjour, comment ça va ?",
+      german: "Guten Morgen, danke!",
+      japanese: "こんにちは",
+      italian: "Buongiorno, per favore!",
+      portuguese: "Olá, bom dia!",
+      mandarin: "你好，早上好！",
+      korean: "안녕하세요, 좋은 아침이에요!",
+      russian: "Здравствуйте, доброе утро!",
+      arabic: "مرحباً، صباح الخير!",
+    },
+    wordBanks: {
+      spanish: ["¡Hola,", "buenos", "días!", "adiós", "gracias", "por", "favor", "noche"],
+      french: ["Bonjour,", "comment", "ça", "va", "?", "merci", "au revoir", "oui"],
+      german: ["Guten", "Morgen,", "danke!", "Tschüss", "bitte", "ja", "nein"],
+      japanese: ["こんにちは", "はじめまして", "ありがとう", "さようなら", "はい"],
+      italian: ["Buongiorno,", "per", "favore!", "grazie", "ciao", "arrivederci"],
+      portuguese: ["Olá,", "bom", "dia!", "adeus", "obrigado", "por", "favor", "noite"],
+      mandarin: ["你好，", "早上好！", "再见", "谢谢", "请", "晚安"],
+      korean: ["안녕하세요,", "좋은", "아침이에요!", "감사합니다", "안녕히 계세요"],
+      russian: ["Здравствуйте,", "доброе", "утро!", "спасибо", "до свидания", "пожалуйста"],
+      arabic: ["مرحباً،", "صباح", "الخير!", "شكراً", "مع السلامة", "من فضلك"],
+    },
+    audioTexts: {
+      spanish: "¡Hola, buenos días!",
+      french: "Bonjour, comment ça va ?",
+      german: "Guten Morgen, danke!",
+      japanese: "こんにちは",
+      italian: "Buongiorno, per favore!",
+      portuguese: "Olá, bom dia!",
+      mandarin: "你好，早上好",
+      korean: "안녕하세요 좋은 아침이에요",
+      russian: "Здравствуйте, доброе утро!",
+      arabic: "مرحباً صباح الخير",
+    },
+    explanation: "Greetings form the foundation of polite conversation across all everyday interactions.",
+  },
+  lang_phrases: {
+    title: "Introductions & Common Phrases",
+    topic: "Names, origin & common expressions",
+    prompts: {
+      spanish: "Translate 'My name is Alex' into Spanish",
+      french: "Translate 'My name is Alex' into French",
+      german: "Translate 'My name is Alex' into German",
+      japanese: "Translate 'My name is Alex' into Japanese",
+      italian: "Translate 'My name is Alex' into Italian",
+      portuguese: "Translate 'My name is Alex' into Portuguese",
+      mandarin: "Translate 'My name is Alex' into Mandarin",
+      korean: "Translate 'My name is Alex' into Korean",
+      russian: "Translate 'My name is Alex' into Russian",
+      arabic: "Translate 'My name is Alex' into Arabic",
+    },
+    targets: {
+      spanish: "My name is Alex",
+      french: "My name is Alex",
+      german: "My name is Alex",
+      japanese: "My name is Alex",
+      italian: "My name is Alex",
+      portuguese: "My name is Alex",
+      mandarin: "My name is Alex",
+      korean: "My name is Alex",
+      russian: "My name is Alex",
+      arabic: "My name is Alex",
+    },
+    correct: {
+      spanish: "Me llamo Alex",
+      french: "Je m'appelle Alex",
+      german: "Ich heiße Alex",
+      japanese: "私はアレックスです",
+      italian: "Mi chiamo Alex",
+      portuguese: "Meu nome é Alex",
+      mandarin: "我叫亚历克斯",
+      korean: "제 이름은 알렉스입니다",
+      russian: "Меня зовут Алекс",
+      arabic: "اسمي أليكس",
+    },
+    wordBanks: {
+      spanish: ["Me", "llamo", "Alex", "soy", "tú", "él", "amigo"],
+      french: ["Je", "m'appelle", "Alex", "suis", "tu", "ami"],
+      german: ["Ich", "heiße", "Alex", "bin", "du", "Freund"],
+      japanese: ["私", "は", "アレックス", "です", "あなた", "友達"],
+      italian: ["Mi", "chiamo", "Alex", "sono", "tu", "amico"],
+      portuguese: ["Meu", "nome", "é", "Alex", "sou", "você", "amigo"],
+      mandarin: ["我", "叫", "亚历克斯", "是", "你", "朋友"],
+      korean: ["제", "이름은", "알렉스입니다", "저는", "친구", "입니다"],
+      russian: ["Меня", "зовут", "Алекс", "я", "твой", "друг"],
+      arabic: ["اسمي", "أليكس", "أنا", "صديق", "أنت"],
+    },
+    audioTexts: {
+      spanish: "Me llamo Alex",
+      french: "Je m'appelle Alex",
+      german: "Ich heiße Alex",
+      japanese: "私はアレックスです",
+      italian: "Mi chiamo Alex",
+      portuguese: "Meu nome é Alex",
+      mandarin: "我叫亚历克斯",
+      korean: "제 이름은 알렉스입니다",
+      russian: "Меня зовут Алекс",
+      arabic: "اسمي أليكس",
+    },
+    explanation: "Introducing yourself uses reflexive verb structures in Romance languages.",
+  },
+  lang_food: {
+    title: "Food & Dining",
+    topic: "Ordering meals, coffee & restaurant phrases",
+    prompts: {
+      spanish: "Translate 'A coffee with milk, please' into Spanish",
+      french: "Translate 'A croissant and coffee, please' into French",
+      german: "Translate 'A coffee with milk, please' into German",
+      japanese: "Translate 'Water, please' into Japanese",
+      italian: "Translate 'An espresso, please' into Italian",
+      portuguese: "Translate 'A coffee with milk, please' into Portuguese",
+      mandarin: "Translate 'Water, please' into Mandarin",
+      korean: "Translate 'Water, please' into Korean",
+      russian: "Translate 'A coffee with milk, please' into Russian",
+      arabic: "Translate 'Coffee, please' into Arabic",
+    },
+    targets: {
+      spanish: "A coffee with milk, please",
+      french: "A croissant and coffee, please",
+      german: "A coffee with milk, please",
+      japanese: "Water, please",
+      italian: "An espresso, please",
+      portuguese: "A coffee with milk, please",
+      mandarin: "Water, please",
+      korean: "Water, please",
+      russian: "A coffee with milk, please",
+      arabic: "Coffee, please",
+    },
+    correct: {
+      spanish: "Un café con leche, por favor",
+      french: "Un croissant et un café, s'il vous plaît",
+      german: "Ein Kaffee mit Milch, bitte",
+      japanese: "お水をください",
+      italian: "Un espresso, per favore",
+      portuguese: "Um café com leite, por favor",
+      mandarin: "请给我水",
+      korean: "물 좀 주세요",
+      russian: "Кофе с молоком, пожалуйста",
+      arabic: "قهوة من فضلك",
+    },
+    wordBanks: {
+      spanish: ["Un", "café", "con", "leche,", "por", "favor", "agua", "pan"],
+      french: ["Un", "croissant", "et", "un", "café,", "s'il", "vous", "plaît"],
+      german: ["Ein", "Kaffee", "mit", "Milch,", "bitte", "Wasser", "Brot"],
+      japanese: ["お水", "を", "ください", "お茶", "ご飯"],
+      italian: ["Un", "espresso,", "per", "favore", "acqua", "pane"],
+      portuguese: ["Um", "café", "com", "leite,", "por", "favor", "água", "pão"],
+      mandarin: ["请", "给我", "水", "茶", "米饭", "谢谢"],
+      korean: ["물", "좀", "주세요", "커피", "밥", "감사합니다"],
+      russian: ["Кофе", "с", "молоком,", "пожалуйста", "вода", "чай", "хлеб"],
+      arabic: ["قهوة", "من", "فضلك", "ماء", "شاي", "خبز"],
+    },
+    audioTexts: {
+      spanish: "Un café con leche, por favor",
+      french: "Un croissant et un café, s'il vous plaît",
+      german: "Ein Kaffee mit Milch, bitte",
+      japanese: "お水をください",
+      italian: "Un espresso, per favore",
+      portuguese: "Um café com leite, por favor",
+      mandarin: "请给我水",
+      korean: "물 좀 주세요",
+      russian: "Кофе с молоком, пожалуйста",
+      arabic: "قهوة من فضلك",
+    },
+    explanation: "Polite ordering requires gender agreement with nouns and polite suffixes.",
+  },
+};
+
+// Database of Duolingo-style Mathematics Lessons
+const MATH_LECTURES: Record<
+  string,
+  {
+    title: string;
+    topic: string;
+    prompt: string;
+    correct: string;
+    choices?: string[];
+    explanation: string;
+    mathVisual?: {
+      type: "fraction_pie" | "grid_array" | "equation" | "geometry_shape";
+      title?: string;
+      value?: string | number;
+      numerator?: number;
+      denominator?: number;
+      rows?: number;
+      cols?: number;
+      shape?: "triangle" | "rectangle" | "circle";
+      dimensions?: string;
+    };
+  }
+> = {
+  math_addition: {
+    title: "Addition & Mental Math",
+    topic: "Place value, mental regrouping & speed addition",
+    prompt: "Calculate the sum: 47 + 38 = ?",
+    correct: "85",
+    choices: ["75", "85", "95", "83"],
+    explanation: "Mental trick: Add tens first (40 + 30 = 70), then add units (7 + 8 = 15). 70 + 15 = 85.",
+  },
+  math_multiplication: {
+    title: "Multiplication Arrays",
+    topic: "Grid arrays, visual area models & product",
+    prompt: "What is the product of 4 rows and 6 columns? (4 × 6 = ?)",
+    correct: "24",
+    choices: ["20", "24", "28", "18"],
+    explanation: "Multiplication represents repeated addition: 4 rows of 6 dots equals 24 total dots.",
+    mathVisual: {
+      type: "grid_array",
+      rows: 4,
+      cols: 6,
+      title: "4 rows × 6 columns array",
+    },
+  },
+  math_division: {
+    title: "Division & Equal Sharing",
+    topic: "Equal distribution, quotients & inverse factors",
+    prompt: "Divide 36 candies equally among 4 friends. (36 ÷ 4 = ?)",
+    correct: "9",
+    choices: ["8", "9", "6", "12"],
+    explanation: "Division is the inverse of multiplication: Since 4 × 9 = 36, each friend gets 9 candies.",
+  },
+  math_fractions: {
+    title: "Fractions as Parts of a Whole",
+    topic: "Numerator, denominator & visual fraction models",
+    prompt: "A pizza has 8 slices. If 5 slices remain, what fraction is left?",
+    correct: "5/8",
+    choices: ["3/8", "5/8", "1/2", "4/8"],
+    explanation: "The denominator (8) is total parts. The numerator (5) is remaining parts: 5/8.",
+    mathVisual: {
+      type: "fraction_pie",
+      numerator: 5,
+      denominator: 8,
+      title: "5 of 8 slices remaining",
+    },
+  },
+  math_decimals: {
+    title: "Decimals & Currency",
+    topic: "Tenths, hundredths & decimal addition",
+    prompt: "Add the currency values: $3.75 + $2.50 = ?",
+    correct: "6.25",
+    choices: ["5.25", "6.25", "6.15", "6.75"],
+    explanation: "Align decimal points: $3.75 + $2.50 = $6.25.",
+  },
+  math_algebra: {
+    title: "Solving Linear Unknowns (X)",
+    topic: "Balancing equations & isolate variables",
+    prompt: "Solve for x: 3x + 6 = 21. What is the value of x?",
+    correct: "5",
+    choices: ["3", "5", "7", "9"],
+    explanation: "Subtract 6 from both sides: 3x = 15. Divide by 3: x = 5.",
+  },
+  math_geometry: {
+    title: "Geometry: Rectangular Area",
+    topic: "Area formula: Width × Height",
+    prompt: "A rectangle has width 8 cm and height 5 cm. What is its Area in square cm?",
+    correct: "40",
+    choices: ["26", "40", "35", "48"],
+    explanation: "Area of a rectangle = Width × Height = 8 × 5 = 40 cm².",
+    mathVisual: {
+      type: "geometry_shape",
+      dimensions: "Width: 8 cm • Height: 5 cm",
+      title: "Rectangle Area: 8 × 5",
+    },
+  },
+  math_area: {
+    title: "Triangle Area Formula",
+    topic: "(Base × Height) ÷ 2",
+    prompt: "A triangle has base 10 cm and height 6 cm. Find its Area: (10 × 6) ÷ 2 = ?",
+    correct: "30",
+    choices: ["60", "30", "16", "25"],
+    explanation: "Area of triangle is half of rectangle: (10 × 6) / 2 = 60 / 2 = 30 cm².",
+  },
+  math_order: {
+    title: "Order of Operations (PEMDAS)",
+    topic: "Parentheses, Multiplication & Addition Priority",
+    prompt: "Evaluate: 6 + 4 × 5 = ?",
+    correct: "26",
+    choices: ["50", "26", "30", "24"],
+    explanation: "Multiplication precedes addition! 4 × 5 = 20, then 6 + 20 = 26.",
+  },
+  math_challenge: {
+    title: "Mental Math Speed Challenge",
+    topic: "Multi-step mental arithmetic",
+    prompt: "Double 35, add 15, then divide by 5: ((35 × 2) + 15) ÷ 5 = ?",
+    correct: "17",
+    choices: ["15", "17", "19", "21"],
+    explanation: "Step 1: 35 × 2 = 70. Step 2: 70 + 15 = 85. Step 3: 85 ÷ 5 = 17.",
+  },
+};
+
 export function getMockAdaptiveLesson(
   language: LanguageId,
   lessonId: string,
   traitOverride?: PersonalityTrait
 ): AdaptiveLessonResponse {
   const trait = traitOverride || mockState.personality;
-  const lecture = LECTURE_DATABASE[lessonId] || LECTURE_DATABASE.conditions;
   const langMeta = SUPPORTED_LANGUAGES[language] || SUPPORTED_LANGUAGES.csharp;
 
+  // 1. Spoken Language Track (Duolingo Style Word Bank)
+  if (langMeta.subject === "language") {
+    const lecture = LANGUAGE_LECTURES[lessonId] || LANGUAGE_LECTURES.lang_greetings;
+    const prompt = lecture.prompts[language] || lecture.prompts.spanish;
+    const targetSentence = lecture.targets[language] || lecture.targets.spanish;
+    const wordBank = lecture.wordBanks[language] || lecture.wordBanks.spanish;
+    const audioText = lecture.audioTexts[language] || lecture.audioTexts.spanish;
+
+    const greetingsMap: Record<string, string> = {
+      spanish: "¡Hola! Louis is here to coach your Spanish pronunciation & grammar!",
+      french: "Bonjour ! Let's practice French vocabulary and sentence flow!",
+      german: "Guten Tag! Master your German grammar with daily consistency!",
+      japanese: "Konnichiwa! Let's build your Japanese conversational skills!",
+      italian: "Ciao! Enjoy learning authentic Italian dialogue and culture!",
+    };
+
+    return {
+      lessonId,
+      language,
+      personality: trait,
+      presentationMode: "PRACTICE_FIRST",
+      title: `${langMeta.label}: ${lecture.title}`,
+      louisMessage: greetingsMap[language] || "Practice makes fluent! Build the translated sentence.",
+      explanation: lecture.explanation,
+      visualSteps: [
+        "1. Read source sentence and listen to pronunciation",
+        "2. Select vocabulary chips from word bank",
+        "3. Check sentence syntax and word order",
+      ],
+      showExplanationFirst: false,
+      exercise: {
+        id: `${language}-${lessonId}-01`,
+        type: "WORD_BANK",
+        prompt,
+        targetSentence,
+        wordBank,
+        audioText,
+      },
+    };
+  }
+
+  // 2. Mathematics Track (Duolingo Math Style)
+  if (langMeta.subject === "math") {
+    const lecture = MATH_LECTURES[lessonId] || MATH_LECTURES.math_addition;
+    return {
+      lessonId,
+      language,
+      personality: trait,
+      presentationMode: "PRACTICE_FIRST",
+      title: `${langMeta.label}: ${lecture.title}`,
+      louisMessage: "Let's crunch the numbers! Use logic and step-by-step arithmetic.",
+      explanation: lecture.explanation,
+      visualSteps: [
+        "1. Identify the given mathematical terms",
+        "2. Apply operation priority (PEMDAS)",
+        "3. Compute final value & verify with keypad",
+      ],
+      showExplanationFirst: false,
+      exercise: {
+        id: `${language}-${lessonId}-01`,
+        type: "MATH_INPUT",
+        prompt: lecture.prompt,
+        choices: lecture.choices,
+        mathVisual: lecture.mathVisual,
+        placeholder: "Enter number...",
+      },
+    };
+  }
+
+  // 3. Programming Languages (Existing Coding Track)
+  const lecture = LECTURE_DATABASE[lessonId] || LECTURE_DATABASE.conditions;
   const starterCode =
     lecture.starters[language] || lecture.starters.csharp;
 
@@ -474,24 +903,58 @@ export function getMockAdaptiveLesson(
 
 export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
   const cleanAns = req.answer.toLowerCase().replace(/\s+/g, " ").trim();
-  const lecture = LECTURE_DATABASE[req.lessonId] || LECTURE_DATABASE.conditions;
-  const targetKey = lecture.correctKeyword.toLowerCase();
+  const langMeta = SUPPORTED_LANGUAGES[req.language] || SUPPORTED_LANGUAGES.csharp;
 
-  // Answer is correct if it includes the lecture's target keyword or valid code
-  const isCorrect =
-    cleanAns.includes(targetKey) ||
-    cleanAns.includes("age >= 18") ||
-    cleanAns.includes("age>=18") ||
-    cleanAns.includes("18") ||
-    cleanAns.includes("score = 100") ||
-    cleanAns.includes("hello") ||
-    cleanAns.includes("a + b") ||
-    cleanAns.includes("louis") ||
-    cleanAns.includes("await") ||
-    cleanAns.includes("catch") ||
-    cleanAns.includes("except") ||
-    cleanAns.includes("box") ||
-    cleanAns.includes("<t>");
+  let isCorrect = false;
+  let successMsg = "Outstanding! 🎉";
+  let failureMsg = "Review the answer and try again.";
+
+  // Evaluate Spoken Language Answers
+  if (langMeta.subject === "language") {
+    const lecture = LANGUAGE_LECTURES[req.lessonId] || LANGUAGE_LECTURES.lang_greetings;
+    const targetCorrect = (lecture.correct[req.language] || "").toLowerCase().trim();
+    // Allow matching punctuation-free or exact
+    const cleanCorrect = targetCorrect.replace(/[¡!¿?,.]/g, "").replace(/\s+/g, " ").trim();
+    const cleanUser = cleanAns.replace(/[¡!¿?,.]/g, "").replace(/\s+/g, " ").trim();
+
+    isCorrect = cleanUser === cleanCorrect || cleanAns.includes(cleanCorrect) || cleanCorrect.includes(cleanUser);
+    successMsg = `¡Excelente! Spot-on translation in ${langMeta.label}.`;
+    failureMsg = `Check word order. Target: ${lecture.correct[req.language] || "Correct sentence"}`;
+  }
+  // Evaluate Math Answers
+  else if (langMeta.subject === "math") {
+    const lecture = MATH_LECTURES[req.lessonId] || MATH_LECTURES.math_addition;
+    const cleanCorrect = lecture.correct.toLowerCase().trim();
+    // Check exact number or choice
+    isCorrect =
+      cleanAns === cleanCorrect ||
+      cleanAns.includes(cleanCorrect) ||
+      cleanAns.replace("$", "").trim() === cleanCorrect;
+    successMsg = `Spot-on calculation! You solved this ${langMeta.label} challenge.`;
+    failureMsg = `Not quite. Expected: ${lecture.correct}`;
+  }
+  // Evaluate Coding Answers
+  else {
+    const lecture = LECTURE_DATABASE[req.lessonId] || LECTURE_DATABASE.conditions;
+    const targetKey = lecture.correctKeyword.toLowerCase();
+
+    isCorrect =
+      cleanAns.includes(targetKey) ||
+      cleanAns.includes("age >= 18") ||
+      cleanAns.includes("age>=18") ||
+      cleanAns.includes("18") ||
+      cleanAns.includes("score = 100") ||
+      cleanAns.includes("hello") ||
+      cleanAns.includes("a + b") ||
+      cleanAns.includes("louis") ||
+      cleanAns.includes("await") ||
+      cleanAns.includes("catch") ||
+      cleanAns.includes("except") ||
+      cleanAns.includes("box") ||
+      cleanAns.includes("<t>");
+    successMsg = `Spot on! You mastered the ${lecture.title} challenge in ${langMeta.label}.`;
+    failureMsg = `Review the syntax for ${lecture.title}. Look for: ${lecture.placeholder}`;
+  }
 
   if (isCorrect) {
     const prevStreak = mockState.streakCurrent;
@@ -499,24 +962,21 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
     mockState.streakCurrent += 1;
     mockState.streakLongest = Math.max(mockState.streakLongest, mockState.streakCurrent);
 
-    if (!mockState.completedLessons[req.language]) {
-      mockState.completedLessons[req.language] = [];
+    const userCompleted = mockState.completedLessons[req.language] || [];
+    mockState.completedLessons[req.language] = userCompleted;
+
+    if (!userCompleted.includes(req.lessonId)) {
+      userCompleted.push(req.lessonId);
     }
 
-    if (!mockState.completedLessons[req.language].includes(req.lessonId)) {
-      mockState.completedLessons[req.language].push(req.lessonId);
-    }
-
-    const completedCount = mockState.completedLessons[req.language].length;
+    const completedCount = userCompleted.length;
 
     return {
       correct: true,
       xpAwarded: 10,
       feedback: {
         title: "Outstanding! 🎉",
-        message: `Spot on! You mastered the ${lecture.title} challenge in ${
-          SUPPORTED_LANGUAGES[req.language]?.label || req.language
-        }.`,
+        message: successMsg,
       },
       progress: {
         lessonCompleted: true,
@@ -538,7 +998,7 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
     xpAwarded: 0,
     feedback: {
       title: "Not quite yet 💡",
-      message: `Review the syntax for ${lecture.title}. Look for: ${lecture.placeholder}`,
+      message: failureMsg,
     },
     progress: {
       lessonCompleted: false,
@@ -555,3 +1015,4 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
     },
   };
 }
+

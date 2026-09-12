@@ -5,13 +5,22 @@ import {
   Flame,
   Zap,
   CheckCircle2,
-  ChevronDown,
   Award,
   BarChart3,
   Sparkles,
+  Maximize2,
+  Minimize2,
+  Code2,
+  Globe,
+  Calculator,
 } from "lucide-react";
-import type { DashboardResponse, LanguageId } from "../../types/api";
-import { SUPPORTED_LANGUAGES } from "../../lib/constants";
+import type { DashboardResponse, LanguageId, SubjectCategory } from "../../types/api";
+import {
+  SUPPORTED_LANGUAGES,
+  CODING_LANGUAGES,
+  SPOKEN_LANGUAGES,
+  MATH_TRACKS,
+} from "../../lib/constants";
 import { LanguageTrackIcon } from "../../lib/icons";
 
 /**
@@ -93,15 +102,37 @@ const getProgressTierLabel = (percent: number): string => {
 interface ProgressRecordProps {
   dashboard?: DashboardResponse;
   currentLanguage: LanguageId;
+  onSelectLanguage?: (lang: LanguageId) => void;
   defaultExpanded?: boolean;
+  isExpanded?: boolean;
+  onToggleExpand?: () => void;
+  variant?: "sidebar" | "compact";
 }
 
 export const ProgressRecord: React.FC<ProgressRecordProps> = ({
   dashboard,
   currentLanguage,
+  onSelectLanguage,
   defaultExpanded = true,
+  isExpanded: controlledExpanded,
+  onToggleExpand,
+  variant = "sidebar",
 }) => {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
+  const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+
+  const activeSubject: SubjectCategory =
+    SUPPORTED_LANGUAGES[currentLanguage]?.subject || "coding";
+  const [selectedSubjectTab, setSelectedSubjectTab] = useState<SubjectCategory | null>(null);
+  const activeTab: SubjectCategory = selectedSubjectTab ?? activeSubject;
+
+  const handleToggle = () => {
+    if (onToggleExpand) {
+      onToggleExpand();
+    } else {
+      setInternalExpanded(!internalExpanded);
+    }
+  };
 
   const currentStreak = dashboard?.streak.current ?? 4;
   const longestStreak = dashboard?.streak.longest ?? 7;
@@ -157,26 +188,108 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
       unlocked: totalCourses >= 3,
       icon: Trophy,
       color:
-        "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800",
+        "text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/40 border-sky-300 dark:border-sky-600",
     },
   ];
+
+  // Compact Ribbon Variant (used when the progress panel is reduced)
+  if (variant === "compact") {
+    return (
+      <div className="w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs px-4 sm:px-6 py-3 transition-all flex flex-wrap md:flex-nowrap items-center justify-between gap-3 sm:gap-4">
+        {/* Left: User Progress & Live badge */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center shadow-xs shrink-0">
+            <BarChart3 className="w-4 h-4 stroke-[2.5]" />
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-extrabold text-slate-900 dark:text-white text-sm">
+                {userName}'s Progress
+              </span>
+              <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded-full border border-red-200 dark:border-red-900/60">
+                <Sparkles className="w-2.5 h-2.5" /> Live
+              </span>
+            </div>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              {completedLessonsTotal} of {totalPossibleLessons} completed ({overallPercentage}%)
+            </span>
+          </div>
+        </div>
+
+        {/* Center: KPI mini pills */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          {/* Streak pill */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-orange-50/80 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/40 text-orange-700 dark:text-orange-400 text-xs font-bold">
+            <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
+            <span>{currentStreak}d streak</span>
+          </div>
+
+          {/* XP pill */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-amber-700 dark:text-amber-400 text-xs font-bold">
+            <Zap className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+            <span>{totalXp} XP</span>
+          </div>
+
+          {/* Active Track Mastery Pill with Red-to-Green mini meter */}
+          <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs font-bold">
+            <LanguageTrackIcon languageId={currentLanguage} className="w-3.5 h-3.5" />
+            <span className="text-slate-700 dark:text-slate-200">{activeLangMeta.label}</span>
+            <div className="w-16 sm:w-24 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${Math.max(10, activePercent)}%`,
+                  background: getProgressGradient(activePercent),
+                }}
+              />
+            </div>
+            <span
+              className="font-black text-[11px]"
+              style={{ color: getProgressColor(activePercent) }}
+            >
+              {activePercent}%
+            </span>
+          </div>
+
+          {/* Tier badge */}
+          <span
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
+          >
+            {tierLabel}
+          </span>
+        </div>
+
+        {/* Right: Expand Full Progress Button */}
+        <button
+          type="button"
+          onClick={handleToggle}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-xs font-black transition-all cursor-pointer shadow-xs hover:scale-[1.02] active:scale-[0.98] shrink-0 ml-auto md:ml-0"
+          title="Expand full progress panel"
+        >
+          <BarChart3 className="w-3.5 h-3.5" />
+          <span>Expand Progress</span>
+          <Maximize2 className="w-3.5 h-3.5 ml-0.5 opacity-80" />
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-all">
       {/* Header Bar: Click to Expand / Collapse */}
-      <button
-        type="button"
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 sm:px-5 py-3.5 flex items-center justify-between gap-3 text-left hover:bg-slate-50/80 dark:hover:bg-slate-800/80 transition-colors cursor-pointer focus:outline-hidden"
-        aria-expanded={isExpanded}
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center shadow-md shadow-orange-500/20 shrink-0">
+      <div className="w-full px-4 sm:px-5 py-3.5 flex items-center justify-between gap-3 text-left hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+        <button
+          type="button"
+          onClick={handleToggle}
+          className="flex items-center gap-3 text-left cursor-pointer focus:outline-hidden group"
+          aria-expanded={isExpanded}
+        >
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center shadow-md shadow-orange-500/20 shrink-0 group-hover:scale-105 transition-transform">
             <BarChart3 className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
             <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="font-black text-slate-900 dark:text-white text-sm sm:text-base leading-tight">
+              <h3 className="font-black text-slate-900 dark:text-white text-sm sm:text-base leading-tight group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                 {userName}'s Progress
               </h3>
               <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded-full border border-red-200 dark:border-red-900/60">
@@ -187,7 +300,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               {completedLessonsTotal} completed • {currentStreak} day streak
             </p>
           </div>
-        </div>
+        </button>
 
         <div className="flex items-center gap-2 shrink-0">
           <span
@@ -195,15 +308,17 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
           >
             {activePercent}%
           </span>
-          <div
-            className={`w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-transform duration-200 ${
-              isExpanded ? "rotate-180" : ""
-            }`}
+          <button
+            type="button"
+            onClick={handleToggle}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-bold transition-all cursor-pointer"
+            title="Reduce progress panel to expand lesson panel"
           >
-            <ChevronDown className="w-3.5 h-3.5" />
-          </div>
+            <span className="hidden sm:inline">Reduce</span>
+            <Minimize2 className="w-3.5 h-3.5" />
+          </button>
         </div>
-      </button>
+      </div>
 
       {/* Main KPI Stats Bar */}
       <div className="px-4 sm:px-5 pb-4 pt-1 grid grid-cols-3 gap-2 border-b border-slate-100 dark:border-slate-800">
@@ -345,7 +460,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                         <div className="text-xs font-black leading-tight truncate">
                           {m.title}
                         </div>
-                        <div className="text-[10px] opacity-80 leading-snug truncate">
+                        <div className="text-[10px] font-medium opacity-90 dark:opacity-95 leading-snug truncate">
                           {m.desc}
                         </div>
                       </div>
@@ -358,16 +473,112 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               </div>
             </div>
 
-            {/* All Tracks Progress Overview (with Red-to-Green mini meters and language icons) */}
-            <div>
-              <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5">
-                <span>All Tracks Overview</span>
+            {/* All Tracks Progress Overview with Left-Sidebar-Style Subject Tabs */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <BarChart3 className="w-3.5 h-3.5 text-red-500" />
+                  <span>Curriculum Tracks Overview</span>
+                </span>
                 <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
-                  {overallPercentage}% Total
+                  {overallPercentage}% Overall
                 </span>
               </div>
+
+              {/* 3 Subject Tabs: Matching Left Navigation Sidebar */}
+              <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100/90 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/60">
+                {(
+                  [
+                    {
+                      id: "coding" as SubjectCategory,
+                      label: "Coding",
+                      icon: Code2,
+                      iconColor: "text-blue-500",
+                      activeStyle:
+                        "bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-300 border-blue-400 dark:border-blue-600 shadow-xs",
+                      tracks: CODING_LANGUAGES,
+                    },
+                    {
+                      id: "language" as SubjectCategory,
+                      label: "Languages",
+                      icon: Globe,
+                      iconColor: "text-emerald-500",
+                      activeStyle:
+                        "bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 border-emerald-400 dark:border-emerald-600 shadow-xs",
+                      tracks: SPOKEN_LANGUAGES,
+                    },
+                    {
+                      id: "math" as SubjectCategory,
+                      label: "Math",
+                      icon: Calculator,
+                      iconColor: "text-amber-500",
+                      activeStyle:
+                        "bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-300 border-amber-400 dark:border-amber-600 shadow-xs",
+                      tracks: MATH_TRACKS,
+                    },
+                  ] as const
+                ).map((tab) => {
+                  const isTabActive = activeTab === tab.id;
+                  const TabIcon = tab.icon;
+
+                  // Calculate category-specific completed lessons
+                  let catCompleted = 0;
+                  const catTotal = tab.tracks.length * 10;
+                  tab.tracks.forEach((tId) => {
+                    const c = dashboard?.courses.find((course) => course.language === tId);
+                    catCompleted += c?.completedLessons ?? (tId === "csharp" ? 1 : 0);
+                  });
+                  const catPercent = Math.round((catCompleted / Math.max(1, catTotal)) * 100);
+
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setSelectedSubjectTab(tab.id)}
+                      className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+                        isTabActive
+                          ? `${tab.activeStyle} scale-[1.02]`
+                          : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-750/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <TabIcon className={`w-3.5 h-3.5 ${tab.iconColor}`} />
+                        <span className="leading-tight">{tab.label}</span>
+                      </div>
+                      <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
+                        {catCompleted}/{catTotal} ({catPercent}%)
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Active Category Header Card */}
+              <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/40 text-xs">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  {activeTab === "coding"
+                    ? "Programming Languages"
+                    : activeTab === "language"
+                    ? "Spoken World Languages"
+                    : "Mathematics Tracks"}
+                </span>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                  {activeTab === "coding"
+                    ? `${CODING_LANGUAGES.length} Tracks`
+                    : activeTab === "language"
+                    ? `${SPOKEN_LANGUAGES.length} Languages`
+                    : `${MATH_TRACKS.length} Tracks`}
+                </span>
+              </div>
+
+              {/* Filtered Track Cards */}
               <div className="grid grid-cols-2 gap-2">
-                {(Object.keys(SUPPORTED_LANGUAGES) as LanguageId[]).map((langId) => {
+                {(activeTab === "coding"
+                  ? CODING_LANGUAGES
+                  : activeTab === "language"
+                  ? SPOKEN_LANGUAGES
+                  : MATH_TRACKS
+                ).map((langId) => {
                   const lang = SUPPORTED_LANGUAGES[langId];
                   const cData = dashboard?.courses.find((c) => c.language === langId);
                   const count = cData?.completedLessons ?? (langId === "csharp" ? 1 : 0);
@@ -375,31 +586,42 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                   const isCurrent = langId === currentLanguage;
 
                   return (
-                    <div
+                    <button
                       key={langId}
-                      className={`p-2 rounded-xl border text-left flex flex-col gap-1 transition-all ${
+                      type="button"
+                      onClick={() => onSelectLanguage?.(langId)}
+                      className={`p-2.5 rounded-xl border text-left flex flex-col gap-1.5 transition-all cursor-pointer group relative ${
                         isCurrent
-                          ? "bg-white dark:bg-slate-800/95 border-red-400 dark:border-red-500 ring-2 ring-red-400/20 shadow-2xs"
-                          : "bg-white dark:bg-slate-850 border-slate-200 dark:border-slate-800"
+                          ? "bg-white dark:bg-slate-850 border-2 border-red-500 dark:border-red-500 ring-2 ring-red-500/40 dark:ring-red-500/50 shadow-[0_0_16px_rgba(239,68,68,0.4)] dark:shadow-[0_0_20px_rgba(239,68,68,0.55)] scale-[1.01]"
+                          : "bg-white dark:bg-slate-850 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/70 hover:shadow-2xs"
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="flex items-center gap-1 font-mono text-[10px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+                        <span className="flex items-center gap-1 font-mono text-[10px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60">
                           <LanguageTrackIcon languageId={langId} className="w-3 h-3" />
                           {lang.badge}
                         </span>
-                        <span
-                          className="text-[10px] font-black"
-                          style={{ color: getProgressColor(trackPercent) }}
-                        >
-                          {count}/10
-                        </span>
+                        <div className="flex items-center gap-1">
+                          {isCurrent && (
+                            <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-950/70 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-800/60">
+                              ACTIVE
+                            </span>
+                          )}
+                          <span
+                            className="text-[10px] font-black"
+                            style={{ color: getProgressColor(trackPercent) }}
+                          >
+                            {count}/10
+                          </span>
+                        </div>
                       </div>
-                      <div className="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate">
+
+                      <div className="text-[11px] font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                         {lang.label}
                       </div>
+
                       {/* Mini Bar that also shifts Red -> Green */}
-                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mt-0.5 border border-slate-200/50 dark:border-slate-600/50">
+                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-0.5 border border-slate-200/50 dark:border-slate-700/60">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
@@ -408,7 +630,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                           }}
                         />
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>

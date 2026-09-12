@@ -1,24 +1,28 @@
 import React from "react";
 import { LessonNode } from "./LessonNode";
-import { LESSON_TEMPLATES } from "../../lib/constants";
+import { getCurriculumForTrack } from "../../lib/constants";
 import type { LanguageId, LessonStatus } from "../../types/api";
 import type { PathLessonNode } from "../../types/lesson";
 
 interface LearningPathProps {
   language: LanguageId;
   completedLessons?: string[];
+  isWide?: boolean;
 }
 
 export const LearningPath: React.FC<LearningPathProps> = ({
   language,
-  completedLessons = ["hello"],
+  completedLessons = [],
+  isWide = false,
 }) => {
+  const curriculum = getCurriculumForTrack(language);
+
   // Determine first incomplete lesson index to set as current
-  const firstIncompleteIdx = LESSON_TEMPLATES.findIndex(
+  const firstIncompleteIdx = curriculum.findIndex(
     (tmpl) => !completedLessons.includes(tmpl.id)
   );
 
-  const pathNodes: PathLessonNode[] = LESSON_TEMPLATES.map((tmpl, idx) => {
+  const pathNodes: PathLessonNode[] = curriculum.map((tmpl, idx) => {
     const isCompleted = completedLessons.includes(tmpl.id);
     let status: LessonStatus = "locked";
 
@@ -57,7 +61,11 @@ export const LearningPath: React.FC<LearningPathProps> = ({
         />
       </div>
 
-      <div className="relative z-10 flex flex-col gap-6 sm:gap-8 w-full max-w-lg sm:max-w-xl mx-auto">
+      <div
+        className={`relative z-10 flex flex-col gap-6 sm:gap-8 w-full ${
+          isWide ? "max-w-xl sm:max-w-2xl lg:max-w-3xl" : "max-w-lg sm:max-w-xl"
+        } mx-auto transition-all duration-300`}
+      >
         {pathNodes.map((node, i) => {
           const isLeft = i % 2 === 0;
           const isCompleted = node.status === "completed";
@@ -74,7 +82,9 @@ export const LearningPath: React.FC<LearningPathProps> = ({
                   <LessonNode lesson={node} />
                   {/* Connecting branch to middle line */}
                   <div
-                    className={`h-0.5 w-3 sm:w-6 rounded-full transition-colors ${
+                    className={`h-0.5 ${
+                      isWide ? "w-3 sm:w-8 md:w-12" : "w-3 sm:w-6"
+                    } rounded-full transition-all duration-300 ${
                       isCompleted
                         ? "bg-emerald-400 dark:bg-emerald-500"
                         : isCurrent
@@ -105,7 +115,9 @@ export const LearningPath: React.FC<LearningPathProps> = ({
                 <div className="flex items-center justify-start pl-1.5 sm:pl-3">
                   {/* Connecting branch to middle line */}
                   <div
-                    className={`h-0.5 w-3 sm:w-6 rounded-full transition-colors ${
+                    className={`h-0.5 ${
+                      isWide ? "w-3 sm:w-8 md:w-12" : "w-3 sm:w-6"
+                    } rounded-full transition-all duration-300 ${
                       isCompleted
                         ? "bg-emerald-400 dark:bg-emerald-500"
                         : isCurrent

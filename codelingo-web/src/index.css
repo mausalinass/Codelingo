@@ -2,6 +2,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-slate-750: #25334c;
+  --color-slate-850: #141d2e;
+}
+
 @layer base {
   :root {
     --brand-red: #E52E2E;
