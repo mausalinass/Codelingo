@@ -7,6 +7,7 @@ import { AppShell } from "../components/layout/AppShell";
 import { LearningPath } from "../components/path/LearningPath";
 import { LouisCoach } from "../components/louis/LouisCoach";
 import { PersonalityBadge } from "../components/personality/PersonalityBadge";
+import { ProgressRecord } from "../components/gamification/ProgressRecord";
 import type { LanguageId } from "../types/api";
 
 interface LearnPageProps {
@@ -82,6 +83,12 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             {activeLangMeta.badge}
           </div>
         </div>
+
+        {/* Live Progress Record & Stats Card */}
+        <ProgressRecord
+          dashboard={dashboard}
+          currentLanguage={selectedLanguage}
+        />
 
         {/* Duolingo Staggered Learning Path */}
         <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs">
