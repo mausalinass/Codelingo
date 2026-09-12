@@ -19,16 +19,23 @@ assert.equal(await page.getByLabel('Scrollable programming languages and tracks'
 await tracks.click();assert.equal(await tracks.getAttribute('aria-expanded'),'false');
 await page.getByRole('button',{name:'Switch to dark mode'}).first().click();
 await page.reload();assert.ok(await page.locator('html').evaluate(e=>e.classList.contains('dark')));
-await page.getByRole('button',{name:/^Math 5 Tracks/}).click();
+await page.getByRole('button',{name:/^Math: choose a learning track/}).click();
 await page.getByText('Preview track:',{exact:false}).waitFor();
 await page.locator('a[href="/lesson/math_basics/math_addition"]').click();
+await page.getByRole('button',{name:'START LESSON',exact:true}).click();
 await page.getByText('Calculate the sum: 47 + 38 = ?',{exact:false}).waitFor();
 await page.getByRole('button',{name:'75',exact:true}).click();
 await page.getByRole('button',{name:'Check',exact:true}).click();
-await page.getByRole('button',{name:'Try Again',exact:true}).click();
+await page.getByRole('button',{name:/Try Again/}).click();
 await page.getByRole('button',{name:'85',exact:true}).click();
 await page.getByRole('button',{name:'Check',exact:true}).click();
 await page.getByRole('button',{name:'Continue',exact:true}).click();
+for(let problem=2;problem<=10;problem++){
+ await page.getByText(`Problem ${problem} / 10`,{exact:true}).waitFor();
+ await page.getByRole('button',{name:'85',exact:true}).click();
+ await page.getByRole('button',{name:'Check',exact:true}).click();
+ await page.getByRole('button',{name:'Continue',exact:true}).click();
+}
 await page.getByText('+0 XP',{exact:true}).waitFor();
 await page.getByText('Preview practice complete.',{exact:false}).waitFor();
 assert.deepEqual(await snapshot(),before);

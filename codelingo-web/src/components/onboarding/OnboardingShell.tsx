@@ -2,11 +2,9 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { ThemeToggle } from "../navigation/ThemeToggle";
-import { LouisRoamer } from "../louis/LouisCompanion";
 
 export function OnboardingShell({ step, backTo, children }: { step: number; backTo: string; children: ReactNode }) {
   return <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-950 dark:text-white transition-colors">
-    <LouisRoamer subtle />
     <header className="h-20 border-b border-slate-200 dark:border-slate-800 flex items-center px-5 sm:px-10">
       <Link to={backTo} aria-label="Go back" className="w-11 h-11 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center"><ArrowLeft /></Link>
       <div className="mx-auto flex gap-2" aria-label={`Step ${step} of 5`}>
@@ -20,7 +18,7 @@ export function OnboardingShell({ step, backTo, children }: { step: number; back
 
 export function LouisPrompt({ children }: { children: ReactNode }) {
   return <div className="flex items-center justify-center gap-4 mb-8">
-    <img src="/louis-transparent.png" className="w-24 h-24 object-contain" alt="Louis, Codelingo's red cardinal" />
+    <img src="/louis-thinking-2_5d.png" className="louis-idle w-24 h-24 object-contain" alt="Louis, Codelingo's red cardinal" />
     <div className="relative max-w-lg rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-4 font-bold shadow-sm">{children}</div>
   </div>;
 }

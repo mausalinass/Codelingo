@@ -18,6 +18,11 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
   const isCelebrating = mood === "celebrating";
   const isThinking = mood === "thinking";
   const isEncouraging = mood === "encouraging";
+  const louisImage = isCelebrating
+    ? "/louis-celebrating-2_5d.png"
+    : isThinking
+      ? "/louis-thinking-2_5d.png"
+      : "/louis-pointing-2_5d.png";
 
   const sizeClasses = {
     sm: "w-16 h-16",
@@ -82,7 +87,7 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
 
         {/* Mascot Bird Image */}
         <img
-          src="/louis-transparent.png"
+          src={louisImage}
           alt="Louis the Cardinal - Codelingo Mascot"
           className="w-full h-full object-contain drop-shadow-md transition-transform"
           draggable="false"

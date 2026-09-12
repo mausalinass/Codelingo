@@ -991,6 +991,11 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
         current: mockState.streakCurrent,
         increased: true,
       },
+      attemptNumber: 1,
+      advanceRequired: true,
+      correctAnswer: null,
+      problemsResolved: 1,
+      totalProblems: 10,
     };
   }
 
@@ -1014,6 +1019,11 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
       current: mockState.streakCurrent,
       increased: false,
     },
+    attemptNumber: 1,
+    advanceRequired: false,
+    correctAnswer: null,
+    problemsResolved: 0,
+    totalProblems: 10,
   };
 }
 

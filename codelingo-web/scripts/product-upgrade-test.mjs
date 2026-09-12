@@ -39,6 +39,7 @@ try {
   await page.getByText(/Condiciones · C#/).waitFor();
   await page.getByRole("button", { name: "EMPEZAR EN CONDICIONES", exact: true }).click();
   await page.waitForURL("**/lesson/csharp/conditions");
+  await page.getByRole("button", { name: "COMENZAR LECCIÓN", exact: true }).waitFor();
   const saved = await fetch(api + "/api/users/11111111-1111-1111-1111-111111111111/onboarding");
   assert.equal(saved.status, 200);
   const state = await saved.json();
@@ -48,11 +49,19 @@ try {
   await page.goto(frontend + "/learn");
   await page.getByLabel("Louis connected").waitFor();
   assert.equal(await page.getByRole("button", { name: /Pause Louis|Resume Louis/ }).count(), 0);
-  assert.ok(await page.getByText("0", { exact: true }).count() > 0, "Fresh demo streak starts at zero");
-  await page.getByRole("link", { name: "Progress", exact: true }).click();
+  await page.getByTitle(/0 day streak/).waitFor();
+  assert.equal(await page.locator(".louis-roamer").count(), 0, "Louis must stay inside the learning path");
+  assert.ok(await page.locator('img[src*="louis-"][src*="2_5d"]').count() >= 3, "2.5D Louis poses appear throughout the path");
+  await page.getByRole("button", { name: "Idioma de explicación" }).click();
+  await page.getByRole("option", { name: /Français/ }).click();
+  await page.getByRole("link", { name: "Parcours", exact: true }).waitFor();
+  await page.getByRole("button", { name: /Langues: choose a learning track/ }).click();
+  await page.getByRole("button", { name: "Learn Japanese" }).click();
+  await page.getByText("Français", { exact: true }).waitFor();
+  await page.getByRole("link", { name: "Progrès", exact: true }).click();
   await page.getByRole("heading", { name: "Progress" }).waitFor();
   assert.deepEqual(errors, []);
-  console.log("PASS product upgrade: flags, language logos, localized onboarding, deterministic placement, zero streak, moving Louis and dashboard navigation");
+  console.log("PASS product upgrade: flag menu, independent UI/course languages, localized onboarding, zero streak, static 2.5D Louis path poses and dashboard navigation");
 } finally {
   await browser.close();
 }

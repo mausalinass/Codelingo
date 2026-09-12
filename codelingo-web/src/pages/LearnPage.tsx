@@ -3,15 +3,14 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDashboard } from "../api/dashboard";
 import { fetchPersonality } from "../api/personality";
-import { DEMO_USER_ID, SUPPORTED_LANGUAGES } from "../lib/constants";
+import { DEMO_USER_ID } from "../lib/constants";
 import { AppShell } from "../components/layout/AppShell";
 import { LearningPath } from "../components/path/LearningPath";
-import { LouisCoach } from "../components/louis/LouisCoach";
-import { LouisConnectionStatus, LouisRoamer } from "../components/louis/LouisCompanion";
+import { LouisConnectionStatus } from "../components/louis/LouisCompanion";
 import { PersonalityBadge } from "../components/personality/PersonalityBadge";
 import { ProgressRecord } from "../components/gamification/ProgressRecord";
-import { LanguageTrackIcon } from "../lib/icons";
 import type { LanguageId } from "../types/api";
+import { CourseSectionHero } from "../components/path/CourseSectionHero";
 
 interface LearnPageProps {
   selectedLanguage: LanguageId;
@@ -45,8 +44,6 @@ export const LearnPage: React.FC<LearnPageProps> = ({
     queryFn: () => fetchPersonality(DEMO_USER_ID),
   });
 
-  const activeLangMeta = SUPPORTED_LANGUAGES[selectedLanguage] || SUPPORTED_LANGUAGES.csharp;
-
   // Derive completed lessons for active language using its dedicated curriculum
   const courseData = dashboard?.courses.find((c) => c.language === selectedLanguage);
   const completedCount = courseData?.completedLessons ?? 0;
@@ -59,7 +56,6 @@ export const LearnPage: React.FC<LearnPageProps> = ({
       onSelectLanguage={onSelectLanguage}
       maxWidth={isProgressExpanded ? "max-w-6xl xl:max-w-7xl" : "max-w-7xl 2xl:max-w-[88rem]"}
     >
-      <LouisRoamer />
       <LouisConnectionStatus />
       {(dashboardError || personalityError) && <div role="alert" className="p-4 text-red-700 dark:text-red-300">Unable to load saved progress or personality. <button onClick={() => { void refetch(); void refetchPersonality(); }}>Retry</button></div>}
       {isPreviewTrack(selectedLanguage) && <p role="status" className="rounded-xl border p-4 text-amber-800 dark:text-amber-200">Preview track: practice is available in this session only. It does not change saved XP, streaks or account progress.</p>}
@@ -92,31 +88,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
               />
             )}
 
-            {/* Louis Mascot Greeting */}
-            <LouisCoach
-              mood="idle"
-              message={`Welcome back, ${
-                dashboard?.user.displayName || "learner"
-              }! Let's continue your ${activeLangMeta.label} track.`}
-            />
-
-            {/* Course Header Banner: Spans full width when reduced */}
-            <div className="rounded-3xl bg-white dark:bg-slate-900 text-slate-950 dark:text-white p-6 sm:p-7 shadow-sm flex items-center justify-between border border-slate-200 dark:border-slate-800">
-              <div>
-                <div className="text-xs uppercase tracking-wider font-extrabold text-red-400">
-                  Active Track
-                </div>
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight mt-0.5">
-                  {activeLangMeta.label} Mastery
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
-                  {courseData?.percentage ?? 0}% completed • {completedCount} of {totalCount} lessons
-                </p>
-              </div>
-              <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-xs flex items-center justify-center text-white border border-white/20 shadow-xs">
-                <LanguageTrackIcon languageId={selectedLanguage} className="w-7 h-7 stroke-[2.2]" />
-              </div>
-            </div>
+            <CourseSectionHero language={selectedLanguage} percentage={courseData?.percentage ?? 0} completed={completedCount} total={totalCount} />
 
             {/* Duolingo Staggered Learning Path (Expansive & Centerpiece) */}
             <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-10 shadow-xs transition-colors">
@@ -156,31 +128,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
               />
             )}
 
-            {/* Louis Mascot Greeting */}
-            <LouisCoach
-              mood="idle"
-              message={`Welcome back, ${
-                dashboard?.user.displayName || "learner"
-              }! Let's continue your ${activeLangMeta.label} track.`}
-            />
-
-            {/* Course Header Banner */}
-            <div className="rounded-2xl bg-white dark:bg-slate-900 text-slate-950 dark:text-white p-5 shadow-sm flex items-center justify-between border border-slate-200 dark:border-slate-800">
-              <div>
-                <div className="text-xs uppercase tracking-wider font-extrabold text-red-400">
-                  Active Track
-                </div>
-                <h2 className="text-xl font-black tracking-tight mt-0.5">
-                  {activeLangMeta.label} Mastery
-                </h2>
-                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
-                  {courseData?.percentage ?? 0}% completed • {completedCount} of {totalCount} lessons
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xs flex items-center justify-center text-white border border-white/20 shadow-xs">
-                <LanguageTrackIcon languageId={selectedLanguage} className="w-6 h-6 stroke-[2.2]" />
-              </div>
-            </div>
+            <CourseSectionHero language={selectedLanguage} percentage={courseData?.percentage ?? 0} completed={completedCount} total={totalCount} />
 
             {/* Duolingo Staggered Learning Path */}
             <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xs transition-colors">

@@ -2,6 +2,8 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, AlertCircle, RefreshCw, ArrowRight } from "lucide-react";
 import type { SubmitStatus } from "../../types/lesson";
+import { useOnboarding } from "../../context/OnboardingContext";
+import { uiText } from "../../lib/i18n";
 
 interface FeedbackCardProps {
   status: SubmitStatus;
@@ -10,6 +12,8 @@ interface FeedbackCardProps {
   onCheck: () => void;
   onContinue: () => void;
   onTryAgain: () => void;
+  tryAgainLabel?: string;
+  correctAnswer?: string | null;
 }
 
 export const FeedbackCard: React.FC<FeedbackCardProps> = ({
@@ -19,7 +23,11 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
   onCheck,
   onContinue,
   onTryAgain,
+  tryAgainLabel = "Try Again",
+  correctAnswer,
 }) => {
+  const { state } = useOnboarding();
+  const t = (key: Parameters<typeof uiText>[1]) => uiText(state.uiLanguage, key);
   const isSubmitting = status === "submitting";
   const isCorrect = status === "correct";
   const isIncorrect = status === "incorrect";
@@ -67,7 +75,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                     <span>Checking...</span>
                   </>
                 ) : (
-                  <span>Check</span>
+                  <span>{t("check")}</span>
                 )}
               </button>
             </motion.div>
@@ -101,7 +109,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                 onClick={onContinue}
                 className="w-full sm:w-auto min-w-[160px] px-8 py-3.5 rounded-2xl font-black text-base uppercase tracking-wider text-white bg-emerald-500 hover:bg-emerald-600 shadow-md shadow-emerald-500/30 transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2"
               >
-                <span>Continue</span>
+                <span>{t("continue")}</span>
                 <ArrowRight className="w-5 h-5 stroke-[3]" />
               </button>
             </motion.div>
@@ -127,6 +135,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                   <div className="text-rose-700 dark:text-rose-300 font-medium text-sm mt-0.5 leading-relaxed max-w-xl">
                     {feedback?.message || "Check your answer and try again."}
                   </div>
+                  {correctAnswer && <div className="mt-2"><span className="text-xs font-black uppercase">{t("correctAnswer")}</span><pre className="mt-1 max-w-xl overflow-auto rounded-lg bg-white/80 p-2 text-xs text-slate-900 dark:bg-slate-900 dark:text-white"><code>{correctAnswer}</code></pre></div>}
                 </div>
               </div>
 
@@ -135,7 +144,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                 onClick={onTryAgain}
                 className="w-full sm:w-auto min-w-[160px] px-8 py-3.5 rounded-2xl font-black text-base uppercase tracking-wider text-white bg-rose-600 hover:bg-rose-700 shadow-md shadow-rose-600/30 transition-all active:scale-98 cursor-pointer"
               >
-                Try Again
+                {tryAgainLabel}
               </button>
             </motion.div>
           )}

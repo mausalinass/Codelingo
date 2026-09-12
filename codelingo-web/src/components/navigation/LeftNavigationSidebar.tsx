@@ -24,6 +24,8 @@ import {
 import { LanguageTrackIcon } from "../../lib/icons";
 import { ThemeToggle } from "./ThemeToggle";
 import type { DashboardResponse, LanguageId, SubjectCategory } from "../../types/api";
+import { useOnboarding } from "../../context/OnboardingContext";
+import { uiText } from "../../lib/i18n";
 
 interface LeftNavigationSidebarProps {
   currentLanguage: LanguageId;
@@ -36,6 +38,8 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
   onSelectLanguage,
   dashboard,
 }) => {
+  const { state: onboarding } = useOnboarding();
+  const t = (key: Parameters<typeof uiText>[1]) => uiText(onboarding.uiLanguage, key);
   const location = useLocation();
   const activeLang = SUPPORTED_LANGUAGES[currentLanguage] || SUPPORTED_LANGUAGES.csharp;
   const activeSubject: SubjectCategory = activeLang.subject || "coding";
@@ -83,7 +87,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
   }> = [
     {
       id: "coding",
-      label: "Coding",
+      label: t("coding"),
       icon: Code2,
       count: `${CODING_LANGUAGES.length} Tracks`,
       tracks: CODING_LANGUAGES,
@@ -93,7 +97,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
     },
     {
       id: "language",
-      label: "Languages",
+      label: t("languages"),
       icon: Globe,
       count: `${SPOKEN_LANGUAGES.length} Languages`,
       tracks: SPOKEN_LANGUAGES,
@@ -103,7 +107,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
     },
     {
       id: "math",
-      label: "Math",
+      label: t("math"),
       icon: Calculator,
       count: `${MATH_TRACKS.length} Tracks`,
       tracks: MATH_TRACKS,
@@ -124,11 +128,11 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
             className="flex items-center gap-2.5 group focus:outline-hidden"
             title="Codelingo"
           >
-            <div className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-red-500/20 shadow-xs group-hover:shadow-md group-hover:shadow-red-500/30 group-hover:scale-105 transition-all bg-[#12bba8] shrink-0 flex items-center justify-center">
+            <div className="w-10 h-10 group-hover:scale-105 transition-all shrink-0 flex items-center justify-center">
               <img
-                src="/logo.png"
+                src="/louis-pointing-2_5d.png"
                 alt="Codelingo Logo"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             <div>
@@ -147,7 +151,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
           {/* SECTION 1: PRIMARY SUBJECT TABS (Coding, Languages, Math) */}
           <div className="flex flex-col gap-1.5">
             <div className="px-2 pb-1.5 text-[11px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
-              Subjects
+              {t("subjects")}
             </div>
 
             {subjects.map((sub) => {
@@ -160,6 +164,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
                   {/* Subject Tab Button */}
                   <button
                     type="button"
+                    aria-label={`${sub.label}: choose a learning track`}
                     onClick={() => handleSubjectTabClick(sub.id)}
                     className={`group w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-left font-bold transition-all cursor-pointer border ${
                       isActive
@@ -214,6 +219,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
                           <button
                             key={tId}
                             type="button"
+                            aria-label={`Learn ${track.label}`}
                             onClick={() => handleSelectTrack(tId, sub.id)}
                             className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                               isCurrentTrack
@@ -243,7 +249,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
           {/* SECTION 2: LEARNING MENU */}
           <div className="flex flex-col gap-1">
             <div className="px-2 pb-1.5 text-[11px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
-              Menu
+              {t("menu")}
             </div>
 
             <Link
@@ -255,17 +261,17 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
               }`}
             >
               <Compass className="w-4 h-4 text-red-500" />
-              <span>Learn Path</span>
+              <span>{t("learnPath")}</span>
             </Link>
 
-            <Link to="/progress" className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider ${location.pathname === "/progress" ? "bg-red-50 dark:bg-red-950/40 text-red-600" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"}`}><BarChart3 className="w-4 h-4"/>Progress</Link>
-            <Link to="/achievements" className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider ${location.pathname === "/achievements" ? "bg-red-50 dark:bg-red-950/40 text-red-600" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"}`}><Trophy className="w-4 h-4"/>Achievements</Link>
-            <Link to="/profile" className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider ${location.pathname === "/profile" ? "bg-red-50 dark:bg-red-950/40 text-red-600" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"}`}><User className="w-4 h-4"/>Profile</Link>
+            <Link to="/progress" className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider ${location.pathname === "/progress" ? "bg-red-50 dark:bg-red-950/40 text-red-600" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"}`}><BarChart3 className="w-4 h-4"/>{t("progress")}</Link>
+            <Link to="/achievements" className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider ${location.pathname === "/achievements" ? "bg-red-50 dark:bg-red-950/40 text-red-600" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"}`}><Trophy className="w-4 h-4"/>{t("achievements")}</Link>
+            <Link to="/profile" className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider ${location.pathname === "/profile" ? "bg-red-50 dark:bg-red-950/40 text-red-600" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"}`}><User className="w-4 h-4"/>{t("profile")}</Link>
 
             <div className="flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider text-slate-400 hover:bg-slate-100/60 dark:hover:bg-slate-800/40 cursor-default select-none">
               <div className="flex items-center gap-3">
                 <Trophy className="w-4 h-4 text-amber-500" />
-                <span>Leaderboard</span>
+                <span>{t("leaderboard")}</span>
               </div>
               <span className="text-[10px] font-black bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded-md">
                 #4
@@ -275,7 +281,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
             <div className="flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider text-slate-400 hover:bg-slate-100/60 dark:hover:bg-slate-800/40 cursor-default select-none">
               <div className="flex items-center gap-3">
                 <Target className="w-4 h-4 text-emerald-500" />
-                <span>Daily Quests</span>
+                <span>{t("quests")}</span>
               </div>
               <span className="text-[10px] font-black bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-md">
                 2/3

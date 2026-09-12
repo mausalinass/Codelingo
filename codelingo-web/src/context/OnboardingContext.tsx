@@ -1,7 +1,7 @@
 /* eslint-disable react/only-export-components -- provider and its typed hook form one small state module */
 import React, { createContext, useContext, useMemo, useState } from "react";
 
-export type UiLanguage = "es" | "en";
+export type UiLanguage = "es" | "en" | "fr" | "de" | "ja" | "it" | "pt" | "zh" | "ko" | "ru" | "ar";
 export type ProgrammingTrack = "python" | "javascript" | "typescript" | "csharp";
 export type ExperienceLevel = "beginner" | "basic" | "intermediate" | "project_experience";
 

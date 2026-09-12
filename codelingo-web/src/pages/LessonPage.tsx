@@ -26,8 +26,13 @@ import { LessonTopicIcon, LanguageTrackIcon } from "../lib/icons";
 
 import type { LanguageId, PersonalityTrait, EvaluateResponse } from "../types/api";
 import type { LouisMood, SubmitStatus } from "../types/lesson";
+import { useOnboarding } from "../context/OnboardingContext";
+import { uiText } from "../lib/i18n";
+import { lessonCopy } from "../lib/lessonTranslations";
 
 export const LessonPage: React.FC = () => {
+  const { state: onboarding } = useOnboarding();
+  const t = (key: Parameters<typeof uiText>[1]) => uiText(onboarding.uiLanguage, key);
   const { language = "csharp", lessonId = "conditions" } = useParams<{
     language: LanguageId;
     lessonId: string;
@@ -60,9 +65,11 @@ export const LessonPage: React.FC = () => {
   });
 
   const [evaluation, setEvaluation] = useState<EvaluateResponse | null>(null);
+  const [problemIndex, setProblemIndex] = useState(0);
+  const [lessonStarted, setLessonStarted] = useState(false);
 
   // Exercise answer state keyed to the active lesson mode
-  const lessonKey = `${lesson?.exercise.id}-${lesson?.presentationMode}`;
+  const lessonKey = `${lesson?.exercise.id}-p${problemIndex + 1}-${lesson?.presentationMode}`;
   const [exerciseState, setExerciseState] = useState<{
     key: string;
     code: string;
@@ -117,9 +124,14 @@ export const LessonPage: React.FC = () => {
     mutationFn: evaluateExercise,
     onSuccess: (data) => {
       setEvaluation(data);
+      const localizedFeedback = onboarding.uiLanguage === "fr"
+        ? { title: data.correct ? "Bonne réponse !" : data.advanceRequired ? "Voici la bonne réponse" : "Réessaie", message: data.correct ? `Problème ${data.problemsResolved} sur ${data.totalProblems} résolu.` : data.advanceRequired ? "Trois tentatives utilisées. Lis la réponse avant de continuer." : `Il te reste ${Math.max(0, 3 - data.attemptNumber)} tentative(s).` }
+        : onboarding.uiLanguage === "es"
+        ? { title: data.correct ? "¡Correcto!" : data.advanceRequired ? "Esta es la respuesta correcta" : "Inténtalo de nuevo", message: data.correct ? `Problema ${data.problemsResolved} de ${data.totalProblems} resuelto.` : data.advanceRequired ? "Usaste tres intentos. Revisa la respuesta antes de continuar." : `Te quedan ${Math.max(0, 3 - data.attemptNumber)} intento(s).` }
+        : data.feedback;
       if (data.correct) {
         setSubmitStatus("correct");
-        setFeedback(data.feedback);
+        setFeedback(localizedFeedback);
 
         // Confetti burst
         confetti({
@@ -138,7 +150,7 @@ export const LessonPage: React.FC = () => {
         queryClient.invalidateQueries({ queryKey: ["dashboard", DEMO_USER_ID] });
       } else {
         setSubmitStatus("incorrect");
-        setFeedback(data.feedback);
+        setFeedback(localizedFeedback);
       }
     },
     onError: (err) => {
@@ -173,13 +185,21 @@ export const LessonPage: React.FC = () => {
       userId: DEMO_USER_ID,
       language: langId,
       lessonId,
-      exerciseId: lesson.exercise.id,
+      exerciseId: `${lesson.exercise.id}-p${problemIndex + 1}`,
       answer: activeAnswer,
     });
   };
 
   // Handle Continue to Complete page
   const handleContinue = () => {
+    if (problemIndex < 9) {
+      setProblemIndex((current) => current + 1);
+      setSubmitStatus("idle");
+      setFeedback(undefined);
+      setEvaluation(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     navigate("/complete", {
       state: {
         language: langId,
@@ -193,6 +213,10 @@ export const LessonPage: React.FC = () => {
 
   // Handle Try Again
   const handleTryAgain = () => {
+    if (evaluation?.advanceRequired) {
+      handleContinue();
+      return;
+    }
     setSubmitStatus("idle");
     setFeedback(undefined);
   };
@@ -208,6 +232,11 @@ export const LessonPage: React.FC = () => {
   const activeTrait = personality?.primaryTrait || "ANALYTICAL";
   const trackMeta = SUPPORTED_LANGUAGES[langId] || SUPPORTED_LANGUAGES.csharp;
   const course = dashboard?.courses.find(c => c.language === langId);
+  const localizedLesson = lesson ? lessonCopy(lessonId, onboarding.uiLanguage, {
+    title: lesson.title,
+    explanation: lesson.explanation,
+    prompt: lesson.exercise.prompt,
+  }) : null;
 
   if (isLessonLoading) {
     return (
@@ -247,7 +276,8 @@ export const LessonPage: React.FC = () => {
         <div className="max-w-4xl mx-auto flex items-center gap-3">
           <div className="flex-1">
             <LessonProgressBar
-              progressPercentage={submitStatus === "correct" ? 100 : 50}
+              progressPercentage={lessonStarted ? ((problemIndex + (evaluation?.advanceRequired ? 1 : 0)) / 10) * 100 : 0}
+              lives={Math.max(0, 3 - (evaluation?.correct ? 0 : evaluation?.attemptNumber ?? 0))}
             />
           </div>
           <ThemeToggle />
@@ -273,7 +303,7 @@ export const LessonPage: React.FC = () => {
                 </span>
               </div>
               <h1 className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg leading-tight mt-0.5">
-                {lesson.title}
+                {localizedLesson?.title ?? lesson.title}
               </h1>
             </div>
           </div>
@@ -312,12 +342,23 @@ export const LessonPage: React.FC = () => {
           }
         />
 
+        {!lessonStarted && <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+          <p className="text-xs font-black uppercase tracking-widest text-red-600">{t("beforeBegin")}</p>
+          <h2 className="mt-2 text-2xl font-black">{t("quickExplanation")}</h2>
+          <p className="mt-2 text-sm font-semibold text-slate-500">{onboarding.uiLanguage === "fr" ? "Lis ce court concept, puis résous 10 problèmes. Tu as trois tentatives pour chaque problème." : onboarding.uiLanguage === "es" ? "Lee este concepto breve y después resuelve 10 problemas. Tienes tres intentos por problema." : "Read this short concept first. Then you will solve 10 problems. Each problem gives you three attempts."}</p>
+          <div className="mt-5"><ConceptCard title={localizedLesson?.title ?? lesson.title} explanation={localizedLesson?.explanation || lesson.explanation || "Review the example and apply the same idea in each problem."} visualSteps={lesson.visualSteps} isVisualMode={mode === "VISUAL_GUIDED"} /></div>
+          <button type="button" onClick={() => setLessonStarted(true)} className="mt-6 w-full rounded-2xl border-b-4 border-red-800 bg-red-600 px-6 py-4 font-black text-white hover:bg-red-700">{t("startLesson").toUpperCase()}</button>
+        </section>}
+
+        {lessonStarted && <>
+        <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-black dark:border-slate-800 dark:bg-slate-900"><span>{t("problem")} {problemIndex + 1} / 10</span><span className="text-slate-500">{evaluation?.attemptNumber ?? 0}/3 {t("attemptsUsed")}</span></div>
+
         {/* 1. Spoken Language: Duolingo Word Bank Exercise */}
         {lesson.exercise.type === "WORD_BANK" && (
           <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-xs animate-in fade-in duration-200">
             <WordBankExercise
-              key={lesson.exercise.id}
-              prompt={lesson.exercise.prompt}
+              key={lessonKey}
+              prompt={localizedLesson?.prompt ?? lesson.exercise.prompt}
               targetSentence={lesson.exercise.targetSentence}
               wordBank={lesson.exercise.wordBank}
               audioText={lesson.exercise.audioText}
@@ -332,8 +373,8 @@ export const LessonPage: React.FC = () => {
         {lesson.exercise.type === "MATH_INPUT" && (
           <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-xs animate-in fade-in duration-200">
             <MathExercise
-              key={lesson.exercise.id}
-              prompt={lesson.exercise.prompt}
+              key={lessonKey}
+              prompt={localizedLesson?.prompt ?? lesson.exercise.prompt}
               value={customAnswer}
               onChange={setCustomAnswer}
               disabled={submitStatus === "correct"}
@@ -346,23 +387,25 @@ export const LessonPage: React.FC = () => {
         )}
 
         {(lesson.exercise.type === "CODE" || lesson.exercise.type === "FILL_BLANK") && <>
-        {mode !== "PRACTICE_FIRST" && <ConceptCard title={lesson.title} explanation={lesson.explanation} visualSteps={lesson.visualSteps} isVisualMode={mode === "VISUAL_GUIDED"} />}
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-xs">
-          {lesson.exercise.type === "CODE" ? <CodeExercise prompt={lesson.exercise.prompt} code={codeAnswer} onChange={setCodeAnswer} language={langId} disabled={submitStatus === "correct" || evaluateMutation.isPending} />
-          : <FillBlankExercise prompt={lesson.exercise.prompt} blankValue={blankAnswer} onChange={setBlankAnswer} language={langId} placeholder={lesson.exercise.placeholder} disabled={submitStatus === "correct" || evaluateMutation.isPending} hasError={submitStatus === "incorrect"} />}
+          {lesson.exercise.type === "CODE" ? <CodeExercise key={lessonKey} prompt={localizedLesson?.prompt ?? lesson.exercise.prompt} code={codeAnswer} onChange={setCodeAnswer} language={langId} disabled={submitStatus === "correct" || evaluateMutation.isPending} />
+          : <FillBlankExercise key={lessonKey} prompt={localizedLesson?.prompt ?? lesson.exercise.prompt} blankValue={blankAnswer} onChange={setBlankAnswer} language={langId} placeholder={lesson.exercise.placeholder} disabled={submitStatus === "correct" || evaluateMutation.isPending} hasError={submitStatus === "incorrect"} />}
         </div>
+        </>}
         </>}
       </main>
 
       {/* Bottom Feedback / Submit Sheet */}
-      <FeedbackCard
+      {lessonStarted && <FeedbackCard
         status={submitStatus}
         feedback={feedback}
         isAnswerEmpty={isAnswerEmpty}
         onCheck={handleCheck}
         onContinue={handleContinue}
         onTryAgain={handleTryAgain}
-      />
+        tryAgainLabel={evaluation?.advanceRequired ? (problemIndex === 9 ? (onboarding.uiLanguage === "fr" ? "Voir les résultats" : onboarding.uiLanguage === "es" ? "Ver resultados" : "See Results") : (onboarding.uiLanguage === "fr" ? "Problème suivant" : onboarding.uiLanguage === "es" ? "Siguiente problema" : "Next Problem")) : `${t("tryAgain")} (${Math.max(0, 3 - (evaluation?.attemptNumber ?? 0))})`}
+        correctAnswer={evaluation?.correctAnswer}
+      />}
     </div>
   );
 };

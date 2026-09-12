@@ -66,16 +66,16 @@ Adaptive response retains lessonId, language, personality, presentationMode, tit
 POST /api/evaluate:
 
 ```json
-{"userId":"11111111-1111-1111-1111-111111111111","language":"csharp","lessonId":"conditions","exerciseId":"cs-if-01","answer":"if (age >= 18) { Console.WriteLine(\"Adult\"); }"}
+{"userId":"11111111-1111-1111-1111-111111111111","language":"csharp","lessonId":"conditions","exerciseId":"cs-if-01-p1","answer":"if (age >= 18) { Console.WriteLine(\"Adult\"); }"}
 ```
 
 After reset, the first correct conditions response:
 
 ```json
-{"correct":true,"xpAwarded":10,"feedback":{"title":"Correct!","message":"Nice work. Your condition checks whether age is at least 18."},"progress":{"lessonCompleted":true,"languagePercentage":20},"streak":{"previous":4,"current":5,"increased":true}}
+{"correct":true,"xpAwarded":0,"feedback":{"title":"Correct!","message":"Correct! Problem 1 of 10 resolved."},"progress":{"lessonCompleted":false,"languagePercentage":10},"streak":{"previous":0,"current":0,"increased":false},"attemptNumber":1,"advanceRequired":true,"correctAnswer":null,"problemsResolved":1,"totalProblems":10}
 ```
 
-Wrong answers return 200 with correct=false and xpAwarded=0, without changing progress/streak. Correct replays return correct=true and xpAwarded=0. The completion screen must use the returned xpAwarded and streak.current; do not assume +10 or add another streak increment. Refetch dashboard after completion.
+Each lesson session uses the base exercise id plus `-p1` through `-p10`. A correct answer advances immediately. An incorrect answer can be retried three times; the third failure returns `advanceRequired=true` and the sample solution in `correctAnswer` so the UI can reveal it before continuing. XP, lesson completion, and the daily streak are applied only when all ten problems have been resolved. Correct replays return `xpAwarded=0`. The completion screen must use the returned `xpAwarded` and `streak.current`; do not assume +10 or add another streak increment. Refetch dashboard after completion.
 
 Limit: 5,000 answer characters, 65,536 request bytes. Empty/whitespace input is a wrong answer; null/missing/overlong input is 400. Unknown user/language/lesson/exercise is 404. Oversized HTTP body is 413. Server failure is generic 500. Disabled or unauthorized demo routes return 404.
 

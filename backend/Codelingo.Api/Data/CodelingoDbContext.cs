@@ -45,7 +45,7 @@ public sealed class CodelingoDbContext(DbContextOptions<CodelingoDbContext> opti
         b.Entity<ExerciseAttempt>().HasIndex(x => x.AttemptedAt);
         b.Entity<UserPreferences>().ToTable("user_preferences", t =>
         {
-            t.HasCheckConstraint("chk_preferences_locale", "ui_language IN ('es','en')");
+            t.HasCheckConstraint("chk_preferences_locale", "ui_language IN ('es','en','fr','de','ja','it','pt','zh','ko','ru','ar')");
             t.HasCheckConstraint("chk_preferences_language", "programming_language IN ('python','javascript','typescript','csharp')");
             t.HasCheckConstraint("chk_preferences_experience", "experience_level IN ('beginner','basic','intermediate','project_experience')");
         });

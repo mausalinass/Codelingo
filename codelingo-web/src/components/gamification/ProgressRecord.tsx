@@ -24,6 +24,8 @@ import {
 } from "../../lib/constants";
 import { LanguageTrackIcon } from "../../lib/icons";
 import { StreakScale } from "./StreakBadge";
+import { useOnboarding } from "../../context/OnboardingContext";
+import { uiText } from "../../lib/i18n";
 
 /**
  * Progression Color System
@@ -120,6 +122,8 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
   onToggleExpand,
   variant = "sidebar",
 }) => {
+  const { state: onboarding } = useOnboarding();
+  const t = (key: Parameters<typeof uiText>[1]) => uiText(onboarding.uiLanguage, key);
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
   const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
 
@@ -210,7 +214,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
           <div>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="font-extrabold text-slate-900 dark:text-white text-sm">
-                {userName}'s Progress
+                {t("progress")} · {userName}
               </span>
               <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded-full border border-red-200 dark:border-red-900/60">
                 <Sparkles className="w-2.5 h-2.5" /> Live
@@ -303,7 +307,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-              {completedLessonsTotal} completed • {currentStreak} day streak
+              {completedLessonsTotal} {t("completed")} • {currentStreak} {t("days")}
             </p>
           </div>
         </button>
@@ -320,7 +324,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
             className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-bold transition-all cursor-pointer"
             title="Reduce progress panel to expand lesson panel"
           >
-            <span className="hidden sm:inline">Reduce</span>
+            <span className="hidden sm:inline">{t("reduce")}</span>
             <Minimize2 className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -332,10 +336,10 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
         <div className="p-2.5 rounded-2xl bg-orange-50/70 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/40 flex flex-col items-center text-center">
           <div className="flex items-center gap-1 text-orange-600 dark:text-orange-400 mb-0.5">
             <Flame className="w-3.5 h-3.5 fill-orange-500" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Streak</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider">{t("streak")}</span>
           </div>
           <span className="text-lg sm:text-xl font-black text-orange-700 dark:text-orange-400">
-            {currentStreak} <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400">days</span>
+            {currentStreak} <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400">{t("days")}</span>
           </span>
           <span className="text-[9px] text-orange-500/90 dark:text-orange-400/80 font-semibold mt-0.5 truncate">
             Best: {longestStreak}d
@@ -346,7 +350,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
         <div className="p-2.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/40 flex flex-col items-center text-center">
           <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 mb-0.5">
             <Zap className="w-3.5 h-3.5 fill-amber-500" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Total XP</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider">{t("totalXp")}</span>
           </div>
           <span className="text-lg sm:text-xl font-black text-amber-700 dark:text-amber-400">
             {totalXp}
@@ -363,7 +367,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               className="w-3.5 h-3.5"
               style={{ color: getProgressColor(activePercent) }}
             />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Mastery</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider">{t("mastery")}</span>
           </div>
           <span
             className="text-lg sm:text-xl font-black transition-colors"
@@ -457,7 +461,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                   </div>
                   <div className="flex flex-col text-left">
                     <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                      Earned Milestones
+                      {t("earnedMilestones")}
                     </span>
                     <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                       {milestones.filter((m) => m.unlocked).length} of {milestones.length} achievements unlocked
@@ -535,7 +539,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                   </div>
                   <div className="flex flex-col text-left">
                     <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                      Programming Languages & Tracks
+                      {t("tracks")}
                     </span>
                     <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                       {activeLangMeta.label} active • {overallPercentage}% Overall

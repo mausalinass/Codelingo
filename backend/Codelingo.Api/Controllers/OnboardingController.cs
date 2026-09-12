@@ -12,7 +12,7 @@ namespace Codelingo.Api.Controllers;
 public sealed class OnboardingController(CodelingoDbContext db, IWebHostEnvironment environment) : ControllerBase
 {
     private static readonly HashSet<string> Languages = ["python", "javascript", "typescript", "csharp"];
-    private static readonly HashSet<string> Locales = ["es", "en"];
+    private static readonly HashSet<string> Locales = ["es", "en", "fr", "de", "ja", "it", "pt", "zh", "ko", "ru", "ar"];
     private static readonly HashSet<string> Levels = ["beginner", "basic", "intermediate", "project_experience"];
 
     [HttpPost("preferences")]

@@ -16,7 +16,8 @@
 
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    overflow-x: hidden;
+    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     background-color: #f8fafc;
     color: #0f172a;
     -webkit-font-smoothing: antialiased;
@@ -46,17 +47,18 @@
   animation: shake 0.4s ease-in-out;
 }
 
-@keyframes louis-roam {
-  0% { transform: translate(2vw, 18vh) rotate(-8deg); }
-  22% { transform: translate(calc(82vw - 80px), 8vh) rotate(8deg); }
-  48% { transform: translate(calc(68vw - 80px), 62vh) rotate(-5deg); }
-  72% { transform: translate(calc(15vw - 20px), 70vh) rotate(7deg); }
-  100% { transform: translate(2vw, 18vh) rotate(-8deg); }
+@keyframes louis-idle {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-7px) rotate(1deg); }
 }
 
-.louis-roamer {
-  animation: louis-roam 18s ease-in-out infinite;
+.louis-idle {
+  animation: louis-idle 2.8s ease-in-out infinite;
   will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .louis-idle { animation: none; }
 }
 
 .custom-scrollbar {

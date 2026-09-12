@@ -138,4 +138,9 @@ export interface EvaluateResponse {
     current: number;
     increased: boolean;
   };
+  attemptNumber: number;
+  advanceRequired: boolean;
+  correctAnswer: string | null;
+  problemsResolved: number;
+  totalProblems: number;
 }

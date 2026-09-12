@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Codelingo.Api.Services;
 public sealed class ProgressService(CodelingoDbContext db, EvaluationService evaluator, StreakService dates, CurriculumCatalog catalog)
 {
+    public const int ProblemsPerLesson = 10;
     public static decimal Percentage(int completed, int total) => total <= 0 ? 0 : Math.Round(completed * 100m / total, 2, MidpointRounding.AwayFromZero);
     public async Task<EvaluateResponse?> EvaluateAsync(EvaluateRequest request, LessonDefinition lesson, CancellationToken ct)
     {
@@ -17,10 +18,20 @@ public sealed class ProgressService(CodelingoDbContext db, EvaluationService eva
         var streak = await db.UserStreaks.SingleAsync(x => x.UserId == user.Id, ct);
         var completion = await db.LessonProgress.SingleOrDefaultAsync(x => x.UserId == user.Id && x.Language == request.Language && x.LessonId == request.LessonId, ct);
         var correct = evaluator.Evaluate(request.Answer, lesson.Exercise);
+        var earlierAttempts = await db.ExerciseAttempts
+            .Where(x => x.UserId == user.Id && x.Language == request.Language && x.LessonId == request.LessonId && x.ExerciseId.StartsWith(lesson.Exercise.Id + "-p"))
+            .Select(x => new { x.ExerciseId, x.IsCorrect })
+            .ToListAsync(ct);
+        var attemptsForProblem = earlierAttempts.Count(x => x.ExerciseId == request.ExerciseId) + 1;
+        var advanceRequired = correct || attemptsForProblem >= 3;
+        var attemptsWithCurrent = earlierAttempts
+            .Append(new { request.ExerciseId, IsCorrect = correct })
+            .GroupBy(x => x.ExerciseId)
+            .Count(group => group.Any(x => x.IsCorrect) || group.Count() >= 3);
         var previous = streak.CurrentStreak;
         var awarded = 0;
         var now = DateTime.UtcNow;
-        if (correct && completion?.IsCompleted != true)
+        if (attemptsWithCurrent >= ProblemsPerLesson && completion?.IsCompleted != true)
         {
             if (completion is null)
             {
@@ -45,10 +56,11 @@ public sealed class ProgressService(CodelingoDbContext db, EvaluationService eva
         }
         db.ExerciseAttempts.Add(new() { UserId = user.Id, Language = request.Language, LessonId = request.LessonId, ExerciseId = request.ExerciseId, SubmittedAnswer = request.Answer, IsCorrect = correct, XpAwarded = awarded, AttemptedAt = now });
         await db.SaveChangesAsync(ct); await tx.CommitAsync(ct);
-        var message = !correct ? "Check the requested condition, output text, and punctuation, then try again."
+        var message = !correct && !advanceRequired ? $"Review the concept and try again. {3 - attemptsForProblem} attempts remaining."
+            : !correct ? "Three attempts used. Review the correct answer before moving to the next problem."
+            : attemptsWithCurrent < ProblemsPerLesson ? $"Correct! Problem {attemptsWithCurrent} of {ProblemsPerLesson} resolved."
             : awarded == 0 ? "Correct again! This lesson is already complete, so no extra XP was awarded."
-            : request.Language == "csharp" && request.LessonId == "conditions" ? "Nice work. Your condition checks whether age is at least 18."
-            : "Nice work. You completed the lesson!";
-        return new(correct, awarded, new(correct ? "Correct!" : "Try again", message), new(completion?.IsCompleted == true, progress.CompletionPercentage), new(previous, streak.CurrentStreak, streak.CurrentStreak > previous));
+            : "Nice work. You completed all ten problems and activated today's learning streak!";
+        return new(correct, awarded, new(correct ? "Correct!" : advanceRequired ? "Correct answer" : "Try again", message), new(completion?.IsCompleted == true, progress.CompletionPercentage), new(previous, streak.CurrentStreak, streak.CurrentStreak > previous), attemptsForProblem, advanceRequired, !correct && advanceRequired ? lesson.Exercise.SampleSolution : null, attemptsWithCurrent, ProblemsPerLesson);
     }
 }
