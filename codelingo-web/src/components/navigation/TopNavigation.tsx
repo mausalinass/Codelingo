@@ -4,6 +4,7 @@ import { UserPlus } from "lucide-react";
 import { CourseSelector } from "./CourseSelector";
 import { StreakBadge } from "../gamification/StreakBadge";
 import { XpBadge } from "../gamification/XpBadge";
+import { ThemeToggle } from "./ThemeToggle";
 import { CreateAccountModal } from "../auth/CreateAccountModal";
 import type { DashboardResponse, LanguageId } from "../../types/api";
 
@@ -29,8 +30,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-xs border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs border-b border-slate-200 dark:border-slate-800 transition-colors">
+        <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
           {/* Left: Brand logo & Course selector */}
           <div className="flex items-center gap-3.5">
             <Link
@@ -46,13 +47,13 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
                 />
               </div>
               <div className="hidden sm:block">
-                <span className="font-black text-xl tracking-tight text-slate-900">
+                <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
                   Code<span className="text-red-600">lingo</span>
                 </span>
               </div>
             </Link>
 
-            <div className="h-6 w-px bg-slate-200" />
+            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
 
             <CourseSelector
               currentLanguage={currentLanguage}
@@ -60,10 +61,13 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             />
           </div>
 
-          {/* Right: Gamification Badges & Create Account & Profile */}
+          {/* Right: Gamification Badges & Theme Toggle & Create Account & Profile */}
           <div className="flex items-center gap-2 sm:gap-3">
             <StreakBadge streak={currentStreak} increased={streakIncreased} />
             <XpBadge xp={currentXp} highlighted={xpAwarded} />
+
+            {/* Dark Mode / Light Mode Toggle */}
+            <ThemeToggle />
 
             {/* Create Account Button */}
             <button
@@ -80,7 +84,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="w-9 h-9 rounded-full bg-slate-100 border border-slate-300 hover:border-slate-400 flex items-center justify-center text-xs font-bold text-slate-700 shadow-2xs select-none transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 flex items-center justify-center text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs select-none transition-colors cursor-pointer"
               title={`Logged in as ${userName}. Click to view or create profile.`}
             >
               {userName.charAt(0).toUpperCase()}

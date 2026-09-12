@@ -8,7 +8,7 @@ import { fetchPersonality } from "../api/personality";
 import { evaluateExercise } from "../api/evaluate";
 import { setDemoPersonality } from "../api/demo";
 import { fetchDashboard } from "../api/dashboard";
-import { DEMO_USER_ID } from "../lib/constants";
+import { DEMO_USER_ID, LESSON_TEMPLATES } from "../lib/constants";
 
 import { LessonProgressBar } from "../components/lesson/LessonProgressBar";
 import { LouisCoach } from "../components/louis/LouisCoach";
@@ -18,6 +18,8 @@ import { CodeExercise } from "../components/lesson/CodeExercise";
 import { FillBlankExercise } from "../components/lesson/FillBlankExercise";
 import { FeedbackCard } from "../components/lesson/FeedbackCard";
 import { DemoPersonalitySwitch } from "../components/demo/DemoPersonalitySwitch";
+import { ThemeToggle } from "../components/navigation/ThemeToggle";
+import { LessonTopicIcon, LanguageTrackIcon } from "../lib/icons";
 
 import type { LanguageId, PersonalityTrait } from "../types/api";
 import type { LouisMood, SubmitStatus } from "../types/lesson";
@@ -217,17 +219,46 @@ export const LessonPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased pb-28">
-      {/* Top Bar: Lesson progress bar and close button */}
-      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-xs border-b border-slate-200 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto">
-          <LessonProgressBar
-            progressPercentage={submitStatus === "correct" ? 100 : 50}
-          />
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col antialiased pb-28 transition-colors">
+      {/* Top Bar: Lesson progress bar, close button & theme toggle */}
+      <header className="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 transition-colors">
+        <div className="max-w-4xl mx-auto flex items-center gap-3">
+          <div className="flex-1">
+            <LessonProgressBar
+              progressPercentage={submitStatus === "correct" ? 100 : 50}
+            />
+          </div>
+          <ThemeToggle />
         </div>
       </header>
 
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-5">
+        {/* Lesson & Language Type Header Card */}
+        <div className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+              <LessonTopicIcon lessonId={lessonId} className="w-5 h-5 stroke-[2.3]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                  <LanguageTrackIcon languageId={langId} className="w-3 h-3" />
+                  {langId.toUpperCase()}
+                </span>
+                <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
+                  Lesson {LESSON_TEMPLATES.find((l) => l.id === lessonId)?.order || 1} of 10
+                </span>
+              </div>
+              <h1 className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg leading-tight mt-0.5">
+                {lesson.title}
+              </h1>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-slate-400 dark:text-slate-500">
+            <span>Adaptive Mode</span>
+          </div>
+        </div>
+
         {/* Floating Demo Personality Switcher for Judges */}
         <DemoPersonalitySwitch
           currentTrait={activeTrait}

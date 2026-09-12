@@ -29,12 +29,12 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
     <div
       className={`fixed bottom-0 left-0 right-0 border-t z-30 transition-colors duration-300 ${
         isCorrect
-          ? "bg-emerald-50 border-emerald-300 text-emerald-950"
+          ? "bg-emerald-50 dark:bg-emerald-950 border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-100"
           : isIncorrect
-          ? "bg-rose-50 border-rose-300 text-rose-950"
+          ? "bg-rose-50 dark:bg-rose-950 border-rose-300 dark:border-rose-800 text-rose-950 dark:text-rose-100"
           : isError
-          ? "bg-amber-50 border-amber-300 text-amber-950"
-          : "bg-white border-slate-200"
+          ? "bg-amber-50 dark:bg-amber-950 border-amber-300 dark:border-amber-800 text-amber-950 dark:text-amber-100"
+          : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
       }`}
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
@@ -48,7 +48,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
               exit={{ opacity: 0 }}
               className="flex items-center justify-between gap-4"
             >
-              <div className="hidden sm:block text-xs font-semibold text-slate-400">
+              <div className="hidden sm:block text-xs font-semibold text-slate-400 dark:text-slate-500">
                 Press Enter or click Check to test your solution
               </div>
               <button
@@ -57,7 +57,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                 disabled={isAnswerEmpty || isSubmitting}
                 className={`ml-auto w-full sm:w-auto min-w-[140px] px-8 py-3.5 rounded-2xl font-black text-base uppercase tracking-wider shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2 ${
                   isAnswerEmpty || isSubmitting
-                    ? "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                    ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed shadow-none"
                     : "bg-red-600 hover:bg-red-700 text-white shadow-red-500/25 ring-2 ring-red-500/20"
                 }`}
               >

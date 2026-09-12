@@ -16,7 +16,7 @@ export const LessonProgressBar: React.FC<LessonProgressBarProps> = ({
       {/* Exit Button back to /learn */}
       <Link
         to="/learn"
-        className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors focus:outline-hidden"
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors focus:outline-hidden"
         title="Exit lesson"
         aria-label="Exit lesson"
       >
@@ -24,7 +24,7 @@ export const LessonProgressBar: React.FC<LessonProgressBarProps> = ({
       </Link>
 
       {/* Duolingo-style Chunky Progress Bar */}
-      <div className="flex-1 h-3.5 bg-slate-200 rounded-full overflow-hidden relative shadow-inner">
+      <div className="flex-1 h-3.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden relative shadow-inner">
         <div
           className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-500 ease-out shadow-xs"
           style={{ width: `${Math.max(8, Math.min(100, progressPercentage))}%` }}

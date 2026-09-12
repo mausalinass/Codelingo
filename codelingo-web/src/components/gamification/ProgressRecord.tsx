@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { DashboardResponse, LanguageId } from "../../types/api";
 import { SUPPORTED_LANGUAGES } from "../../lib/constants";
+import { LanguageTrackIcon } from "../../lib/icons";
 
 /**
  * Progression Color System
@@ -42,20 +43,42 @@ const getProgressGradient = (percent: number): string => {
   return "linear-gradient(90deg, #ef4444 0%, #dc2626 100%)";
 };
 
-const getProgressBadgeStyle = (percent: number): { bg: string; text: string; border: string } => {
+const getProgressBadgeStyle = (
+  percent: number
+): { bg: string; text: string; border: string } => {
   if (percent >= 80) {
-    return { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-300" };
+    return {
+      bg: "bg-emerald-50 dark:bg-emerald-950/40",
+      text: "text-emerald-700 dark:text-emerald-400",
+      border: "border-emerald-300 dark:border-emerald-800",
+    };
   }
   if (percent >= 60) {
-    return { bg: "bg-lime-50", text: "text-lime-700", border: "border-lime-300" };
+    return {
+      bg: "bg-lime-50 dark:bg-lime-950/40",
+      text: "text-lime-700 dark:text-lime-400",
+      border: "border-lime-300 dark:border-lime-800",
+    };
   }
   if (percent >= 40) {
-    return { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-300" };
+    return {
+      bg: "bg-amber-50 dark:bg-amber-950/40",
+      text: "text-amber-700 dark:text-amber-400",
+      border: "border-amber-300 dark:border-amber-800",
+    };
   }
   if (percent >= 20) {
-    return { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-300" };
+    return {
+      bg: "bg-orange-50 dark:bg-orange-950/40",
+      text: "text-orange-700 dark:text-orange-400",
+      border: "border-orange-300 dark:border-orange-800",
+    };
   }
-  return { bg: "bg-red-50", text: "text-red-700", border: "border-red-300" };
+  return {
+    bg: "bg-red-50 dark:bg-red-950/40",
+    text: "text-red-700 dark:text-red-400",
+    border: "border-red-300 dark:border-red-800",
+  };
 };
 
 const getProgressTierLabel = (percent: number): string => {
@@ -109,38 +132,42 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
       desc: "Completed your first lesson",
       unlocked: completedLessonsTotal >= 1,
       icon: CheckCircle2,
-      color: "text-emerald-500 bg-emerald-50 border-emerald-200",
+      color:
+        "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800",
     },
     {
       title: "Flame Keeper",
       desc: "Maintained a 4+ day streak",
       unlocked: currentStreak >= 4,
       icon: Flame,
-      color: "text-orange-500 bg-orange-50 border-orange-200",
+      color:
+        "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800",
     },
     {
       title: "Centurion XP",
       desc: "Earned over 100 XP points",
       unlocked: totalXp >= 100,
       icon: Zap,
-      color: "text-amber-500 bg-amber-50 border-amber-200",
+      color:
+        "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800",
     },
     {
       title: "Polyglot Coder",
       desc: "Explored multiple programming tracks",
       unlocked: totalCourses >= 3,
       icon: Trophy,
-      color: "text-purple-500 bg-purple-50 border-purple-200",
+      color:
+        "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800",
     },
   ];
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden transition-all">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-all">
       {/* Header Bar: Click to Expand / Collapse */}
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 sm:px-5 py-3.5 flex items-center justify-between gap-3 text-left hover:bg-slate-50/80 transition-colors cursor-pointer focus:outline-hidden"
+        className="w-full px-4 sm:px-5 py-3.5 flex items-center justify-between gap-3 text-left hover:bg-slate-50/80 dark:hover:bg-slate-800/80 transition-colors cursor-pointer focus:outline-hidden"
         aria-expanded={isExpanded}
       >
         <div className="flex items-center gap-3">
@@ -149,14 +176,14 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="font-black text-slate-900 text-sm sm:text-base leading-tight">
+              <h3 className="font-black text-slate-900 dark:text-white text-sm sm:text-base leading-tight">
                 {userName}'s Progress
               </h3>
-              <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-red-50 text-red-600 px-1.5 py-0.5 rounded-full border border-red-200">
+              <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded-full border border-red-200 dark:border-red-900/60">
                 <Sparkles className="w-2.5 h-2.5" /> Live
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
               {completedLessonsTotal} completed • {currentStreak} day streak
             </p>
           </div>
@@ -169,7 +196,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
             {activePercent}%
           </span>
           <div
-            className={`w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 transition-transform duration-200 ${
+            className={`w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-transform duration-200 ${
               isExpanded ? "rotate-180" : ""
             }`}
           >
@@ -179,38 +206,38 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
       </button>
 
       {/* Main KPI Stats Bar */}
-      <div className="px-4 sm:px-5 pb-4 pt-1 grid grid-cols-3 gap-2 border-b border-slate-100">
+      <div className="px-4 sm:px-5 pb-4 pt-1 grid grid-cols-3 gap-2 border-b border-slate-100 dark:border-slate-800">
         {/* Streak */}
-        <div className="p-2.5 rounded-2xl bg-orange-50/70 border border-orange-100 flex flex-col items-center text-center">
-          <div className="flex items-center gap-1 text-orange-600 mb-0.5">
+        <div className="p-2.5 rounded-2xl bg-orange-50/70 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/40 flex flex-col items-center text-center">
+          <div className="flex items-center gap-1 text-orange-600 dark:text-orange-400 mb-0.5">
             <Flame className="w-3.5 h-3.5 fill-orange-500" />
             <span className="text-[10px] font-bold uppercase tracking-wider">Streak</span>
           </div>
-          <span className="text-lg sm:text-xl font-black text-orange-700">
-            {currentStreak} <span className="text-[10px] font-bold text-orange-600">days</span>
+          <span className="text-lg sm:text-xl font-black text-orange-700 dark:text-orange-400">
+            {currentStreak} <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400">days</span>
           </span>
-          <span className="text-[9px] text-orange-500/90 font-semibold mt-0.5 truncate">
+          <span className="text-[9px] text-orange-500/90 dark:text-orange-400/80 font-semibold mt-0.5 truncate">
             Best: {longestStreak}d
           </span>
         </div>
 
         {/* Total XP */}
-        <div className="p-2.5 rounded-2xl bg-amber-50/70 border border-amber-100 flex flex-col items-center text-center">
-          <div className="flex items-center gap-1 text-amber-600 mb-0.5">
+        <div className="p-2.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/40 flex flex-col items-center text-center">
+          <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 mb-0.5">
             <Zap className="w-3.5 h-3.5 fill-amber-500" />
             <span className="text-[10px] font-bold uppercase tracking-wider">Total XP</span>
           </div>
-          <span className="text-lg sm:text-xl font-black text-amber-700">
+          <span className="text-lg sm:text-xl font-black text-amber-700 dark:text-amber-400">
             {totalXp}
           </span>
-          <span className="text-[9px] text-amber-500/90 font-semibold mt-0.5 truncate">
+          <span className="text-[9px] text-amber-500/90 dark:text-amber-400/80 font-semibold mt-0.5 truncate">
             Points
           </span>
         </div>
 
         {/* Mastery with Dynamic Red-to-Green Mini Bar */}
-        <div className="p-2.5 rounded-2xl bg-white border border-slate-200 flex flex-col items-center text-center shadow-2xs">
-          <div className="flex items-center gap-1 text-slate-600 mb-0.5">
+        <div className="p-2.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col items-center text-center shadow-2xs">
+          <div className="flex items-center gap-1 text-slate-600 dark:text-slate-300 mb-0.5">
             <CheckCircle2
               className="w-3.5 h-3.5"
               style={{ color: getProgressColor(activePercent) }}
@@ -223,7 +250,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
           >
             {activeCompleted}/10
           </span>
-          <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200/60">
+          <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mt-1 border border-slate-200/60 dark:border-slate-600/60">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
@@ -232,7 +259,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               }}
             />
           </div>
-          <span className="text-[9px] font-bold text-slate-500 mt-0.5 truncate">
+          <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
             {tierLabel}
           </span>
         </div>
@@ -246,12 +273,12 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="px-4 sm:px-5 py-4 flex flex-col gap-5 bg-slate-50/50"
+            className="px-4 sm:px-5 py-4 flex flex-col gap-5 bg-slate-50/50 dark:bg-slate-950/40"
           >
             {/* Active Track Detailed Progress Bar: Transitions Red -> Green */}
-            <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+            <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-2xs">
               <div className="flex items-center justify-between gap-2 text-xs font-bold mb-2">
-                <span className="text-slate-800 font-extrabold truncate">
+                <span className="text-slate-800 dark:text-slate-100 font-extrabold truncate">
                   {activeLangMeta.label} Track Progress
                 </span>
                 <span
@@ -262,7 +289,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               </div>
 
               {/* Dynamic Red-to-Green Progress Bar */}
-              <div className="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200 relative shadow-inner">
+              <div className="h-3.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden p-0.5 border border-slate-200 dark:border-slate-600 relative shadow-inner">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-out shadow-xs relative"
                   style={{
@@ -277,16 +304,16 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               </div>
 
               {/* Red-to-Green Progression Legend */}
-              <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 mt-2 px-1">
-                <span className="flex items-center gap-1 text-red-600">
+              <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-2 px-1">
+                <span className="flex items-center gap-1 text-red-600 dark:text-red-400">
                   <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                   Novice (Red)
                 </span>
-                <span className="flex items-center gap-1 text-amber-600">
+                <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                   Mid (Amber)
                 </span>
-                <span className="flex items-center gap-1 text-emerald-600">
+                <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   Master (Green)
                 </span>
@@ -295,7 +322,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
 
             {/* Milestones / Achievements Grid */}
             <div>
-              <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2.5">
+              <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5">
                 <Award className="w-3.5 h-3.5" />
                 <span>Earned Milestones</span>
               </div>
@@ -308,10 +335,10 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                       className={`p-2.5 rounded-xl border flex items-center gap-2.5 transition-all ${
                         m.unlocked
                           ? `${m.color} shadow-2xs`
-                          : "bg-slate-100/70 border-slate-200 text-slate-400 opacity-60"
+                          : "bg-slate-100/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-750 text-slate-400 dark:text-slate-500 opacity-60"
                       }`}
                     >
-                      <div className="p-1.5 rounded-lg bg-white shadow-2xs shrink-0">
+                      <div className="p-1.5 rounded-lg bg-white dark:bg-slate-800 shadow-2xs shrink-0">
                         <Icon className="w-3.5 h-3.5" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -331,11 +358,11 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               </div>
             </div>
 
-            {/* All Tracks Progress Overview (with Red-to-Green mini meters) */}
+            {/* All Tracks Progress Overview (with Red-to-Green mini meters and language icons) */}
             <div>
-              <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2.5">
+              <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5">
                 <span>All Tracks Overview</span>
-                <span className="text-[10px] font-bold text-slate-500">
+                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
                   {overallPercentage}% Total
                 </span>
               </div>
@@ -346,17 +373,19 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                   const count = cData?.completedLessons ?? (langId === "csharp" ? 1 : 0);
                   const trackPercent = Math.round((count / 10) * 100);
                   const isCurrent = langId === currentLanguage;
+
                   return (
                     <div
                       key={langId}
                       className={`p-2 rounded-xl border text-left flex flex-col gap-1 transition-all ${
                         isCurrent
-                          ? "bg-white border-red-400 ring-2 ring-red-400/20 shadow-2xs"
-                          : "bg-white border-slate-200"
+                          ? "bg-white dark:bg-slate-800/95 border-red-400 dark:border-red-500 ring-2 ring-red-400/20 shadow-2xs"
+                          : "bg-white dark:bg-slate-850 border-slate-200 dark:border-slate-800"
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-800">
+                        <span className="flex items-center gap-1 font-mono text-[10px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+                          <LanguageTrackIcon languageId={langId} className="w-3 h-3" />
                           {lang.badge}
                         </span>
                         <span
@@ -366,11 +395,11 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                           {count}/10
                         </span>
                       </div>
-                      <div className="text-[11px] font-bold text-slate-700 truncate">
+                      <div className="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate">
                         {lang.label}
                       </div>
                       {/* Mini Bar that also shifts Red -> Green */}
-                      <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden mt-0.5 border border-slate-200/50">
+                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mt-0.5 border border-slate-200/50 dark:border-slate-600/50">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{

@@ -120,19 +120,19 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
             initial={{ scale: 0.95, opacity: 0, y: 15 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 15 }}
-            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden z-10 max-h-[90vh] flex flex-col"
+            className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden z-10 max-h-[90vh] flex flex-col"
           >
             {/* Modal Header Bar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50 shrink-0">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-xl bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center font-bold">
                   <UserPlus className="w-4 h-4 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-slate-900 text-base leading-tight">
+                  <h3 className="font-extrabold text-slate-900 dark:text-white text-base leading-tight">
                     Create Your Account
                   </h3>
-                  <p className="text-xs text-slate-500 font-medium">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                     Personalized learning powered by Swell
                   </p>
                 </div>
@@ -141,7 +141,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 stroke-[2.5]" />
@@ -188,7 +188,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                       placeholder="e.g. Alex Rivera"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 text-sm outline-hidden transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 dark:text-white text-sm outline-hidden transition-all"
                     />
                   </div>
 
@@ -196,7 +196,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                   <div>
                     <label
                       htmlFor="account-email"
-                      className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5"
+                      className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
                     >
                       Email Address
                     </label>
@@ -207,7 +207,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                       placeholder="e.g. alex@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 text-sm outline-hidden transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 dark:text-white text-sm outline-hidden transition-all"
                     />
                   </div>
 
@@ -216,13 +216,13 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                     <div className="flex items-center justify-between mb-1.5">
                       <label
                         htmlFor="account-password"
-                        className="block text-xs font-bold uppercase tracking-wider text-slate-600"
+                        className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300"
                       >
                         Password
                       </label>
                       {password && (
-                        <span className="text-[11px] font-bold text-slate-500">
-                          Strength: <span className="font-extrabold text-slate-700">{passwordStrength.label}</span>
+                        <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                          Strength: <span className="font-extrabold text-slate-700 dark:text-slate-200">{passwordStrength.label}</span>
                         </span>
                       )}
                     </div>
@@ -235,7 +235,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                         placeholder="At least 6 characters"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 text-sm outline-hidden transition-all"
+                        className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 dark:text-white text-sm outline-hidden transition-all"
                       />
                       <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
                         <Lock className="w-4 h-4" />
@@ -243,7 +243,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 cursor-pointer"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                       >
                         {showPassword ? (
@@ -257,20 +257,20 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                     {/* Password Strength Indicator */}
                     {password && (
                       <div className="mt-1.5 flex items-center gap-1.5">
-                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden flex gap-1">
+                        <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex gap-1">
                           <div
                             className={`h-full transition-all ${
-                              passwordStrength.score >= 1 ? passwordStrength.color : "bg-slate-200"
+                              passwordStrength.score >= 1 ? passwordStrength.color : "bg-slate-200 dark:bg-slate-700"
                             } flex-1 rounded-full`}
                           />
                           <div
                             className={`h-full transition-all ${
-                              passwordStrength.score >= 2 ? passwordStrength.color : "bg-slate-200"
+                              passwordStrength.score >= 2 ? passwordStrength.color : "bg-slate-200 dark:bg-slate-700"
                             } flex-1 rounded-full`}
                           />
                           <div
                             className={`h-full transition-all ${
-                              passwordStrength.score >= 3 ? passwordStrength.color : "bg-slate-200"
+                              passwordStrength.score >= 3 ? passwordStrength.color : "bg-slate-200 dark:bg-slate-700"
                             } flex-1 rounded-full`}
                           />
                         </div>
@@ -280,7 +280,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
 
                   {/* Personality Preference */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                       Choose Your Learning Style
                     </label>
                     <div className="grid grid-cols-3 gap-2">
@@ -295,12 +295,12 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                             className={`p-3 rounded-xl border text-left flex flex-col items-start gap-1 transition-all cursor-pointer ${
                               isSelected
                                 ? `${t.color} border-2 shadow-xs ring-1 ring-current/20 scale-102`
-                                : "border-slate-200 hover:bg-slate-50 text-slate-700"
+                                : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200"
                             }`}
                           >
                             <Icon className="w-4 h-4 shrink-0" />
                             <span className="font-bold text-xs">{t.label}</span>
-                            <span className="text-[10px] text-slate-500 leading-tight">
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
                               {t.desc}
                             </span>
                           </button>

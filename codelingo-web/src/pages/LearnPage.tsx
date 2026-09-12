@@ -8,6 +8,7 @@ import { LearningPath } from "../components/path/LearningPath";
 import { LouisCoach } from "../components/louis/LouisCoach";
 import { PersonalityBadge } from "../components/personality/PersonalityBadge";
 import { ProgressRecord } from "../components/gamification/ProgressRecord";
+import { LanguageTrackIcon } from "../lib/icons";
 import type { LanguageId } from "../types/api";
 
 interface LearnPageProps {
@@ -82,17 +83,17 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                 {courseData?.percentage ?? 10}% completed • {completedCount} of {totalCount} lessons
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-xs flex items-center justify-center font-mono font-black text-lg text-white border border-white/20">
-              {activeLangMeta.badge}
+            <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xs flex items-center justify-center text-white border border-white/20 shadow-xs">
+              <LanguageTrackIcon languageId={selectedLanguage} className="w-6 h-6 stroke-[2.2]" />
             </div>
           </div>
 
           {/* Duolingo Staggered Learning Path */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xs transition-colors">
             {isDashboardLoading ? (
               <div className="py-16 flex flex-col items-center justify-center gap-3">
                 <div className="w-10 h-10 border-3 border-red-600 border-t-transparent rounded-full animate-spin" />
-                <div className="text-sm font-bold text-slate-400">
+                <div className="text-sm font-bold text-slate-400 dark:text-slate-500">
                   Loading learning path...
                 </div>
               </div>

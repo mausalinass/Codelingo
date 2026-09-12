@@ -175,10 +175,10 @@ export const FillBlankExercise: React.FC<FillBlankExerciseProps> = ({
     <div className="flex flex-col gap-3">
       {/* Exercise Prompt */}
       <div className="flex items-center justify-between">
-        <div className="font-extrabold text-slate-800 text-base sm:text-lg">
+        <div className="font-extrabold text-slate-800 dark:text-slate-100 text-base sm:text-lg">
           {prompt}
         </div>
-        <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+        <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
           <Sparkles className="w-3 h-3" /> Quick fill
         </span>
       </div>
