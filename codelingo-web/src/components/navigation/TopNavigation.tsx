@@ -38,8 +38,12 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               className="flex items-center gap-2 group focus:outline-hidden"
               title="Codelingo Learn Path"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
-                <span className="text-white font-black text-xl tracking-tighter">CL</span>
+              <div className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-red-500/20 shadow-sm group-hover:shadow-md group-hover:shadow-red-500/30 group-hover:scale-105 transition-all bg-[#12bba8] shrink-0 flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  alt="Codelingo Cardinal Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="hidden sm:block">
                 <span className="font-black text-xl tracking-tight text-slate-900">
