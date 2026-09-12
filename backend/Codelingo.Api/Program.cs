@@ -8,6 +8,7 @@ builder.Services.AddControllers(); builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<CurriculumCatalog>(); builder.Services.AddSingleton<LessonService>(); builder.Services.AddSingleton<EvaluationService>();
+builder.Services.AddSingleton<PlacementService>();
 builder.Services.AddScoped<StreakService>(); builder.Services.AddScoped<DemoSeed>(); builder.Services.AddScoped<ProgressService>();
 builder.Services.AddScoped<ISwellPersonalityProvider, MockSwellPersonalityProvider>(); builder.Services.AddScoped<PersonalityService>();
 var connection = builder.Configuration.GetConnectionString("Default");

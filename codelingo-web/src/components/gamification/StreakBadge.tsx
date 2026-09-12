@@ -1,6 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame } from "lucide-react";
+import { getStreakTier } from "../../lib/streak";
 
 interface StreakBadgeProps {
   streak: number;
@@ -8,6 +9,7 @@ interface StreakBadgeProps {
 }
 
 export const StreakBadge: React.FC<StreakBadgeProps> = ({ streak, increased }) => {
+  const tier = getStreakTier(streak);
   return (
     <motion.div
       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/80 text-orange-600 dark:text-orange-400 font-bold shadow-xs select-none transition-colors"
@@ -25,7 +27,7 @@ export const StreakBadge: React.FC<StreakBadgeProps> = ({ streak, increased }) =
           : {}
       }
       transition={{ duration: 0.7, ease: "easeOut" }}
-      title={`${streak} day streak`}
+      title={`${streak} day streak · ${tier.label}`}
     >
       <motion.div
         animate={
@@ -39,7 +41,7 @@ export const StreakBadge: React.FC<StreakBadgeProps> = ({ streak, increased }) =
           ease: "easeInOut",
         }}
       >
-        <Flame className="w-5 h-5 fill-orange-500 text-orange-500 drop-shadow-xs" />
+        <Flame className="w-5 h-5 drop-shadow-xs" style={{ fill: tier.color, color: tier.color }} />
       </motion.div>
       <AnimatePresence mode="wait">
         <motion.span

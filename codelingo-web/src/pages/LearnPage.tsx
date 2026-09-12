@@ -21,6 +21,8 @@ export const LearnPage: React.FC<LearnPageProps> = ({
   selectedLanguage,
   onSelectLanguage,
 }) => {
+  const [louisPaused, setLouisPaused] = React.useState(() => localStorage.getItem("codelingo_louis_paused") === "true");
+  const toggleLouis = () => setLouisPaused((current) => { const next = !current; localStorage.setItem("codelingo_louis_paused", String(next)); return next; });
   const [isProgressExpanded, setIsProgressExpanded] = React.useState<boolean>(() => {
     const saved = localStorage.getItem("codelingo_progress_expanded");
     return saved !== null ? saved === "true" : true;
@@ -92,13 +94,15 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             {/* Louis Mascot Greeting */}
             <LouisCoach
               mood="idle"
+              paused={louisPaused}
               message={`Welcome back, ${
                 dashboard?.user.displayName || "learner"
               }! Let's continue your ${activeLangMeta.label} track.`}
             />
+            <button type="button" onClick={toggleLouis} className="self-end rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs font-black text-slate-600 dark:text-slate-300" aria-pressed={louisPaused}>{louisPaused ? "Resume Louis" : "Pause Louis"}</button>
 
             {/* Course Header Banner: Spans full width when reduced */}
-            <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 sm:p-7 shadow-md flex items-center justify-between border border-slate-700/40">
+            <div className="rounded-3xl bg-white dark:bg-slate-900 text-slate-950 dark:text-white p-6 sm:p-7 shadow-sm flex items-center justify-between border border-slate-200 dark:border-slate-800">
               <div>
                 <div className="text-xs uppercase tracking-wider font-extrabold text-red-400">
                   Active Track
@@ -106,7 +110,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                 <h2 className="text-xl sm:text-2xl font-black tracking-tight mt-0.5">
                   {activeLangMeta.label} Mastery
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-300 mt-1">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
                   {courseData?.percentage ?? 0}% completed • {completedCount} of {totalCount} lessons
                 </p>
               </div>
@@ -156,13 +160,15 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             {/* Louis Mascot Greeting */}
             <LouisCoach
               mood="idle"
+              paused={louisPaused}
               message={`Welcome back, ${
                 dashboard?.user.displayName || "learner"
               }! Let's continue your ${activeLangMeta.label} track.`}
             />
+            <button type="button" onClick={toggleLouis} className="self-end rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs font-black text-slate-600 dark:text-slate-300" aria-pressed={louisPaused}>{louisPaused ? "Resume Louis" : "Pause Louis"}</button>
 
             {/* Course Header Banner */}
-            <div className="rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 text-white p-5 shadow-sm flex items-center justify-between">
+            <div className="rounded-2xl bg-white dark:bg-slate-900 text-slate-950 dark:text-white p-5 shadow-sm flex items-center justify-between border border-slate-200 dark:border-slate-800">
               <div>
                 <div className="text-xs uppercase tracking-wider font-extrabold text-red-400">
                   Active Track
@@ -170,7 +176,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                 <h2 className="text-xl font-black tracking-tight mt-0.5">
                   {activeLangMeta.label} Mastery
                 </h2>
-                <p className="text-xs text-slate-300 mt-1">
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                   {courseData?.percentage ?? 0}% completed • {completedCount} of {totalCount} lessons
                 </p>
               </div>

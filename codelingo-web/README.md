@@ -2,6 +2,14 @@
 
 React + TypeScript + Vite, integrated with the ASP.NET API in ../backend. This is a shared-profile learning demo, not an authenticated user account service.
 
+## Product flow
+
+Open `http://localhost:5173/` for the public landing page. The locally testable journey is Landing -> Get Started -> explanation language -> programming track -> experience -> five-question placement -> recommendation -> demo lesson. The onboarding draft survives refreshes and its final recommendation is stored by the Development-only demo API without awarding XP or completing skipped lessons.
+
+`/login` exposes the reliable demo fallback. Google activates only when `VITE_GOOGLE_AUTH_URL` and corresponding backend verification are configured; Apple remains configuration-dependent. Never place provider secrets in `VITE_*` variables.
+
+The `/learn` dashboard preserves its left sidebar, earned-milestones and track dropdowns, math previews, dark mode, Swell card and backend-backed programming progress. Louis can be paused, and that preference persists locally.
+
 ## Local startup
 
 Start PostgreSQL and the backend using ../backend/README.md, then:

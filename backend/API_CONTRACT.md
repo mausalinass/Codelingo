@@ -21,6 +21,10 @@ GET /api/lessons/catalog returns language groups with lesson id, title, and orde
 | POST | /api/evaluate | Persisted attempt, XP, progress and streak |
 | POST | /api/demo/users/{userId}/personality | Demo-only personality switch |
 | POST | /api/demo/users/{userId}/reset | Reset only the fixed demo user |
+| POST | /api/onboarding/preferences | Persist demo onboarding selections in Development |
+| POST | /api/onboarding/placement | Score five deterministic placement answers in Development |
+| POST | /api/onboarding/complete | Persist the demo starting point in Development |
+| GET | /api/users/{userId}/onboarding | Resume persisted demo onboarding in Development |
 | GET | /health | Liveness |
 | GET | /health/ready | PostgreSQL connectivity |
 
@@ -79,7 +83,9 @@ Evaluation is controlled pattern/string matching and never executes code. Origin
 
 ## Demo and production
 
-Development demo controls are enabled by default. Outside Development, mutation requires Demo__Enabled=true and X-Demo-Key matching secret Demo__ApiKey. Never put that secret in public VITE_* configuration. Production frontend hides controls by default; a trusted presenter tool can switch personality. There is no signup/login: the frontend clearly identifies the shared demo profile and does not collect passwords.
+Development demo controls are enabled by default. Outside Development, mutation requires Demo__Enabled=true and X-Demo-Key matching secret Demo__ApiKey. Never put that secret in public VITE_* configuration. Production frontend hides controls by default; a trusted presenter tool can switch personality. There is no verified real-user signup/login yet. The frontend identifies the shared demo profile and does not collect passwords. Google and Apple controls remain disabled until a hosted provider and backend token verification are configured.
+
+The onboarding endpoints are limited to the fixed demo user in Development until real authentication exists. Preferences accept `uiLanguage` (`es` or `en`), `programmingLanguage` (`python`, `javascript`, `typescript`, or `csharp`) and the four documented experience levels. Placement requires exactly five unique answers, returns a deterministic score/recommendation, and does not award XP, streaks, or lesson completion. Completion stores `startingLessonId` separately from progress.
 
 Development CORS allows localhost and 127.0.0.1 on ports 5173, 5174, and 3000. Production requires exact FrontendOrigin. Set VITE_API_BASE_URL to the deployed HTTPS API origin when deploying frontend separately; an empty production value assumes a same-origin /api proxy.
 

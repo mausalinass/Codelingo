@@ -19,6 +19,8 @@ public sealed class DemoSeed(CodelingoDbContext db, StreakService dates, Curricu
         if (user is null) { user = new() { Id = UserId }; db.Users.Add(user); }
         else
         {
+            await db.PlacementResults.Where(x => x.UserId == UserId).ExecuteDeleteAsync(ct);
+            await db.UserPreferences.Where(x => x.UserId == UserId).ExecuteDeleteAsync(ct);
             await db.ExerciseAttempts.Where(x => x.UserId == UserId).ExecuteDeleteAsync(ct);
             await db.LessonProgress.Where(x => x.UserId == UserId).ExecuteDeleteAsync(ct);
             await db.LanguageProgress.Where(x => x.UserId == UserId).ExecuteDeleteAsync(ct);

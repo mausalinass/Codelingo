@@ -11,6 +11,8 @@ public sealed class CodelingoDbContext(DbContextOptions<CodelingoDbContext> opti
     public DbSet<LessonProgress> LessonProgress => Set<LessonProgress>();
     public DbSet<SwellProfile> SwellProfiles => Set<SwellProfile>();
     public DbSet<ExerciseAttempt> ExerciseAttempts => Set<ExerciseAttempt>();
+    public DbSet<UserPreferences> UserPreferences => Set<UserPreferences>();
+    public DbSet<PlacementResult> PlacementResults => Set<PlacementResult>();
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<User>().ToTable("users", t => t.HasCheckConstraint("chk_active_language", "active_language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')"));
@@ -41,6 +43,17 @@ public sealed class CodelingoDbContext(DbContextOptions<CodelingoDbContext> opti
         b.Entity<ExerciseAttempt>().HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         b.Entity<ExerciseAttempt>().HasIndex(x => x.UserId);
         b.Entity<ExerciseAttempt>().HasIndex(x => x.AttemptedAt);
+        b.Entity<UserPreferences>().ToTable("user_preferences", t =>
+        {
+            t.HasCheckConstraint("chk_preferences_locale", "ui_language IN ('es','en')");
+            t.HasCheckConstraint("chk_preferences_language", "programming_language IN ('python','javascript','typescript','csharp')");
+            t.HasCheckConstraint("chk_preferences_experience", "experience_level IN ('beginner','basic','intermediate','project_experience')");
+        });
+        b.Entity<UserPreferences>().HasKey(x => x.UserId);
+        b.Entity<UserPreferences>().HasOne<User>().WithOne().HasForeignKey<UserPreferences>(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+        b.Entity<PlacementResult>().ToTable("placement_results", t => t.HasCheckConstraint("chk_placement_language", "language IN ('python','javascript','typescript','csharp')"));
+        b.Entity<PlacementResult>().HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+        b.Entity<PlacementResult>().HasIndex(x => new { x.UserId, x.CompletedAt });
         foreach (var entity in b.Model.GetEntityTypes())
         foreach (var property in entity.GetProperties())
         {

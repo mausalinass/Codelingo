@@ -18,3 +18,9 @@ The inherited prototype curriculum includes generic/fallback exercises; it is no
 - scripts/integration-test.mjs: original API integration regression passes.
 - scripts/bonus-integration-test.mjs: dropdowns, sidebar, dark mode reload, wrong/correct math answers and unchanged server progress pass.
 - Build reports non-blocking bundle size warnings.
+
+## Product upgrade implementation
+
+The public `/` route now offers Get Started, Login and explicit demo access. The persisted onboarding flow covers explanation language, four programming tracks, experience, five deterministic questions and a real starting-point result stored by Development-only demo onboarding endpoints. `/progress`, `/achievements` and `/profile` are live sidebar destinations. Louis can be paused with the preference retained across reloads, and streak badges use the 0/1/50/100/250/500 color tiers.
+
+Google and Apple authentication remain externally blocked because no provider credentials or backend verifier are configured. Their controls say setup is required; the complete local flow uses the deterministic demo user. Real-user identity and account persistence must be completed before production launch.

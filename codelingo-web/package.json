@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test:integration": "node scripts/integration-test.mjs"
+    ,"test:product": "node scripts/product-upgrade-test.mjs"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.5",

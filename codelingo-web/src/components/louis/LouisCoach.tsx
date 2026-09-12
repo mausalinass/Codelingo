@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { LouisMood } from "../../types/lesson";
 
 interface LouisCoachProps {
@@ -7,6 +7,7 @@ interface LouisCoachProps {
   message: string;
   className?: string;
   size?: "sm" | "md" | "lg";
+  paused?: boolean;
 }
 
 export const LouisCoach: React.FC<LouisCoachProps> = ({
@@ -14,7 +15,9 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
   message,
   className = "",
   size = "md",
+  paused = false,
 }) => {
+  const reduceMotion = useReducedMotion();
   const isCelebrating = mood === "celebrating";
   const isThinking = mood === "thinking";
   const isEncouraging = mood === "encouraging";
@@ -30,7 +33,7 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
       {/* Louis Cardinal Mascot */}
       <motion.div
         className={`shrink-0 ${sizeClasses[size]} relative select-none flex items-center justify-center`}
-        animate={
+        animate={paused || reduceMotion ? {} :
           isCelebrating
             ? {
                 y: [0, -16, 0, -10, 0],

@@ -81,5 +81,8 @@ public class DomainTests
         Assert.Equal(analytical.Exercise.Id, practical.Exercise.Id); Assert.True(analytical.ShowExplanationFirst);
         Assert.Null(practical.Explanation); Assert.False(practical.ShowExplanationFirst); Assert.NotEmpty(visual.VisualSteps);
     }
+    [Theory]
+    [InlineData(0, "hello")][InlineData(1, "hello")][InlineData(2, "variables")][InlineData(3, "variables")][InlineData(4, "conditions")][InlineData(5, "functions")]
+    public void PlacementRecommendationIsDeterministic(int score, string lesson) => Assert.Equal(lesson, PlacementService.Recommend(score));
     private sealed class FixedClock(DateTimeOffset now) : TimeProvider { public override DateTimeOffset GetUtcNow() => now; }
 }
