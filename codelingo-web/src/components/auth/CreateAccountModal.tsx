@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, UserPlus, Sparkles, Check, Brain, Zap, Eye } from "lucide-react";
+import { X, UserPlus, Sparkles, Check, Brain, Zap, Eye, EyeOff, Lock } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useQueryClient } from "@tanstack/react-query";
 import { DEMO_USER_ID } from "../../lib/constants";
@@ -20,12 +20,30 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [selectedTrait, setSelectedTrait] = useState<PersonalityTrait>("ANALYTICAL");
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const getPasswordStrength = (pass: string) => {
+    if (!pass) return { score: 0, label: "", color: "bg-slate-200" };
+    if (pass.length < 6) return { score: 1, label: "Too short", color: "bg-rose-500" };
+    const hasNumbers = /\d/.test(pass);
+    const hasSpecial = /[^A-Za-z0-9]/.test(pass);
+    if (pass.length >= 8 && (hasNumbers || hasSpecial)) {
+      return { score: 3, label: "Strong", color: "bg-emerald-500" };
+    }
+    if (pass.length >= 6) {
+      return { score: 2, label: "Good", color: "bg-amber-500" };
+    }
+    return { score: 1, label: "Weak", color: "bg-rose-500" };
+  };
+
+  const passwordStrength = getPasswordStrength(password);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || password.length < 6) return;
 
     // Update local state and mock data
     mockState.personality = selectedTrait;
@@ -102,11 +120,11 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
             initial={{ scale: 0.95, opacity: 0, y: 15 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 15 }}
-            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden z-10"
+            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden z-10 max-h-[90vh] flex flex-col"
           >
             {/* Modal Header Bar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50 shrink-0">
+              <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
                   <UserPlus className="w-4 h-4 stroke-[2.5]" />
                 </div>
@@ -131,7 +149,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
             </div>
 
             {/* Modal Body */}
-            <div className="p-6">
+            <div className="p-6 overflow-y-auto">
               {isSuccess ? (
                 <div className="py-8 flex flex-col items-center text-center gap-3">
                   <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-xs">
@@ -151,7 +169,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                     <LouisCoach
                       mood="encouraging"
                       size="sm"
-                      message="Ready to unlock your streak and track your coding progress?"
+                      message="Ready to set up your profile and track your streaks securely?"
                     />
                   </div>
 
@@ -191,6 +209,73 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 text-sm outline-hidden transition-all"
                     />
+                  </div>
+
+                  {/* Password Input */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label
+                        htmlFor="account-password"
+                        className="block text-xs font-bold uppercase tracking-wider text-slate-600"
+                      >
+                        Password
+                      </label>
+                      {password && (
+                        <span className="text-[11px] font-bold text-slate-500">
+                          Strength: <span className="font-extrabold text-slate-700">{passwordStrength.label}</span>
+                        </span>
+                      )}
+                    </div>
+                    <div className="relative">
+                      <input
+                        id="account-password"
+                        type={showPassword ? "text" : "password"}
+                        required
+                        minLength={6}
+                        placeholder="At least 6 characters"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-semibold text-slate-900 text-sm outline-hidden transition-all"
+                      />
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                        <Lock className="w-4 h-4" />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Password Strength Indicator */}
+                    {password && (
+                      <div className="mt-1.5 flex items-center gap-1.5">
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden flex gap-1">
+                          <div
+                            className={`h-full transition-all ${
+                              passwordStrength.score >= 1 ? passwordStrength.color : "bg-slate-200"
+                            } flex-1 rounded-full`}
+                          />
+                          <div
+                            className={`h-full transition-all ${
+                              passwordStrength.score >= 2 ? passwordStrength.color : "bg-slate-200"
+                            } flex-1 rounded-full`}
+                          />
+                          <div
+                            className={`h-full transition-all ${
+                              passwordStrength.score >= 3 ? passwordStrength.color : "bg-slate-200"
+                            } flex-1 rounded-full`}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Personality Preference */}
@@ -236,9 +321,9 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
 
                     <button
                       type="submit"
-                      disabled={!name.trim()}
+                      disabled={!name.trim() || password.length < 6}
                       className={`px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider text-white shadow-md transition-all active:scale-98 cursor-pointer flex items-center gap-1.5 ${
-                        !name.trim()
+                        !name.trim() || password.length < 6
                           ? "bg-slate-300 cursor-not-allowed shadow-none"
                           : "bg-red-600 hover:bg-red-700 shadow-red-500/30"
                       }`}
