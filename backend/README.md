@@ -1,6 +1,6 @@
 # Codelingo backend
 
-Single ASP.NET Core 10 Web API with EF Core/Npgsql PostgreSQL persistence. Runtime data is stored in PostgreSQL; nine lessons are static C# definitions. Student code is never executed. See [API_CONTRACT.md](API_CONTRACT.md) for frontend integration.
+Single ASP.NET Core 10 Web API with EF Core/Npgsql PostgreSQL persistence. Runtime data is stored in PostgreSQL; 80 lessons are static, versioned definitions. Student code is never executed. See [API_CONTRACT.md](API_CONTRACT.md) for frontend integration.
 
 ## Requirements
 
@@ -73,6 +73,7 @@ From repository root:
 dotnet build backend/Codelingo.Api
 dotnet test backend/Codelingo.Api.Tests
 node backend/scripts/smoke.mjs
+node backend/scripts/curriculum-smoke.mjs
 ```
 
 The smoke suite deliberately resets the fixed demo user, performs three full judge flows, verifies 12 simultaneous requests award XP once, checks validation/CORS/OpenAPI, and leaves the demo reset. Do not run against an active judging session. Override API_BASE_URL and DEMO_API_KEY for a configured host. Swagger/OpenAPI checks in this script expect Development; production Swagger is disabled.
@@ -83,7 +84,7 @@ Six tables map to the execution plan, including unique user/language and user/la
 
 Evaluation, personality changes, and reset lock the user's PostgreSQL row. First completion, attempt, global/route XP, aggregate progress, and streak commit together. This protects duplicate XP across concurrent API processes. Dashboard reads use a repeatable-read snapshot. Reset uses an additional advisory lock for initial user creation.
 
-Seed: one user, three course rows, nine lesson-state rows, one profile and one streak. Python/C# hello are completed. Global XP starts at 120, including 100 historical/demo XP beyond the two seeded lesson rewards. Course XP starts at 10/0/10.
+Seed: one user, eight course rows, 80 lesson-state rows, one profile and one streak. Python/C# hello are completed. Global XP starts at 120, including 100 historical/demo XP beyond the two seeded lesson rewards. Python/C# course XP starts at 10; other routes start at zero.
 
 ## Deployment handoff
 
@@ -94,3 +95,9 @@ Public deployment is not provisioned. Supply an API host/project and production 
 Use the database provider's required TLS/certificate settings. Publish with `dotnet publish backend/Codelingo.Api -c Release -o backend/.runtime/publish`, deploy its output on a .NET 10 host, and configure the host's HTTPS reverse proxy/listening port. Set ASPNETCORE_ENVIRONMENT=Production and FrontendOrigin to the actual React origin. Apply migrations and seed before judging. Production demo endpoints need both Demo__Enabled=true and a strong Demo__ApiKey, used from trusted presenter tooling, never embedded in public React code.
 
 This MVP has no user authentication or code compiler. Regex checks recognize the plan's controlled patterns and do not establish arbitrary semantic correctness. Path locking is presentational, not enforced by the API. Swell is explicitly SWELL_MOCK behind a provider boundary.
+
+## Expansion migration
+
+ExpandCurriculum adds the five language IDs, backfills route/lesson state for existing users, and recalculates percentages against ten lessons. It preserves global XP, route XP, completion IDs/dates, attempts and streaks. Back up PostgreSQL before deployment. Down migration deliberately refuses to discard earned progress; rollback requires a pre-migration backup. A local pre-expansion backup is in ignored .runtime/before-expansion.dump.
+
+The frontend is in ../codelingo-web. Its API integration uses live server responses without a mock fallback. The shared profile is a demo, not a personal account. Follow that directory's README for build and browser tests.

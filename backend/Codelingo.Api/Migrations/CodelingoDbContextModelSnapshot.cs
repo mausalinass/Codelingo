@@ -76,7 +76,7 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("exercise_attempts", null, t =>
                         {
-                            t.HasCheckConstraint("chk_attempt_language", "language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_attempt_language", "language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
                         });
                 });
 
@@ -129,7 +129,7 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("language_progress", null, t =>
                         {
-                            t.HasCheckConstraint("chk_progress_language", "language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_progress_language", "language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
                         });
                 });
 
@@ -175,7 +175,51 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("lesson_progress", null, t =>
                         {
-                            t.HasCheckConstraint("chk_lesson_language", "language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_lesson_language", "language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
+                        });
+                });
+
+            modelBuilder.Entity("Codelingo.Api.Models.PlacementResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<int>("CorrectAnswers")
+                        .HasColumnType("integer")
+                        .HasColumnName("correct_answers");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("language");
+
+                    b.Property<string>("RecommendedLessonId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("recommended_lesson_id");
+
+                    b.Property<int>("TotalQuestions")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_questions");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "CompletedAt");
+
+                    b.ToTable("placement_results", null, t =>
+                        {
+                            t.HasCheckConstraint("chk_placement_language", "language IN ('python','javascript','typescript','csharp')");
                         });
                 });
 
@@ -280,7 +324,56 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("users", null, t =>
                         {
-                            t.HasCheckConstraint("chk_active_language", "active_language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_active_language", "active_language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
+                        });
+                });
+
+            modelBuilder.Entity("Codelingo.Api.Models.UserPreferences", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("ExperienceLevel")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("experience_level");
+
+                    b.Property<bool>("OnboardingCompleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("onboarding_completed");
+
+                    b.Property<string>("ProgrammingLanguage")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("programming_language");
+
+                    b.Property<string>("StartingLessonId")
+                        .HasColumnType("text")
+                        .HasColumnName("starting_lesson_id");
+
+                    b.Property<string>("UiLanguage")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ui_language");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("user_preferences", null, t =>
+                        {
+                            t.HasCheckConstraint("chk_preferences_experience", "experience_level IN ('beginner','basic','intermediate','project_experience')");
+
+                            t.HasCheckConstraint("chk_preferences_language", "programming_language IN ('python','javascript','typescript','csharp')");
+
+                            t.HasCheckConstraint("chk_preferences_locale", "ui_language IN ('es','en','fr','de','ja','it','pt','zh','ko','ru','ar')");
                         });
                 });
 
@@ -338,11 +431,29 @@ namespace Codelingo.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Codelingo.Api.Models.PlacementResult", b =>
+                {
+                    b.HasOne("Codelingo.Api.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Codelingo.Api.Models.SwellProfile", b =>
                 {
                     b.HasOne("Codelingo.Api.Models.User", null)
                         .WithOne()
                         .HasForeignKey("Codelingo.Api.Models.SwellProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Codelingo.Api.Models.UserPreferences", b =>
+                {
+                    b.HasOne("Codelingo.Api.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("Codelingo.Api.Models.UserPreferences", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

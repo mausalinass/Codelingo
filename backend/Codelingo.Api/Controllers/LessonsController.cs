@@ -6,6 +6,10 @@ namespace Codelingo.Api.Controllers;
 [ApiController, Route("api/lessons")]
 public sealed class LessonsController(CurriculumCatalog catalog, PersonalityService personality, LessonService lessons) : ControllerBase
 {
+    [HttpGet("catalog")]
+    public IActionResult Catalog() => Ok(CurriculumCatalog.Languages.Select(language => new {
+        language, lessons = catalog.ForLanguage(language).Select((l, i) => new { id = l.Id, title = l.Title, order = i + 1 })
+    }));
     [HttpGet("{language}/{lessonId}")]
     public async Task<ActionResult<AdaptiveLessonDto>> Get(string language, string lessonId, [FromQuery] Guid userId, CancellationToken ct)
     {

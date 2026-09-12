@@ -18,6 +18,24 @@ public class DomainTests
         { "csharp", "conditions", "if (age >= 18) { Console.WriteLine(\"Adult\"); }" },
         { "csharp", "loops", "for (int i = 0; i < 3; i++) { Console.WriteLine(i); }" }
     };
+    public static IEnumerable<object[]> AllSolutions() => new CurriculumCatalog().Lessons.Select(l => new object[] { l.Language, l.Id, l.Exercise.SampleSolution });
+    [Theory, MemberData(nameof(AllSolutions))]
+    public void AcceptsAllEightySolutions(string language, string id, string answer)
+    {
+        var exercise = new CurriculumCatalog().Find(language, id)!.Exercise;
+        var evaluator = new EvaluationService();
+        Assert.True(evaluator.Evaluate(answer, exercise));
+        Assert.True(evaluator.Evaluate("  \r\n" + answer.Replace("\n", "\r\n") + "\r\n ", exercise));
+        Assert.False(evaluator.Evaluate("18", exercise));
+        Assert.False(evaluator.Evaluate("wrong answer", exercise));
+    }
+    [Fact] public void CatalogHasEightyDistinctExercises()
+    {
+        var catalog = new CurriculumCatalog();
+        Assert.Equal(80, catalog.Lessons.Count);
+        Assert.Equal(80, catalog.Lessons.Select(x => x.Exercise.Id).Distinct().Count());
+        Assert.All(CurriculumCatalog.Languages, language => Assert.Equal(10, catalog.ForLanguage(language).Length));
+    }
     [Theory, MemberData(nameof(Solutions))]
     public void AcceptsRehearsedSolutions(string language, string id, string answer) => Assert.True(new EvaluationService().Evaluate(answer, new CurriculumCatalog().Find(language, id)!.Exercise));
     [Theory]
@@ -62,6 +80,25 @@ public class DomainTests
         var visual = service.Build(lesson, new("SWELL_MOCK", "VISUAL", "VISUAL_GUIDED", new(0.35m, 0.48m, 0.91m)));
         Assert.Equal(analytical.Exercise.Id, practical.Exercise.Id); Assert.True(analytical.ShowExplanationFirst);
         Assert.Null(practical.Explanation); Assert.False(practical.ShowExplanationFirst); Assert.NotEmpty(visual.VisualSteps);
+        Assert.Equal(10, analytical.Exercise.Problems.Length);
+        Assert.Equal(10, analytical.Exercise.Problems.Select(problem => problem.Prompt).Distinct().Count());
+        Assert.NotEqual(analytical.Exercise.Problems[0].Prompt, practical.Exercise.Problems[0].Prompt);
+        Assert.Contains("INPUT", visual.Exercise.Problems[0].Prompt);
     }
+    [Fact] public void EveryCodingLessonHasTenDistinctValidProblems()
+    {
+        var evaluator = new EvaluationService();
+        foreach (var lesson in new CurriculumCatalog().Lessons)
+        {
+            var problems = ProblemSet.CreateAll(lesson, "DEEP_EXPLANATION");
+            Assert.Equal(10, problems.Length);
+            Assert.Equal(10, problems.Select(problem => problem.Prompt).Distinct().Count());
+            Assert.Equal(10, problems.Select(problem => problem.Exercise.SampleSolution).Distinct().Count());
+            Assert.All(problems, problem => Assert.True(evaluator.Evaluate(problem.Exercise.SampleSolution, problem.Exercise)));
+        }
+    }
+    [Theory]
+    [InlineData(0, "hello")][InlineData(1, "hello")][InlineData(2, "variables")][InlineData(3, "variables")][InlineData(4, "conditions")][InlineData(5, "functions")]
+    public void PlacementRecommendationIsDeterministic(int score, string lesson) => Assert.Equal(lesson, PlacementService.Recommend(score));
     private sealed class FixedClock(DateTimeOffset now) : TimeProvider { public override DateTimeOffset GetUtcNow() => now; }
 }

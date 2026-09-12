@@ -1,0 +1,8 @@
+import { Link, useNavigate } from "react-router-dom";
+import { ThemeToggle } from "../components/navigation/ThemeToggle";
+
+export function LoginPage() {
+  const navigate = useNavigate();
+  const configured = Boolean(import.meta.env.VITE_GOOGLE_AUTH_URL);
+  return <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-950 dark:text-white p-6 flex items-center justify-center"><ThemeToggle className="fixed right-6 top-6"/><div className="w-full max-w-md text-center"><Link to="/"><img src="/louis-pointing-2_5d.png" className="w-20 h-20 object-contain mx-auto" alt="Louis, Codelingo mascot"/></Link><h1 className="text-3xl font-black mt-5">Welcome back</h1><p className="text-slate-500 mt-2">Continue your learning journey.</p><div className="mt-8 space-y-3"><button disabled={!configured} onClick={() => { if (configured) window.location.assign(import.meta.env.VITE_GOOGLE_AUTH_URL as string); }} className="w-full rounded-2xl border-2 px-5 py-4 font-black disabled:opacity-50">Continue with Google {!configured && "· setup required"}</button><button disabled className="w-full rounded-2xl border-2 px-5 py-4 font-black opacity-50">Continue with Apple · setup required</button><button onClick={() => { localStorage.setItem("codelingo_demo_session","true"); navigate("/learn"); }} className="w-full rounded-2xl border-b-4 border-red-800 bg-red-600 px-5 py-4 font-black text-white">CONTINUE WITH DEMO</button></div><p className="mt-6 text-sm text-slate-500">OAuth buttons activate when provider URLs and backend verification are configured.</p><Link to="/" className="inline-block mt-6 font-bold text-red-600">Back to home</Link></div></div>;
+}
