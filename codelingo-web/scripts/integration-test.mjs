@@ -33,12 +33,12 @@ try {
  await page.getByRole('button',{name:'Check',exact:true}).click();
  await page.getByRole('button',{name:'Continue',exact:true}).click();
  await page.waitForURL('**/complete');
- await page.getByText('+10 XP',{exact:true}).waitFor();await page.getByText('5 DAYS',{exact:true}).waitFor();
+ await page.getByText('+10 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
  await page.goto(frontend+'/lesson/csharp/conditions');
  await page.locator('.cm-content').fill(solution);
  await page.getByRole('button',{name:'Check',exact:true}).click();
  await page.getByRole('button',{name:'Continue',exact:true}).click();
- await page.waitForURL('**/complete');await page.getByText('+0 XP',{exact:true}).waitFor();await page.getByText('5 DAYS',{exact:true}).waitFor();
+ await page.waitForURL('**/complete');await page.getByText('+0 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
  await page.goto(frontend+'/learn');await page.reload();
  await page.getByText('2 of 10 lessons',{exact:false}).waitFor();await page.getByTitle('130 total XP').waitFor();
  // Out-of-order completion must not mark Variables completed.
@@ -55,7 +55,7 @@ try {
  await page.getByText('Could not check your answer',{exact:true}).waitFor();
  assert.equal((await request('/api/users/'+user+'/dashboard')).user.totalXp,130);
  await page.unroute('**/api/evaluate');await page.getByRole('button',{name:'Retry Check',exact:true}).click();
- await page.getByRole('button',{name:'Continue',exact:true}).click();await page.waitForURL('**/complete');await page.getByText('+10 XP',{exact:true}).waitFor();await page.getByText('5 DAYS',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Continue',exact:true}).click();await page.waitForURL('**/complete');await page.getByText('+10 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
  await page.setViewportSize({width:390,height:844});await page.goto(frontend+'/learn');await page.getByText('3 of 10 lessons',{exact:false}).waitFor();
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),'Mobile page must not overflow horizontally');
  // New browser context avoids cached data when testing dashboard failure.

@@ -101,7 +101,7 @@ export const CompletePage: React.FC = () => {
               <Flame className="w-8 h-8 fill-orange-500 text-orange-500 mb-1" />
             </motion.div>
             <div className="text-2xl font-black text-orange-600 dark:text-orange-400">
-              {newStreak} DAYS
+              {newStreak} {newStreak === 1 ? "DAY" : "DAYS"}
             </div>
             <div className="text-[11px] font-bold text-orange-700/80 dark:text-orange-300/80 uppercase tracking-wide">
               Daily Streak 🔥

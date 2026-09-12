@@ -7,6 +7,7 @@ import { XpBadge } from "../gamification/XpBadge";
 import { ThemeToggle } from "./ThemeToggle";
 import { CreateAccountModal } from "../auth/CreateAccountModal";
 import type { DashboardResponse, LanguageId } from "../../types/api";
+import { useOnboarding, type UiLanguage } from "../../context/OnboardingContext";
 
 interface TopNavigationProps {
   dashboard?: DashboardResponse;
@@ -23,6 +24,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   streakIncreased,
   xpAwarded,
 }) => {
+  const { state: onboarding, update: updateOnboarding } = useOnboarding();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentStreak = dashboard?.streak.current ?? 0;
   const currentXp = dashboard?.user.totalXp ?? 0;
@@ -59,6 +61,13 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
           {/* Right: Gamification Badges & Theme Toggle & Create Account & Profile */}
           <div className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 sm:gap-3">
+            <label className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 py-1.5 text-xs font-black dark:border-slate-700 dark:bg-slate-800">
+              <span aria-hidden="true">{onboarding.uiLanguage === "en" ? "🇺🇸" : "🇪🇸"}</span>
+              <select aria-label="Explanation language" value={onboarding.uiLanguage ?? "es"} onChange={(event) => updateOnboarding({ uiLanguage: event.target.value as UiLanguage })} className="max-w-24 bg-transparent outline-none">
+                <option value="es">Español</option>
+                <option value="en">English</option>
+              </select>
+            </label>
             {dashboard && <StreakBadge streak={currentStreak} increased={streakIncreased} />}
             {dashboard && <XpBadge xp={currentXp} highlighted={xpAwarded} />}
 

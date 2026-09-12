@@ -3,7 +3,7 @@ using Codelingo.Api.Curriculum;
 using Codelingo.Api.Services;
 using Microsoft.EntityFrameworkCore;
 namespace Codelingo.Api.Data;
-public sealed class DemoSeed(CodelingoDbContext db, StreakService dates, CurriculumCatalog catalog)
+public sealed class DemoSeed(CodelingoDbContext db, CurriculumCatalog catalog)
 {
     public static readonly Guid UserId = Guid.Parse("11111111-1111-1111-1111-111111111111");
     public async Task EnsureAsync(CancellationToken ct = default)
@@ -29,7 +29,7 @@ public sealed class DemoSeed(CodelingoDbContext db, StreakService dates, Curricu
         }
         var now = DateTime.UtcNow;
         user.DisplayName = "Mauricio"; user.Email = "demo@codelingo.dev"; user.ActiveLanguage = "csharp"; user.TotalXp = 120; user.UpdatedAt = now;
-        db.UserStreaks.Add(new() { UserId = UserId, CurrentStreak = 4, LongestStreak = 7, LastActivityDate = dates.Today.AddDays(-1) });
+        db.UserStreaks.Add(new() { UserId = UserId, CurrentStreak = 0, LongestStreak = 0, LastActivityDate = null });
         var profile = new SwellProfile { UserId = UserId }; PersonalityService.Apply(profile, MockSwellPersonalityProvider.ForTrait("ANALYTICAL")); db.SwellProfiles.Add(profile);
         foreach (var language in CurriculumCatalog.Languages)
         {

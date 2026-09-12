@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ThemeToggle } from "../components/navigation/ThemeToggle";
+import { useOnboarding, type UiLanguage } from "../context/OnboardingContext";
 
 export function PublicLandingPage() {
+  const { state: onboarding, update: updateOnboarding } = useOnboarding();
   const [greeting, setGreeting] = useState("Click Louis and let's code together!");
   const hasDemoSession = localStorage.getItem("codelingo_demo_session") === "true";
   return <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-950 dark:text-white flex flex-col transition-colors">
     <header className="max-w-6xl w-full mx-auto px-6 h-20 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
       <Link to="/" className="flex items-center gap-3"><img src="/logo.png" className="w-12 h-12 rounded-2xl" alt="Codelingo"/><span className="text-2xl font-black">Code<span className="text-red-600">lingo</span></span></Link>
-      <div className="flex items-center gap-3"><label className="sr-only" htmlFor="site-language">Site language</label><select id="site-language" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 font-bold"><option>Español</option><option>English</option></select><ThemeToggle /></div>
+      <div className="flex items-center gap-3"><label className="sr-only" htmlFor="site-language">Site language</label><select id="site-language" value={onboarding.uiLanguage ?? "es"} onChange={(event) => updateOnboarding({ uiLanguage: event.target.value as UiLanguage })} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 font-bold"><option value="es">🇪🇸 Español</option><option value="en">🇺🇸 English</option></select><ThemeToggle /></div>
     </header>
     <main className="flex-1 max-w-6xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-12 items-center">
       <button onClick={() => setGreeting(greeting.startsWith("Click") ? "Small steps. Big developers. Ready?" : "Click Louis and let's code together!")} className="relative min-h-80 group" aria-label="Talk to Louis">

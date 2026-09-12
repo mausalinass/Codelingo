@@ -21,8 +21,8 @@ export interface MockState {
 
 export const mockState: MockState = {
   totalXp: 120,
-  streakCurrent: 4,
-  streakLongest: 7,
+  streakCurrent: 0,
+  streakLongest: 0,
   activeLanguage: "csharp",
   personality: "ANALYTICAL",
   completedLessons: {

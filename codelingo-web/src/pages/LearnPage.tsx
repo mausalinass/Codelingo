@@ -7,6 +7,7 @@ import { DEMO_USER_ID, SUPPORTED_LANGUAGES } from "../lib/constants";
 import { AppShell } from "../components/layout/AppShell";
 import { LearningPath } from "../components/path/LearningPath";
 import { LouisCoach } from "../components/louis/LouisCoach";
+import { LouisConnectionStatus, LouisRoamer } from "../components/louis/LouisCompanion";
 import { PersonalityBadge } from "../components/personality/PersonalityBadge";
 import { ProgressRecord } from "../components/gamification/ProgressRecord";
 import { LanguageTrackIcon } from "../lib/icons";
@@ -21,8 +22,6 @@ export const LearnPage: React.FC<LearnPageProps> = ({
   selectedLanguage,
   onSelectLanguage,
 }) => {
-  const [louisPaused, setLouisPaused] = React.useState(() => localStorage.getItem("codelingo_louis_paused") === "true");
-  const toggleLouis = () => setLouisPaused((current) => { const next = !current; localStorage.setItem("codelingo_louis_paused", String(next)); return next; });
   const [isProgressExpanded, setIsProgressExpanded] = React.useState<boolean>(() => {
     const saved = localStorage.getItem("codelingo_progress_expanded");
     return saved !== null ? saved === "true" : true;
@@ -60,6 +59,8 @@ export const LearnPage: React.FC<LearnPageProps> = ({
       onSelectLanguage={onSelectLanguage}
       maxWidth={isProgressExpanded ? "max-w-6xl xl:max-w-7xl" : "max-w-7xl 2xl:max-w-[88rem]"}
     >
+      <LouisRoamer />
+      <LouisConnectionStatus />
       {(dashboardError || personalityError) && <div role="alert" className="p-4 text-red-700 dark:text-red-300">Unable to load saved progress or personality. <button onClick={() => { void refetch(); void refetchPersonality(); }}>Retry</button></div>}
       {isPreviewTrack(selectedLanguage) && <p role="status" className="rounded-xl border p-4 text-amber-800 dark:text-amber-200">Preview track: practice is available in this session only. It does not change saved XP, streaks or account progress.</p>}
       {/* When Progress Panel is REDUCED: Show sleek compact bar at top & Lesson Panel fills most of the screen below */}
@@ -94,12 +95,10 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             {/* Louis Mascot Greeting */}
             <LouisCoach
               mood="idle"
-              paused={louisPaused}
               message={`Welcome back, ${
                 dashboard?.user.displayName || "learner"
               }! Let's continue your ${activeLangMeta.label} track.`}
             />
-            <button type="button" onClick={toggleLouis} className="self-end rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs font-black text-slate-600 dark:text-slate-300" aria-pressed={louisPaused}>{louisPaused ? "Resume Louis" : "Pause Louis"}</button>
 
             {/* Course Header Banner: Spans full width when reduced */}
             <div className="rounded-3xl bg-white dark:bg-slate-900 text-slate-950 dark:text-white p-6 sm:p-7 shadow-sm flex items-center justify-between border border-slate-200 dark:border-slate-800">
@@ -160,12 +159,10 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             {/* Louis Mascot Greeting */}
             <LouisCoach
               mood="idle"
-              paused={louisPaused}
               message={`Welcome back, ${
                 dashboard?.user.displayName || "learner"
               }! Let's continue your ${activeLangMeta.label} track.`}
             />
-            <button type="button" onClick={toggleLouis} className="self-end rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs font-black text-slate-600 dark:text-slate-300" aria-pressed={louisPaused}>{louisPaused ? "Resume Louis" : "Pause Louis"}</button>
 
             {/* Course Header Banner */}
             <div className="rounded-2xl bg-white dark:bg-slate-900 text-slate-950 dark:text-white p-5 shadow-sm flex items-center justify-between border border-slate-200 dark:border-slate-800">

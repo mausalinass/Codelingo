@@ -23,6 +23,7 @@ import {
   MATH_TRACKS,
 } from "../../lib/constants";
 import { LanguageTrackIcon } from "../../lib/icons";
+import { StreakScale } from "./StreakBadge";
 
 /**
  * Progression Color System
@@ -385,6 +386,8 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
         </div>
       </div>
 
+      <div className="px-4 pb-4 sm:px-5"><StreakScale current={currentStreak} /></div>
+
       {/* Expandable Detailed Record Breakdown */}
       <AnimatePresence>
         {isExpanded && (
@@ -483,7 +486,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <div className="pt-2.5 flex flex-col gap-2">
+                    <div className="mt-2.5 max-h-56 overflow-y-auto pr-1 flex flex-col gap-2 custom-scrollbar" aria-label="Scrollable earned milestones">
                       {milestones.map((m, idx) => {
                         const Icon = m.icon;
                         return (
@@ -561,7 +564,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <div className="pt-3 flex flex-col gap-3">
+                    <div className="mt-3 max-h-[28rem] overflow-y-auto pr-1 flex flex-col gap-3 custom-scrollbar" aria-label="Scrollable programming languages and tracks">
                       {/* 3 Subject Tabs: Matching Left Navigation Sidebar */}
                       <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100/90 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/60">
                 {(

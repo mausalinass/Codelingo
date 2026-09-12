@@ -11,9 +11,11 @@ try{
 await page.goto(site+'/learn');
 const milestones=page.getByRole('button',{name:/Earned Milestones/});
 await milestones.click();assert.equal(await milestones.getAttribute('aria-expanded'),'true');
+assert.equal(await page.getByLabel('Scrollable earned milestones').evaluate(e=>getComputedStyle(e).overflowY),'auto');
 await milestones.click();assert.equal(await milestones.getAttribute('aria-expanded'),'false');
 const tracks=page.getByRole('button',{name:/Programming Languages & Tracks/});
 await tracks.click();assert.equal(await tracks.getAttribute('aria-expanded'),'true');
+assert.equal(await page.getByLabel('Scrollable programming languages and tracks').evaluate(e=>getComputedStyle(e).overflowY),'auto');
 await tracks.click();assert.equal(await tracks.getAttribute('aria-expanded'),'false');
 await page.getByRole('button',{name:'Switch to dark mode'}).first().click();
 await page.reload();assert.ok(await page.locator('html').evaluate(e=>e.classList.contains('dark')));

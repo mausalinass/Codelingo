@@ -269,10 +269,26 @@ interface LanguageTrackIconProps {
   className?: string;
 }
 
+const ProgrammingLanguageIcon = ({ languageId, className = "" }: LanguageTrackIconProps) => {
+  const common = { className, viewBox: "0 0 48 48", role: "img", "aria-label": `${languageId} logo` };
+  if (languageId === "python") return <svg {...common}><path fill="#3776ab" d="M24 4c-11 0-10 5-10 5v7h11v2H10s-6-1-6 10 5 11 5 11h6v-8s0-5 5-5h10s5 0 5-5V9s1-5-11-5Zm-6 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"/><path fill="#ffd43b" d="M24 44c11 0 10-5 10-5v-7H23v-2h15s6 1 6-10-5-11-5-11h-6v8s0 5-5 5H18s-5 0-5 5v12s-1 5 11 5Zm6-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/></svg>;
+  if (languageId === "javascript") return <svg {...common}><rect width="44" height="44" x="2" y="2" rx="7" fill="#f7df1e"/><text x="24" y="34" textAnchor="middle" fontSize="22" fontWeight="900" fill="#151515">JS</text></svg>;
+  if (languageId === "typescript") return <svg {...common}><rect width="44" height="44" x="2" y="2" rx="7" fill="#3178c6"/><text x="24" y="34" textAnchor="middle" fontSize="21" fontWeight="900" fill="white">TS</text></svg>;
+  if (languageId === "csharp") return <svg {...common}><path fill="#6f2da8" d="m24 2 19 11v22L24 46 5 35V13Z"/><text x="24" y="31" textAnchor="middle" fontSize="19" fontWeight="900" fill="white">C#</text></svg>;
+  if (languageId === "go") return <svg {...common}><text x="24" y="31" textAnchor="middle" fontSize="22" fontWeight="900" fontStyle="italic" fill="#00add8">GO</text><path stroke="#00add8" strokeWidth="3" d="M2 17h11M5 23h8M1 29h12"/></svg>;
+  if (languageId === "rust") return <svg {...common}><circle cx="24" cy="24" r="20" fill="#1f2937"/><circle cx="24" cy="24" r="14" fill="white"/><text x="24" y="31" textAnchor="middle" fontSize="22" fontWeight="900" fill="#1f2937">R</text></svg>;
+  if (languageId === "java") return <svg {...common}><path fill="none" stroke="#e76f00" strokeWidth="3" strokeLinecap="round" d="M27 4c-8 6 6 7-2 14M31 10c7 6-6 7-2 12"/><path fill="none" stroke="#5382a1" strokeWidth="4" strokeLinecap="round" d="M11 24h23v9c0 7-20 7-20 0M34 27h3c7 0 5 8-2 8M10 42c9 3 21 3 29-1"/></svg>;
+  if (languageId === "cpp") return <svg {...common}><path fill="#00599c" d="m24 2 20 11v22L24 46 4 35V13Z"/><text x="24" y="30" textAnchor="middle" fontSize="15" fontWeight="900" fill="white">C++</text></svg>;
+  return null;
+};
+
 export const LanguageTrackIcon: React.FC<LanguageTrackIconProps> = ({
   languageId,
   className = "",
 }) => {
+  if (["python", "javascript", "typescript", "csharp", "go", "rust", "java", "cpp"].includes(languageId)) {
+    return <ProgrammingLanguageIcon languageId={languageId} className={className} />;
+  }
   // Flags for spoken languages
   if (languageId === "spanish") {
     return <span className={`inline-flex items-center justify-center select-none text-base ${className}`}>🇪🇸</span>;
