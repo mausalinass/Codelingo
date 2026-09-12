@@ -13,6 +13,7 @@ import {
   Code2,
   Globe,
   Calculator,
+  ChevronDown,
 } from "lucide-react";
 import type { DashboardResponse, LanguageId, SubjectCategory } from "../../types/api";
 import {
@@ -125,6 +126,8 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
     SUPPORTED_LANGUAGES[currentLanguage]?.subject || "coding";
   const [selectedSubjectTab, setSelectedSubjectTab] = useState<SubjectCategory | null>(null);
   const activeTab: SubjectCategory = selectedSubjectTab ?? activeSubject;
+  const [isMilestonesOpen, setIsMilestonesOpen] = useState(false);
+  const [isTracksOpen, setIsTracksOpen] = useState(false);
 
   const handleToggle = () => {
     if (onToggleExpand) {
@@ -435,58 +438,130 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               </div>
             </div>
 
-            {/* Milestones / Achievements Grid */}
-            <div>
-              <div className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5">
-                <Award className="w-3.5 h-3.5" />
-                <span>Earned Milestones</span>
-              </div>
-              <div className="grid grid-cols-1 gap-2">
-                {milestones.map((m, idx) => {
-                  const Icon = m.icon;
-                  return (
-                    <div
-                      key={idx}
-                      className={`p-2.5 rounded-xl border flex items-center gap-2.5 transition-all ${
-                        m.unlocked
-                          ? `${m.color} shadow-2xs`
-                          : "bg-slate-100/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-750 text-slate-400 dark:text-slate-500 opacity-60"
-                      }`}
-                    >
-                      <div className="p-1.5 rounded-lg bg-white dark:bg-slate-800 shadow-2xs shrink-0">
-                        <Icon className="w-3.5 h-3.5" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-xs font-black leading-tight truncate">
-                          {m.title}
-                        </div>
-                        <div className="text-[10px] font-medium opacity-90 dark:opacity-95 leading-snug truncate">
-                          {m.desc}
-                        </div>
-                      </div>
-                      {m.unlocked && (
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-current" />
-                      )}
+            {/* Milestones / Achievements Collapsible Dropdown */}
+            <div className="flex flex-col">
+              <button
+                type="button"
+                onClick={() => setIsMilestonesOpen((prev) => !prev)}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/70 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer shadow-2xs group select-none"
+                aria-expanded={isMilestonesOpen}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+                    <Award className="w-4 h-4 stroke-[2.2]" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                      Earned Milestones
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                      {milestones.filter((m) => m.unlocked).length} of {milestones.length} achievements unlocked
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-amber-100/80 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/50">
+                    {milestones.filter((m) => m.unlocked).length}/{milestones.length}
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                      isMilestonesOpen ? "rotate-180 text-slate-700 dark:text-slate-200" : ""
+                    }`}
+                  />
+                </div>
+              </button>
+
+              <AnimatePresence>
+                {isMilestonesOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-2.5 flex flex-col gap-2">
+                      {milestones.map((m, idx) => {
+                        const Icon = m.icon;
+                        return (
+                          <div
+                            key={idx}
+                            className={`p-2.5 rounded-xl border flex items-center gap-2.5 transition-all ${
+                              m.unlocked
+                                ? `${m.color} shadow-2xs`
+                                : "bg-slate-100/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-750 text-slate-400 dark:text-slate-500 opacity-60"
+                            }`}
+                          >
+                            <div className="p-1.5 rounded-lg bg-white dark:bg-slate-800 shadow-2xs shrink-0">
+                              <Icon className="w-3.5 h-3.5" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="text-xs font-black leading-tight truncate">
+                                {m.title}
+                              </div>
+                              <div className="text-[10px] font-medium opacity-90 dark:opacity-95 leading-snug truncate">
+                                {m.desc}
+                              </div>
+                            </div>
+                            {m.unlocked && (
+                              <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-current" />
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* All Tracks Progress Overview with Left-Sidebar-Style Subject Tabs */}
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                <span className="flex items-center gap-1.5">
-                  <BarChart3 className="w-3.5 h-3.5 text-red-500" />
-                  <span>Curriculum Tracks Overview</span>
-                </span>
-                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
-                  {overallPercentage}% Overall
-                </span>
-              </div>
+            {/* Programming Languages & Curriculum Tracks Collapsible Dropdown */}
+            <div className="flex flex-col">
+              <button
+                type="button"
+                onClick={() => setIsTracksOpen((prev) => !prev)}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/70 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer shadow-2xs group select-none"
+                aria-expanded={isTracksOpen}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                    <BarChart3 className="w-4 h-4 stroke-[2.2]" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                      Programming Languages & Tracks
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                      {activeLangMeta.label} active • {overallPercentage}% Overall
+                    </span>
+                  </div>
+                </div>
 
-              {/* 3 Subject Tabs: Matching Left Navigation Sidebar */}
-              <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100/90 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/60">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-blue-100/80 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/50">
+                    {CODING_LANGUAGES.length + SPOKEN_LANGUAGES.length + MATH_TRACKS.length} Tracks
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                      isTracksOpen ? "rotate-180 text-slate-700 dark:text-slate-200" : ""
+                    }`}
+                  />
+                </div>
+              </button>
+
+              <AnimatePresence>
+                {isTracksOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-3 flex flex-col gap-3">
+                      {/* 3 Subject Tabs: Matching Left Navigation Sidebar */}
+                      <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100/90 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/60">
                 {(
                   [
                     {
@@ -639,5 +714,9 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
         )}
       </AnimatePresence>
     </div>
-  );
+  </motion.div>
+)}
+</AnimatePresence>
+</div>
+);
 };

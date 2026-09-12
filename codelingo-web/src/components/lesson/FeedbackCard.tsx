@@ -87,10 +87,10 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                   <CheckCircle2 className="w-6 h-6 stroke-[3]" />
                 </div>
                 <div>
-                  <div className="text-emerald-800 font-black text-lg tracking-tight">
+                  <div className="text-emerald-800 dark:text-emerald-200 font-black text-lg tracking-tight">
                     {feedback?.title || "Outstanding! 🎉"}
                   </div>
-                  <div className="text-emerald-700 font-medium text-sm mt-0.5 leading-relaxed max-w-xl">
+                  <div className="text-emerald-700 dark:text-emerald-300 font-medium text-sm mt-0.5 leading-relaxed max-w-xl">
                     {feedback?.message || "You completed the challenge perfectly!"}
                   </div>
                 </div>
@@ -121,10 +121,10 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                   <AlertCircle className="w-6 h-6 stroke-[3]" />
                 </div>
                 <div>
-                  <div className="text-rose-800 font-black text-lg tracking-tight">
+                  <div className="text-rose-800 dark:text-rose-200 font-black text-lg tracking-tight">
                     {feedback?.title || "Not quite yet 💡"}
                   </div>
-                  <div className="text-rose-700 font-medium text-sm mt-0.5 leading-relaxed max-w-xl">
+                  <div className="text-rose-700 dark:text-rose-300 font-medium text-sm mt-0.5 leading-relaxed max-w-xl">
                     {feedback?.message || "Check your answer and try again."}
                   </div>
                 </div>
@@ -154,10 +154,10 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                   <AlertCircle className="w-6 h-6 stroke-[3]" />
                 </div>
                 <div>
-                  <div className="text-amber-900 font-black text-lg">
+                  <div className="text-amber-900 dark:text-amber-200 font-black text-lg">
                     Network Request Issue
                   </div>
-                  <div className="text-amber-800 font-medium text-sm">
+                  <div className="text-amber-800 dark:text-amber-300 font-medium text-sm">
                     Preserved your typed answer. Click retry to re-evaluate.
                   </div>
                 </div>

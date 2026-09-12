@@ -73,10 +73,10 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: [1, 1.15, 1], opacity: 1 }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="absolute -top-3 -right-1 flex items-center gap-0.5 bg-white border border-slate-200 rounded-full px-2 py-0.5 shadow-md text-xs font-bold pointer-events-none z-10"
+            className="absolute -top-3 -right-1 flex items-center gap-0.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-2 py-0.5 shadow-md text-xs font-bold pointer-events-none z-10"
           >
             <span>💡</span>
-            <span className="text-blue-600 font-extrabold">?</span>
+            <span className="text-blue-600 dark:text-blue-400 font-extrabold">?</span>
           </motion.div>
         )}
 
@@ -95,24 +95,24 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
         initial={{ opacity: 0, y: 6, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.25 }}
-        className="relative flex-1 bg-white border border-slate-200 rounded-2xl px-4 py-3.5 shadow-xs"
+        className="relative flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 shadow-xs transition-colors"
       >
         {/* Pointer arrow to Louis */}
-        <div className="absolute -left-2 top-6 w-3.5 h-3.5 bg-white border-l border-b border-slate-200 rotate-45 transform" />
+        <div className="absolute -left-2 top-6 w-3.5 h-3.5 bg-white dark:bg-slate-900 border-l border-b border-slate-200 dark:border-slate-800 rotate-45 transform" />
 
         <div className="relative z-10">
           <div className="flex items-center justify-between gap-2 mb-1">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-              <span className="text-xs font-black uppercase tracking-wider text-red-600">
+              <span className="text-xs font-black uppercase tracking-wider text-red-600 dark:text-red-400">
                 Louis
               </span>
             </div>
-            <span className="text-[10px] uppercase font-bold text-slate-400">
+            <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">
               {mood}
             </span>
           </div>
-          <p className="text-sm sm:text-base font-semibold text-slate-800 leading-relaxed">
+          <p className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-relaxed">
             {message}
           </p>
         </div>

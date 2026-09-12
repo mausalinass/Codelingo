@@ -10,7 +10,7 @@ interface XpBadgeProps {
 export const XpBadge: React.FC<XpBadgeProps> = ({ xp, highlighted }) => {
   return (
     <motion.div
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-bold shadow-xs select-none"
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 text-amber-700 dark:text-amber-400 font-bold shadow-xs select-none transition-colors"
       animate={
         highlighted
           ? {
@@ -33,7 +33,7 @@ export const XpBadge: React.FC<XpBadgeProps> = ({ xp, highlighted }) => {
           initial={highlighted ? { y: -8, opacity: 0 } : false}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 8, opacity: 0 }}
-          className="text-base font-extrabold tracking-tight text-amber-800"
+          className="text-base font-extrabold tracking-tight text-amber-800 dark:text-amber-300"
         >
           {xp} XP
         </motion.span>

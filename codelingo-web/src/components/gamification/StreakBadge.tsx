@@ -10,7 +10,7 @@ interface StreakBadgeProps {
 export const StreakBadge: React.FC<StreakBadgeProps> = ({ streak, increased }) => {
   return (
     <motion.div
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-600 font-bold shadow-xs select-none"
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/80 text-orange-600 dark:text-orange-400 font-bold shadow-xs select-none transition-colors"
       animate={
         increased
           ? {
@@ -47,7 +47,7 @@ export const StreakBadge: React.FC<StreakBadgeProps> = ({ streak, increased }) =
           initial={increased ? { y: -10, opacity: 0 } : false}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 10, opacity: 0 }}
-          className="text-base font-extrabold tracking-tight text-orange-700"
+          className="text-base font-extrabold tracking-tight text-orange-700 dark:text-orange-300"
         >
           {streak}
         </motion.span>

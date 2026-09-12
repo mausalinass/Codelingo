@@ -24,7 +24,7 @@ export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
         return {
           icon: Brain,
           label: "Analytical",
-          color: "border-blue-200 bg-blue-50/70 text-blue-700",
+          color: "border-blue-200 dark:border-blue-900/60 bg-blue-50/70 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300",
           badgeBg: "bg-blue-600 text-white",
           dotColor: "bg-blue-500",
           modeLabel: "Deep Explanation Mode",
@@ -34,7 +34,7 @@ export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
         return {
           icon: Zap,
           label: "Practical",
-          color: "border-emerald-200 bg-emerald-50/70 text-emerald-700",
+          color: "border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/70 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300",
           badgeBg: "bg-emerald-600 text-white",
           dotColor: "bg-emerald-500",
           modeLabel: "Practice First Mode",
@@ -44,7 +44,7 @@ export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
         return {
           icon: Eye,
           label: "Visual",
-          color: "border-purple-200 bg-purple-50/70 text-purple-700",
+          color: "border-purple-200 dark:border-purple-900/60 bg-purple-50/70 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300",
           badgeBg: "bg-purple-600 text-white",
           dotColor: "bg-purple-500",
           modeLabel: "Visual Guided Mode",
@@ -62,7 +62,7 @@ export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
       initial={{ scale: 0.96, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className={`rounded-2xl border px-3.5 py-2.5 shadow-xs ${config.color} ${className}`}
+      className={`rounded-2xl border px-3.5 py-2.5 shadow-xs transition-colors ${config.color} ${className}`}
     >
       <div className="flex items-center justify-between gap-3">
         {/* Left: Icon & Trait Tag */}
@@ -75,7 +75,7 @@ export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
               <span className="font-extrabold text-sm tracking-tight">
                 {config.label} Learner
               </span>
-              <span className="text-xs font-bold px-1.5 py-0.5 rounded-md bg-white/80 border border-current/10">
+              <span className="text-xs font-bold px-1.5 py-0.5 rounded-md bg-white/80 dark:bg-slate-900/80 border border-current/10">
                 {score}% fit
               </span>
             </div>
@@ -87,7 +87,7 @@ export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
 
         {/* Right: Sponsor / Source Proof */}
         <div className="text-right shrink-0">
-          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/90 border border-current/15 text-[10px] font-bold tracking-wider uppercase text-slate-800 shadow-2xs">
+          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/90 dark:bg-slate-900/90 border border-current/15 text-[10px] font-bold tracking-wider uppercase text-slate-800 dark:text-slate-200 shadow-2xs">
             <Sparkles className="w-3 h-3 text-amber-500" />
             <span>Powered by {source}</span>
           </div>

@@ -33,12 +33,12 @@ export const CodeExercise: React.FC<CodeExerciseProps> = ({
   return (
     <div className="flex flex-col gap-3">
       {/* Exercise Prompt */}
-      <div className="font-extrabold text-slate-800 text-base sm:text-lg">
+      <div className="font-extrabold text-slate-800 dark:text-slate-100 text-base sm:text-lg">
         {prompt}
       </div>
 
       {/* Code Editor Container */}
-      <div className="rounded-2xl border border-slate-300 bg-slate-900 overflow-hidden shadow-md focus-within:ring-2 focus-within:ring-red-500/50 transition-all">
+      <div className="rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-900 overflow-hidden shadow-md focus-within:ring-2 focus-within:ring-red-500/50 transition-all">
         {/* Editor Fake Window Bar */}
         <div className="flex items-center justify-between px-4 py-2.5 bg-slate-800/80 border-b border-slate-700/60 select-none">
           <div className="flex items-center gap-1.5">

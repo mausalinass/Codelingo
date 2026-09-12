@@ -155,10 +155,10 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                   <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-xs">
                     <Check className="w-8 h-8 stroke-[3]" />
                   </div>
-                  <h4 className="text-xl font-extrabold text-slate-900">
+                  <h4 className="text-xl font-extrabold text-slate-900 dark:text-white">
                     Welcome aboard, {name}! 🎉
                   </h4>
-                  <p className="text-sm text-slate-500 max-w-xs">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs">
                     Your profile has been created with your tailored {selectedTrait.toLowerCase()} learning track.
                   </p>
                 </div>
@@ -177,7 +177,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                   <div>
                     <label
                       htmlFor="account-name"
-                      className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5"
+                      className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
                     >
                       Full Name
                     </label>
@@ -310,11 +310,11 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                   </div>
 
                   {/* Actions */}
-                  <div className="mt-2 pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
+                  <div className="mt-2 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
                     <button
                       type="button"
                       onClick={onClose}
-                      className="px-4 py-2.5 rounded-xl font-bold text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+                      className="px-4 py-2.5 rounded-xl font-bold text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
@@ -324,7 +324,7 @@ export const CreateAccountModal: React.FC<CreateAccountModalProps> = ({
                       disabled={!name.trim() || password.length < 6}
                       className={`px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider text-white shadow-md transition-all active:scale-98 cursor-pointer flex items-center gap-1.5 ${
                         !name.trim() || password.length < 6
-                          ? "bg-slate-300 cursor-not-allowed shadow-none"
+                          ? "bg-slate-300 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed shadow-none"
                           : "bg-red-600 hover:bg-red-700 shadow-red-500/30"
                       }`}
                     >

@@ -207,7 +207,7 @@ export const LessonPage: React.FC = () => {
 
   if (isLessonLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4 transition-colors">
         <LouisCoach
           mood="thinking"
           message="Preparing your tailored exercise..."
@@ -219,15 +219,15 @@ export const LessonPage: React.FC = () => {
 
   if (lessonError || !lesson) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-md max-w-md text-center">
-          <h2 className="text-lg font-bold text-rose-600 mb-2">Failed to load lesson</h2>
-          <p className="text-sm text-slate-600 mb-4">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4 transition-colors">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md max-w-md text-center">
+          <h2 className="text-lg font-bold text-rose-600 dark:text-rose-400 mb-2">Failed to load lesson</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
             Could not retrieve the lesson details.
           </p>
           <button
             onClick={() => navigate("/learn")}
-            className="px-4 py-2 bg-red-600 text-white rounded-xl font-bold text-sm"
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm cursor-pointer transition-colors"
           >
             Back to Learn
           </button>
@@ -350,7 +350,7 @@ export const LessonPage: React.FC = () => {
             />
 
             {/* CodeMirror Code Exercise */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs transition-colors">
               <CodeExercise
                 prompt={lesson.exercise.prompt}
                 code={codeAnswer}
@@ -367,7 +367,7 @@ export const LessonPage: React.FC = () => {
           mode === "PRACTICE_FIRST" && (
             <div className="flex flex-col gap-5 animate-in fade-in duration-200">
               {/* Quick Interactive Exercise */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs transition-colors">
                 <FillBlankExercise
                   prompt={lesson.exercise.prompt}
                   blankValue={blankAnswer}
@@ -394,7 +394,7 @@ export const LessonPage: React.FC = () => {
               />
 
               {/* Guided Blank Challenge */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs transition-colors">
                 <FillBlankExercise
                   prompt={lesson.exercise.prompt}
                   blankValue={blankAnswer}
