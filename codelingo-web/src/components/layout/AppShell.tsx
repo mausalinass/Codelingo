@@ -10,6 +10,7 @@ interface AppShellProps {
   streakIncreased?: boolean;
   xpAwarded?: boolean;
   hideTopNav?: boolean;
+  maxWidth?: string;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
@@ -20,6 +21,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   streakIncreased,
   xpAwarded,
   hideTopNav = false,
+  maxWidth = "max-w-4xl",
 }) => {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased selection:bg-red-500 selection:text-white">
@@ -32,9 +34,10 @@ export const AppShell: React.FC<AppShellProps> = ({
           xpAwarded={xpAwarded}
         />
       )}
-      <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col">
+      <main className={`flex-1 w-full ${maxWidth} mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col`}>
         {children}
       </main>
     </div>
   );
 };
+
