@@ -3,6 +3,7 @@ import { ChevronDown, Code2, Globe, Calculator } from "lucide-react";
 import type { LanguageId, SubjectCategory } from "../../types/api";
 import { SUPPORTED_LANGUAGES } from "../../lib/constants";
 import { LanguageTrackIcon } from "../../lib/icons";
+import { useNavigate } from "react-router-dom";
 
 interface CourseSelectorProps {
   currentLanguage: LanguageId;
@@ -13,6 +14,7 @@ export const CourseSelector: React.FC<CourseSelectorProps> = ({
   currentLanguage,
   onSelectLanguage,
 }) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -126,6 +128,7 @@ export const CourseSelector: React.FC<CourseSelectorProps> = ({
                     onSelectLanguage(langId);
                     setSelectedTab(null);
                     setIsOpen(false);
+                    navigate("/learn");
                   }}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left transition-all cursor-pointer ${
                     isSelected

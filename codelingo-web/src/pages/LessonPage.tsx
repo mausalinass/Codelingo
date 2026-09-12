@@ -29,6 +29,7 @@ import type { LouisMood, SubmitStatus } from "../types/lesson";
 import { useOnboarding } from "../context/OnboardingContext";
 import { uiText } from "../lib/i18n";
 import { lessonCopy } from "../lib/lessonTranslations";
+import { getTaskGuidance } from "../lib/taskGuidance";
 
 export const LessonPage: React.FC = () => {
   const { state: onboarding } = useOnboarding();
@@ -237,6 +238,7 @@ export const LessonPage: React.FC = () => {
     explanation: lesson.explanation,
     prompt: lesson.exercise.prompt,
   }) : null;
+  const taskGuidance = lesson ? getTaskGuidance(langId, lessonId, onboarding.uiLanguage, localizedLesson?.prompt ?? lesson.exercise.prompt) : null;
 
   if (isLessonLoading) {
     return (
@@ -338,7 +340,7 @@ export const LessonPage: React.FC = () => {
           message={
             submitStatus === "correct"
               ? "Brilliant! You mastered this challenge!"
-              : lesson.louisMessage
+               : taskGuidance?.louisMessage ?? lesson.louisMessage
           }
         />
 
@@ -352,6 +354,12 @@ export const LessonPage: React.FC = () => {
 
         {lessonStarted && <>
         <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-black dark:border-slate-800 dark:bg-slate-900"><span>{t("problem")} {problemIndex + 1} / 10</span><span className="text-slate-500">{evaluation?.attemptNumber ?? 0}/3 {t("attemptsUsed")}</span></div>
+
+        {taskGuidance && <section aria-label={taskGuidance.label} className="rounded-2xl border-2 border-amber-300 bg-amber-50 px-5 py-4 shadow-sm dark:border-amber-700 dark:bg-amber-950/30">
+          <p className="text-xs font-black uppercase tracking-widest text-amber-700 dark:text-amber-300">Louis · {taskGuidance.label}</p>
+          <p className="mt-2 text-lg font-black text-slate-950 dark:text-white">{taskGuidance.goal}</p>
+          {taskGuidance.hint && <p className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-300">{onboarding.uiLanguage === "es" ? "Pista de sintaxis" : onboarding.uiLanguage === "fr" ? "Indice de syntaxe" : "Syntax hint"}: <code className="rounded-lg bg-white px-2 py-1 font-mono text-red-600 dark:bg-slate-900 dark:text-red-300">{taskGuidance.hint}</code></p>}
+        </section>}
 
         {/* 1. Spoken Language: Duolingo Word Bank Exercise */}
         {lesson.exercise.type === "WORD_BANK" && (

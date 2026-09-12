@@ -273,7 +273,22 @@ export type FlagCode = "us" | "es" | "fr" | "de" | "jp" | "it" | "br" | "cn" | "
 
 export const CountryFlag = ({ code, className = "" }: { code: FlagCode; className?: string }) => {
   const frame = `inline-flex overflow-hidden rounded-md border border-slate-200 shadow-sm ${className}`;
-  if (code === "us") return <span className={frame}><svg viewBox="0 0 36 24" aria-label="United States flag"><rect width="36" height="24" fill="#fff"/><path stroke="#ef4444" strokeWidth="2" d="M0 1h36M0 5h36M0 9h36M0 13h36M0 17h36M0 21h36"/><rect width="16" height="12" fill="#2563eb"/><text x="8" y="9" textAnchor="middle" fontSize="8" fill="white">✦✦</text></svg></span>;
+  if (code === "us") {
+    const stripeHeight = 24 / 13;
+    const stars = Array.from({ length: 9 }, (_, row) => {
+      const count = row % 2 === 0 ? 6 : 5;
+      return Array.from({ length: count }, (_, column) => ({
+        x: 1.35 + column * 2.25 + (row % 2 ? 1.12 : 0),
+        y: 1.15 + row * 1.28,
+      }));
+    }).flat();
+    return <span className={frame}><svg viewBox="0 0 36 24" role="img" aria-label="United States flag" data-flag="us">
+      <rect width="36" height="24" fill="#fff" />
+      {Array.from({ length: 7 }, (_, index) => <rect data-flag-stripe="red" key={index} y={index * stripeHeight * 2} width="36" height={stripeHeight} fill="#B22234" />)}
+      <rect width="14.4" height={stripeHeight * 7} fill="#3C3B6E" />
+      {stars.map((star, index) => <circle data-flag-star="true" key={index} cx={star.x} cy={star.y} r="0.34" fill="#fff" />)}
+    </svg></span>;
+  }
   if (code === "es") return <span className={frame}><svg viewBox="0 0 36 24" aria-label="Spain flag"><rect width="36" height="24" fill="#facc15"/><path stroke="#dc2626" strokeWidth="7" d="M0 3.5h36M0 20.5h36"/></svg></span>;
   if (code === "fr") return <span className={frame}><svg viewBox="0 0 36 24" aria-label="France flag"><path fill="#2563eb" d="M0 0h12v24H0z"/><path fill="white" d="M12 0h12v24H12z"/><path fill="#ef4444" d="M24 0h12v24H24z"/></svg></span>;
   if (code === "de") return <span className={frame}><svg viewBox="0 0 36 24" aria-label="Germany flag"><path fill="#111827" d="M0 0h36v8H0z"/><path fill="#dc2626" d="M0 8h36v8H0z"/><path fill="#facc15" d="M0 16h36v8H0z"/></svg></span>;

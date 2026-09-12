@@ -37,7 +37,7 @@ try {
  await page.getByRole('button',{name:'Close demo profile'}).click();
  await page.goto(frontend+'/lesson/csharp/conditions');
  await page.getByRole('button',{name:/Practical Mode/}).click();
- await page.getByText("No lecture. Let's code it.").waitFor();
+ await page.getByText('Before you begin',{exact:true}).waitFor();
  await page.getByRole('button',{name:'START LESSON',exact:true}).click();
  await page.locator('.cm-content').waitFor();
  assert.equal(await page.locator('.cm-content').count(),1);
@@ -62,7 +62,7 @@ try {
  assert.equal(await page.locator('a[href="/lesson/csharp/conditions"]').count(),1);
  await page.goto(frontend+'/lesson/csharp/variables');
  await page.getByRole('button',{name:/Visual Mode/}).click();
- await page.getByText('Follow each step with me, then try the code.').waitFor();
+ await page.getByText('Before you begin',{exact:true}).waitFor();
  await page.getByRole('button',{name:'START LESSON',exact:true}).click();
  await page.locator('.cm-content').waitFor();
  await page.locator('.cm-content').fill('int score = 100;');

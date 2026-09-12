@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Code2,
   Globe,
@@ -41,11 +41,13 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
   const { state: onboarding } = useOnboarding();
   const t = (key: Parameters<typeof uiText>[1]) => uiText(onboarding.uiLanguage, key);
   const location = useLocation();
+  const navigate = useNavigate();
   const activeLang = SUPPORTED_LANGUAGES[currentLanguage] || SUPPORTED_LANGUAGES.csharp;
   const activeSubject: SubjectCategory = activeLang.subject || "coding";
 
   // Control open/close of each subject's track accordion
   const [expandedSubject, setExpandedSubject] = useState<SubjectCategory | null>(activeSubject);
+  const [questsExpanded, setQuestsExpanded] = useState(false);
 
   // Remembers the last selected track per subject category
   const [lastSelectedTracks, setLastSelectedTracks] = useState<Record<SubjectCategory, LanguageId>>({
@@ -58,6 +60,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
     // If clicking the currently active subject, toggle accordion
     if (activeSubject === subject) {
       setExpandedSubject((prev) => (prev === subject ? null : subject));
+      if (location.pathname !== "/learn") navigate("/learn");
       return;
     }
 
@@ -65,6 +68,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
     const targetTrack = lastSelectedTracks[subject];
     setExpandedSubject(subject);
     onSelectLanguage(targetTrack);
+    navigate("/learn");
   };
 
   const handleSelectTrack = (trackId: LanguageId, subject: SubjectCategory) => {
@@ -73,6 +77,7 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
       [subject]: trackId,
     }));
     onSelectLanguage(trackId);
+    navigate("/learn");
   };
 
   const subjects: Array<{
@@ -116,6 +121,20 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
       accentIconColor: "text-amber-600 dark:text-amber-400",
     },
   ];
+
+  const locale = onboarding.uiLanguage === "es" || onboarding.uiLanguage === "fr" ? onboarding.uiLanguage : "en";
+  const completedLessons = dashboard?.courses.reduce((total, course) => total + course.completedLessons, 0) ?? 0;
+  const exploredTracks = dashboard?.courses.filter((course) => course.completedLessons > 0).length ?? 0;
+  const questPool = [
+    { id: "lesson", labels: { en: "Complete one lesson", es: "Completa una lección", fr: "Termine une leçon" }, value: Math.min(1, completedLessons % 2), target: 1 },
+    { id: "problems", labels: { en: "Solve 10 practice problems", es: "Resuelve 10 problemas", fr: "Résous 10 problèmes" }, value: Math.min(10, (dashboard?.user.totalXp ?? 0) % 11), target: 10 },
+    { id: "streak", labels: { en: "Keep today's streak", es: "Mantén la racha de hoy", fr: "Garde ta série aujourd'hui" }, value: Math.min(1, dashboard?.streak.current ?? 0), target: 1 },
+    { id: "track", labels: { en: "Explore a second track", es: "Explora una segunda ruta", fr: "Explore un deuxième parcours" }, value: Math.min(2, exploredTracks), target: 2 },
+    { id: "xp", labels: { en: "Earn 20 XP", es: "Gana 20 XP", fr: "Gagne 20 XP" }, value: Math.min(20, (dashboard?.user.totalXp ?? 0) % 21), target: 20 },
+  ];
+  const daySeed = Math.floor(new Date().setHours(0, 0, 0, 0) / 86_400_000) % questPool.length;
+  const dailyQuests = Array.from({ length: 3 }, (_, index) => questPool[(daySeed + index) % questPool.length]);
+  const completedQuests = dailyQuests.filter((quest) => quest.value >= quest.target).length;
 
   return (
     <>
@@ -278,14 +297,20 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
               </span>
             </div>
 
-            <div className="flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider text-slate-400 hover:bg-slate-100/60 dark:hover:bg-slate-800/40 cursor-default select-none">
-              <div className="flex items-center gap-3">
-                <Target className="w-4 h-4 text-emerald-500" />
-                <span>{t("quests")}</span>
-              </div>
-              <span className="text-[10px] font-black bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-md">
-                2/3
-              </span>
+            <div>
+              <button type="button" aria-expanded={questsExpanded} aria-controls="daily-quests-panel" onClick={() => setQuestsExpanded((open) => !open)} className="flex w-full items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider text-slate-500 hover:bg-slate-100/60 dark:text-slate-400 dark:hover:bg-slate-800/40">
+                <span className="flex items-center gap-3"><Target className="w-4 h-4 text-emerald-500" />{t("quests")}</span>
+                <span className="flex items-center gap-1.5"><span className="rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">{completedQuests}/3</span><ChevronDown className={`h-4 w-4 transition ${questsExpanded ? "rotate-180" : ""}`} /></span>
+              </button>
+              {questsExpanded && <div id="daily-quests-panel" className="ml-5 mt-1 space-y-1 border-l-2 border-emerald-200 pl-3 dark:border-emerald-900">
+                {dailyQuests.map((quest) => {
+                  const done = quest.value >= quest.target;
+                  return <button key={quest.id} type="button" onClick={() => navigate("/learn")} className="w-full rounded-xl px-2.5 py-2 text-left hover:bg-emerald-50 dark:hover:bg-emerald-950/30">
+                    <span className="flex items-center gap-2 text-xs font-extrabold text-slate-700 dark:text-slate-200"><span className={`grid h-5 w-5 place-items-center rounded-full ${done ? "bg-emerald-500 text-white" : "border-2 border-slate-300 dark:border-slate-600"}`}>{done && <Check className="h-3 w-3 stroke-[3]" />}</span>{quest.labels[locale]}</span>
+                    <span className="mt-1.5 flex items-center gap-2 pl-7"><span className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"><span className="block h-full rounded-full bg-emerald-500" style={{ width: `${Math.min(100, quest.value / quest.target * 100)}%` }} /></span><span className="text-[10px] font-black text-slate-400">{quest.value}/{quest.target}</span></span>
+                  </button>;
+                })}
+              </div>}
             </div>
           </div>
 
