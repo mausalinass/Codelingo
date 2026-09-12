@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:5080
+@userId = 11111111-1111-1111-1111-111111111111
+
+GET {{baseUrl}}/api/users/{{userId}}/dashboard
+
+###
+GET {{baseUrl}}/api/users/{{userId}}/personality
+
+###
+GET {{baseUrl}}/api/lessons/csharp/conditions?userId={{userId}}
+
+###
+POST {{baseUrl}}/api/demo/users/{{userId}}/personality
+Content-Type: application/json
+
+{"primaryTrait":"PRACTICAL"}
+
+###
+POST {{baseUrl}}/api/evaluate
+Content-Type: application/json
+
+{"userId":"{{userId}}","language":"csharp","lessonId":"conditions","exerciseId":"cs-if-01","answer":"if (age >= 18) { Console.WriteLine(\"Adult\"); }"}
+
+###
+POST {{baseUrl}}/api/demo/users/{{userId}}/reset
+Content-Type: application/json
+
+{}
