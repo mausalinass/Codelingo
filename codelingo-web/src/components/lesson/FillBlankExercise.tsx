@@ -23,10 +23,153 @@ export const FillBlankExercise: React.FC<FillBlankExerciseProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-focus the blank input on load
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  const renderInput = () => (
+    <input
+      ref={inputRef}
+      type="text"
+      value={blankValue}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      disabled={disabled}
+      className="bg-slate-800 text-amber-300 px-3 py-1 rounded-lg border-2 border-dashed border-red-400 focus:border-solid focus:border-red-500 focus:bg-slate-950 font-mono font-bold text-sm sm:text-base outline-hidden min-w-[140px] max-w-[240px] transition-all"
+      autoComplete="off"
+      spellCheck="false"
+    />
+  );
+
+  const renderLanguageSnippet = () => {
+    switch (language) {
+      case "rust":
+        return (
+          <div>
+            <div>
+              <span className="text-purple-400">let</span> age:{" "}
+              <span className="text-blue-400">i32</span> ={" "}
+              <span className="text-amber-300">20</span>;
+            </div>
+            <div className="flex items-center flex-wrap gap-2 my-1">
+              <span className="text-purple-400">if</span> {renderInput()} &#123;
+            </div>
+            <div className="pl-6">
+              <span className="text-cyan-300">println!</span>(
+              <span className="text-emerald-300">"Adult"</span>);
+            </div>
+            <div>&#125;</div>
+          </div>
+        );
+
+      case "go":
+        return (
+          <div>
+            <div>
+              age := <span className="text-amber-300">20</span>
+            </div>
+            <div className="flex items-center flex-wrap gap-2 my-1">
+              <span className="text-purple-400">if</span> {renderInput()} &#123;
+            </div>
+            <div className="pl-6">
+              <span className="text-cyan-300">fmt</span>.Println(
+              <span className="text-emerald-300">"Adult"</span>)
+            </div>
+            <div>&#125;</div>
+          </div>
+        );
+
+      case "cpp":
+        return (
+          <div>
+            <div>
+              <span className="text-blue-400">int</span> age ={" "}
+              <span className="text-amber-300">20</span>;
+            </div>
+            <div className="flex items-center flex-wrap gap-2 my-1">
+              <span className="text-purple-400">if</span> ({renderInput()}) &#123;
+            </div>
+            <div className="pl-6">
+              <span className="text-cyan-300">std::cout</span> &lt;&lt;{" "}
+              <span className="text-emerald-300">"Adult"</span> &lt;&lt;{" "}
+              <span className="text-cyan-300">std::endl</span>;
+            </div>
+            <div>&#125;</div>
+          </div>
+        );
+
+      case "java":
+        return (
+          <div>
+            <div>
+              <span className="text-blue-400">int</span> age ={" "}
+              <span className="text-amber-300">20</span>;
+            </div>
+            <div className="flex items-center flex-wrap gap-2 my-1">
+              <span className="text-purple-400">if</span> ({renderInput()}) &#123;
+            </div>
+            <div className="pl-6">
+              <span className="text-cyan-300">System.out</span>.println(
+              <span className="text-emerald-300">"Adult"</span>);
+            </div>
+            <div>&#125;</div>
+          </div>
+        );
+
+      case "typescript":
+        return (
+          <div>
+            <div>
+              <span className="text-blue-400">const</span> age:{" "}
+              <span className="text-blue-300">number</span> ={" "}
+              <span className="text-amber-300">20</span>;
+            </div>
+            <div className="flex items-center flex-wrap gap-2 my-1">
+              <span className="text-purple-400">if</span> ({renderInput()}) &#123;
+            </div>
+            <div className="pl-6">
+              <span className="text-cyan-300">console</span>.log(
+              <span className="text-emerald-300">"Adult"</span>);
+            </div>
+            <div>&#125;</div>
+          </div>
+        );
+
+      case "python":
+        return (
+          <div>
+            <div>
+              age = <span className="text-amber-300">20</span>
+            </div>
+            <div className="flex items-center flex-wrap gap-2 my-1">
+              <span className="text-purple-400">if</span> {renderInput()}:
+            </div>
+            <div className="pl-6">
+              print(<span className="text-emerald-300">"Adult"</span>)
+            </div>
+          </div>
+        );
+
+      case "csharp":
+      default:
+        return (
+          <div>
+            <div>
+              <span className="text-blue-400">int</span> age ={" "}
+              <span className="text-amber-300">20</span>;
+            </div>
+            <div className="flex items-center flex-wrap gap-2 my-1">
+              <span className="text-purple-400">if</span> ({renderInput()}) &#123;
+            </div>
+            <div className="pl-6">
+              <span className="text-cyan-300">Console</span>.WriteLine(
+              <span className="text-emerald-300">"Adult"</span>);
+            </div>
+            <div>&#125;</div>
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="flex flex-col gap-3">
@@ -49,88 +192,10 @@ export const FillBlankExercise: React.FC<FillBlankExerciseProps> = ({
         }`}
       >
         <div className="text-slate-400 select-none text-xs mb-3 font-sans uppercase font-bold tracking-wider">
-          Complete the conditional expression:
+          Complete the code expression:
         </div>
 
-        {language === "csharp" ? (
-          <div>
-            <div>
-              <span className="text-blue-400">int</span> age ={" "}
-              <span className="text-amber-300">20</span>;
-            </div>
-            <div className="flex items-center flex-wrap gap-2 my-1">
-              <span className="text-purple-400">if</span> (
-              <input
-                ref={inputRef}
-                type="text"
-                value={blankValue}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder={placeholder}
-                disabled={disabled}
-                className="bg-slate-800 text-amber-300 px-3 py-1 rounded-lg border-2 border-dashed border-red-400 focus:border-solid focus:border-red-500 focus:bg-slate-950 font-mono font-bold text-sm sm:text-base outline-hidden min-w-[140px] max-w-[220px] transition-all"
-                autoComplete="off"
-                spellCheck="false"
-              />
-              )
-            </div>
-            <div>&#123;</div>
-            <div className="pl-6">
-              <span className="text-cyan-300">Console</span>.WriteLine(
-              <span className="text-emerald-300">"Adult"</span>);
-            </div>
-            <div>&#125;</div>
-          </div>
-        ) : language === "python" ? (
-          <div>
-            <div>
-              age = <span className="text-amber-300">20</span>
-            </div>
-            <div className="flex items-center flex-wrap gap-2 my-1">
-              <span className="text-purple-400">if</span>
-              <input
-                ref={inputRef}
-                type="text"
-                value={blankValue}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder={placeholder}
-                disabled={disabled}
-                className="bg-slate-800 text-amber-300 px-3 py-1 rounded-lg border-2 border-dashed border-red-400 focus:border-solid focus:border-red-500 focus:bg-slate-950 font-mono font-bold text-sm sm:text-base outline-hidden min-w-[140px] max-w-[220px] transition-all"
-                autoComplete="off"
-                spellCheck="false"
-              />
-              :
-            </div>
-            <div className="pl-6">
-              print(<span className="text-emerald-300">"Adult"</span>)
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div>
-              <span className="text-blue-400">const</span> age ={" "}
-              <span className="text-amber-300">20</span>;
-            </div>
-            <div className="flex items-center flex-wrap gap-2 my-1">
-              <span className="text-purple-400">if</span> (
-              <input
-                ref={inputRef}
-                type="text"
-                value={blankValue}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder={placeholder}
-                disabled={disabled}
-                className="bg-slate-800 text-amber-300 px-3 py-1 rounded-lg border-2 border-dashed border-red-400 focus:border-solid focus:border-red-500 focus:bg-slate-950 font-mono font-bold text-sm sm:text-base outline-hidden min-w-[140px] max-w-[220px] transition-all"
-                autoComplete="off"
-                spellCheck="false"
-              />
-              ) &#123;
-            </div>
-            <div className="pl-6">
-              console.log(<span className="text-emerald-300">"Adult"</span>);
-            </div>
-            <div>&#125;</div>
-          </div>
-        )}
+        {renderLanguageSnippet()}
       </div>
     </div>
   );

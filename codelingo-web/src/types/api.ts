@@ -1,4 +1,12 @@
-export type LanguageId = "python" | "javascript" | "csharp";
+export type LanguageId =
+  | "python"
+  | "javascript"
+  | "typescript"
+  | "csharp"
+  | "rust"
+  | "go"
+  | "cpp"
+  | "java";
 export type PersonalityTrait = "ANALYTICAL" | "PRACTICAL" | "VISUAL";
 export type LearningMode = "DEEP_EXPLANATION" | "PRACTICE_FIRST" | "VISUAL_GUIDED";
 export type LessonStatus = "completed" | "current" | "locked";

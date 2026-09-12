@@ -33,11 +33,17 @@ export const LearnPage: React.FC<LearnPageProps> = ({
   // Derive completed lessons for active language
   const courseData = dashboard?.courses.find((c) => c.language === selectedLanguage);
   const completedCount = courseData?.completedLessons ?? 1;
-
-  const completedLessonIds = [];
-  if (completedCount >= 1) completedLessonIds.push("hello");
-  if (completedCount >= 2) completedLessonIds.push("conditions");
-  if (completedCount >= 3) completedLessonIds.push("loops");
+  const totalCount = courseData?.totalLessons ?? 8;
+  const completedLessonIds = [
+    "hello",
+    "variables",
+    "conditions",
+    "functions",
+    "loops",
+    "arrays",
+    "oop",
+    "async",
+  ].slice(0, completedCount);
 
   return (
     <AppShell
@@ -78,7 +84,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
               {activeLangMeta.label} Mastery
             </h2>
             <p className="text-xs text-slate-300 mt-1">
-              {courseData?.percentage ?? 33}% completed • {courseData?.completedLessons ?? 1} of 3 lessons
+              {courseData?.percentage ?? 12}% completed • {completedCount} of {totalCount} lessons
             </p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-xs flex items-center justify-center font-mono font-black text-lg text-white border border-white/20">

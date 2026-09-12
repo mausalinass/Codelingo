@@ -47,7 +47,21 @@ export const CodeExercise: React.FC<CodeExerciseProps> = ({
             <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
           </div>
           <span className="text-xs font-mono text-slate-400">
-            solution.{language === "csharp" ? "cs" : language === "python" ? "py" : "ts"}
+            solution.{
+              language === "csharp"
+                ? "cs"
+                : language === "python"
+                ? "py"
+                : language === "rust"
+                ? "rs"
+                : language === "go"
+                ? "go"
+                : language === "cpp"
+                ? "cpp"
+                : language === "java"
+                ? "java"
+                : "ts"
+            }
           </span>
           <span className="text-[10px] uppercase font-bold text-slate-500">
             CodeMirror

@@ -8,28 +8,18 @@ interface LearningPathProps {
   completedLessons?: string[];
 }
 
-const LESSON_TEMPLATES = [
-  {
-    id: "hello",
-    title: "1. Hello World",
-    description: "Syntax basics & printing",
-    order: 1,
-  },
-  {
-    id: "conditions",
-    title: "2. Conditions",
-    description: "If-statements & branching",
-    order: 2,
-  },
-  {
-    id: "loops",
-    title: "3. Loops",
-    description: "Iteration & repetition",
-    order: 3,
-  },
-];
+import { LESSON_TEMPLATES } from "../../lib/constants";
 
-const OFFSETS = ["translate-x-0", "translate-x-12", "-translate-x-10"];
+const OFFSETS = [
+  "translate-x-0",
+  "translate-x-12",
+  "translate-x-4",
+  "-translate-x-10",
+  "translate-x-0",
+  "translate-x-12",
+  "-translate-x-4",
+  "-translate-x-12",
+];
 
 export const LearningPath: React.FC<LearningPathProps> = ({
   language,
