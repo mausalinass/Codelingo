@@ -37,6 +37,14 @@ export type PersonalityTrait = "ANALYTICAL" | "PRACTICAL" | "VISUAL";
 export type LearningMode = "DEEP_EXPLANATION" | "PRACTICE_FIRST" | "VISUAL_GUIDED";
 export type LessonStatus = "completed" | "current" | "locked";
 
+export interface LessonState {
+  id: string;
+  title: string;
+  description: string;
+  order: number;
+  status: LessonStatus;
+}
+
 export interface DashboardResponse {
   user: {
     id: string;
@@ -50,9 +58,11 @@ export interface DashboardResponse {
   activeLanguage: LanguageId;
   courses: Array<{
     language: LanguageId;
+    preview?: boolean;
     completedLessons: number;
     totalLessons: number;
     percentage: number;
+    lessons: LessonState[];
   }>;
 }
 

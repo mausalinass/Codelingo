@@ -293,15 +293,15 @@ export const LeftNavigationSidebar: React.FC<LeftNavigationSidebarProps> = ({
         <div className="p-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-850/50">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-red-600 text-white font-black text-xs flex items-center justify-center shadow-xs">
-              {(dashboard?.user.displayName || "Alex").charAt(0).toUpperCase()}
+              {(dashboard?.user.displayName || "Learner").charAt(0).toUpperCase()}
             </div>
             <div className="flex flex-col">
               <span className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">
-                {dashboard?.user.displayName || "Alex"}
+                {dashboard?.user.displayName || "Learner"}
               </span>
               <span className="text-[10px] font-semibold text-slate-400 flex items-center gap-1">
                 <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
-                {dashboard?.user.totalXp ?? 120} XP
+                {dashboard?.user.totalXp ?? 0} XP
               </span>
             </div>
           </div>

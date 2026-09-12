@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from "../../context/useTheme";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
@@ -19,14 +20,14 @@ export const CodeExercise: React.FC<CodeExerciseProps> = ({
   language,
   disabled = false,
 }) => {
+  const { theme } = useTheme();
   const getExtensions = () => {
     switch (language) {
       case "python":
         return [python()];
-      case "javascript":
-      case "csharp":
-      default:
-        return [javascript({ typescript: true })];
+      case "javascript": return [javascript()];
+      case "typescript": return [javascript({ typescript: true })];
+      default: return [];
     }
   };
 
@@ -60,7 +61,7 @@ export const CodeExercise: React.FC<CodeExerciseProps> = ({
                 ? "cpp"
                 : language === "java"
                 ? "java"
-                : "ts"
+                : language === "javascript" ? "js" : "ts"
             }
           </span>
           <span className="text-[10px] uppercase font-bold text-slate-500">
@@ -73,7 +74,7 @@ export const CodeExercise: React.FC<CodeExerciseProps> = ({
           <CodeMirror
             value={code}
             height="180px"
-            theme="dark"
+            theme={theme}
             extensions={getExtensions()}
             onChange={onChange}
             readOnly={disabled}

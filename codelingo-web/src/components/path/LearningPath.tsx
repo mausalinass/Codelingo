@@ -1,48 +1,20 @@
 import React from "react";
 import { LessonNode } from "./LessonNode";
-import { getCurriculumForTrack } from "../../lib/constants";
-import type { LanguageId, LessonStatus } from "../../types/api";
+import type { LanguageId, LessonState } from "../../types/api";
 import type { PathLessonNode } from "../../types/lesson";
 
 interface LearningPathProps {
   language: LanguageId;
-  completedLessons?: string[];
+  lessons: LessonState[];
   isWide?: boolean;
 }
 
 export const LearningPath: React.FC<LearningPathProps> = ({
   language,
-  completedLessons = [],
+  lessons,
   isWide = false,
 }) => {
-  const curriculum = getCurriculumForTrack(language);
-
-  // Determine first incomplete lesson index to set as current
-  const firstIncompleteIdx = curriculum.findIndex(
-    (tmpl) => !completedLessons.includes(tmpl.id)
-  );
-
-  const pathNodes: PathLessonNode[] = curriculum.map((tmpl, idx) => {
-    const isCompleted = completedLessons.includes(tmpl.id);
-    let status: LessonStatus = "locked";
-
-    if (isCompleted) {
-      status = "completed";
-    } else if (idx === firstIncompleteIdx) {
-      status = "current";
-    } else {
-      status = "locked";
-    }
-
-    return {
-      id: tmpl.id,
-      title: tmpl.title,
-      description: tmpl.description,
-      language,
-      order: idx + 1,
-      status,
-    };
-  });
+  const pathNodes: PathLessonNode[] = lessons.map(lesson => ({ ...lesson, language }));
 
   const completedCount = pathNodes.filter((n) => n.status === "completed").length;
   // Progress along the vertical line

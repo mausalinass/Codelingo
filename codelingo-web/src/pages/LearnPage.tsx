@@ -1,8 +1,9 @@
+import { isPreviewTrack } from "../api/preview";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDashboard } from "../api/dashboard";
 import { fetchPersonality } from "../api/personality";
-import { DEMO_USER_ID, SUPPORTED_LANGUAGES, getCurriculumForTrack } from "../lib/constants";
+import { DEMO_USER_ID, SUPPORTED_LANGUAGES } from "../lib/constants";
 import { AppShell } from "../components/layout/AppShell";
 import { LearningPath } from "../components/path/LearningPath";
 import { LouisCoach } from "../components/louis/LouisCoach";
@@ -33,12 +34,12 @@ export const LearnPage: React.FC<LearnPageProps> = ({
     });
   };
 
-  const { data: dashboard, isLoading: isDashboardLoading } = useQuery({
+  const { data: dashboard, isLoading: isDashboardLoading, error: dashboardError, refetch } = useQuery({
     queryKey: ["dashboard", DEMO_USER_ID],
     queryFn: () => fetchDashboard(DEMO_USER_ID),
   });
 
-  const { data: personality } = useQuery({
+  const { data: personality, error: personalityError, refetch: refetchPersonality } = useQuery({
     queryKey: ["personality", DEMO_USER_ID],
     queryFn: () => fetchPersonality(DEMO_USER_ID),
   });
@@ -46,11 +47,9 @@ export const LearnPage: React.FC<LearnPageProps> = ({
   const activeLangMeta = SUPPORTED_LANGUAGES[selectedLanguage] || SUPPORTED_LANGUAGES.csharp;
 
   // Derive completed lessons for active language using its dedicated curriculum
-  const curriculum = getCurriculumForTrack(selectedLanguage);
   const courseData = dashboard?.courses.find((c) => c.language === selectedLanguage);
-  const completedCount = courseData?.completedLessons ?? 1;
-  const totalCount = courseData?.totalLessons ?? curriculum.length;
-  const completedLessonIds = curriculum.map((l) => l.id).slice(0, completedCount);
+  const completedCount = courseData?.completedLessons ?? 0;
+  const totalCount = courseData?.totalLessons ?? 0;
 
   return (
     <AppShell
@@ -59,6 +58,8 @@ export const LearnPage: React.FC<LearnPageProps> = ({
       onSelectLanguage={onSelectLanguage}
       maxWidth={isProgressExpanded ? "max-w-6xl xl:max-w-7xl" : "max-w-7xl 2xl:max-w-[88rem]"}
     >
+      {(dashboardError || personalityError) && <div role="alert" className="p-4 text-red-700 dark:text-red-300">Unable to load saved progress or personality. <button onClick={() => { void refetch(); void refetchPersonality(); }}>Retry</button></div>}
+      {isPreviewTrack(selectedLanguage) && <p role="status" className="rounded-xl border p-4 text-amber-800 dark:text-amber-200">Preview track: practice is available in this session only. It does not change saved XP, streaks or account progress.</p>}
       {/* When Progress Panel is REDUCED: Show sleek compact bar at top & Lesson Panel fills most of the screen below */}
       {!isProgressExpanded ? (
         <div className="flex flex-col gap-6 w-full animate-in fade-in duration-300">
@@ -83,7 +84,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                 score={
                   personality.scores[
                     personality.primaryTrait.toLowerCase() as keyof typeof personality.scores
-                  ] || 88
+                  ] ?? 0
                 }
               />
             )}
@@ -92,7 +93,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             <LouisCoach
               mood="idle"
               message={`Welcome back, ${
-                dashboard?.user.displayName || "Alex"
+                dashboard?.user.displayName || "learner"
               }! Let's continue your ${activeLangMeta.label} track.`}
             />
 
@@ -106,7 +107,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                   {activeLangMeta.label} Mastery
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-300 mt-1">
-                  {courseData?.percentage ?? 10}% completed • {completedCount} of {totalCount} lessons
+                  {courseData?.percentage ?? 0}% completed • {completedCount} of {totalCount} lessons
                 </p>
               </div>
               <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-xs flex items-center justify-center text-white border border-white/20 shadow-xs">
@@ -126,7 +127,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
               ) : (
                 <LearningPath
                   language={selectedLanguage}
-                  completedLessons={completedLessonIds}
+                  lessons={courseData?.lessons ?? []}
                   isWide={true}
                 />
               )}
@@ -147,7 +148,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                 score={
                   personality.scores[
                     personality.primaryTrait.toLowerCase() as keyof typeof personality.scores
-                  ] || 88
+                  ] ?? 0
                 }
               />
             )}
@@ -156,7 +157,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             <LouisCoach
               mood="idle"
               message={`Welcome back, ${
-                dashboard?.user.displayName || "Alex"
+                dashboard?.user.displayName || "learner"
               }! Let's continue your ${activeLangMeta.label} track.`}
             />
 
@@ -170,7 +171,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                   {activeLangMeta.label} Mastery
                 </h2>
                 <p className="text-xs text-slate-300 mt-1">
-                  {courseData?.percentage ?? 10}% completed • {completedCount} of {totalCount} lessons
+                  {courseData?.percentage ?? 0}% completed • {completedCount} of {totalCount} lessons
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-xs flex items-center justify-center text-white border border-white/20 shadow-xs">
@@ -190,7 +191,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
               ) : (
                 <LearningPath
                   language={selectedLanguage}
-                  completedLessons={completedLessonIds}
+                  lessons={courseData?.lessons ?? []}
                   isWide={false}
                 />
               )}

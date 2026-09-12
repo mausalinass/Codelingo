@@ -28,7 +28,7 @@ export const DemoPersonalitySwitch: React.FC<DemoPersonalitySwitchProps> = ({
     {
       id: "ANALYTICAL",
       title: "Analytical Mode",
-      subtitle: "Deep Theory & CodeMirror Editor",
+      subtitle: "Explanation and coding practice",
       tag: "Code Deep Dive",
       icon: Brain,
       activeBorder: "border-blue-500 ring-2 ring-blue-500/30",
@@ -39,7 +39,7 @@ export const DemoPersonalitySwitch: React.FC<DemoPersonalitySwitchProps> = ({
     {
       id: "PRACTICAL",
       title: "Practical Mode",
-      subtitle: "Hands-on Fill-in-the-Blank",
+      subtitle: "Hands-on coding practice",
       tag: "Practice First",
       icon: Zap,
       activeBorder: "border-emerald-500 ring-2 ring-emerald-500/30",
@@ -74,7 +74,7 @@ export const DemoPersonalitySwitch: React.FC<DemoPersonalitySwitchProps> = ({
           </span>
         </div>
         <span className="text-[11px] font-semibold text-slate-400">
-          Powered by Swell
+          Swell demo profile
         </span>
       </div>
 

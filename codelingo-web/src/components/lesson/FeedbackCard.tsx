@@ -49,7 +49,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
               className="flex items-center justify-between gap-4"
             >
               <div className="hidden sm:block text-xs font-semibold text-slate-400 dark:text-slate-500">
-                Press Enter or click Check to test your solution
+                Click Check to review your solution
               </div>
               <button
                 type="button"
@@ -155,7 +155,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                 </div>
                 <div>
                   <div className="text-amber-900 dark:text-amber-200 font-black text-lg">
-                    Network Request Issue
+                    Could not check your answer
                   </div>
                   <div className="text-amber-800 dark:text-amber-300 font-medium text-sm">
                     Preserved your typed answer. Click retry to re-evaluate.

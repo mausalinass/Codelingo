@@ -10,14 +10,14 @@ export class ApiError extends Error {
   }
 }
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:5080" : "");
 
 interface RequestOptions extends RequestInit {
   timeoutMs?: number;
 }
 
 export async function apiClient<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  const { timeoutMs = 2500, ...fetchOptions } = options;
+  const { timeoutMs = 15000, ...fetchOptions } = options;
   const url = `${API_BASE_URL}${endpoint}`;
 
   const controller = new AbortController();
@@ -33,15 +33,10 @@ export async function apiClient<T>(endpoint: string, options: RequestOptions = {
       signal: controller.signal,
     });
 
-    clearTimeout(timeoutId);
-
     if (!res.ok) {
-      let errorData;
-      try {
-        errorData = await res.json();
-      } catch {
-        errorData = await res.text();
-      }
+      const body = await res.text();
+      let errorData: unknown = body;
+      try { errorData = JSON.parse(body); } catch { /* Keep the original error text. */ }
       throw new ApiError(
         `API request failed with status ${res.status}: ${res.statusText}`,
         res.status,
@@ -49,7 +44,9 @@ export async function apiClient<T>(endpoint: string, options: RequestOptions = {
       );
     }
 
-    return (await res.json()) as T;
+    const result = (await res.json()) as T;
+    clearTimeout(timeoutId);
+    return result;
   } catch (err: unknown) {
     clearTimeout(timeoutId);
     if (err instanceof ApiError) {

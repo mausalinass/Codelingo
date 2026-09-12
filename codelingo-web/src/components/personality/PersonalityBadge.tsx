@@ -14,8 +14,8 @@ interface PersonalityBadgeProps {
 export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
   trait,
   mode,
-  source = "SWELL",
-  score = 88,
+  source = "SWELL_MOCK",
+  score = 0,
   className = "",
 }) => {
   const getTraitConfig = (t: PersonalityTrait) => {
@@ -76,7 +76,7 @@ export const PersonalityBadge: React.FC<PersonalityBadgeProps> = ({
                 {config.label} Learner
               </span>
               <span className="text-xs font-bold px-1.5 py-0.5 rounded-md bg-white/80 dark:bg-slate-900/80 border border-current/10">
-                {score}% fit
+                {Math.round(score * 100)}% fit
               </span>
             </div>
             <div className="text-[11px] font-medium opacity-85 capitalize">

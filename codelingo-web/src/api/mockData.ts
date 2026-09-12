@@ -7,7 +7,7 @@ import type {
   PersonalityResponse,
   PersonalityTrait,
 } from "../types/api";
-import { DEMO_USER_ID, SUPPORTED_LANGUAGES } from "../lib/constants";
+import { DEMO_USER_ID, SUPPORTED_LANGUAGES, getCurriculumForTrack } from "../lib/constants";
 
 // Global mutable mock state for seamless offline fallback / demo consistency
 export interface MockState {
@@ -80,6 +80,7 @@ export function getMockDashboard(): DashboardResponse {
       const completed = getCompletedCount(lang);
       return {
         language: lang,
+        lessons: getCurriculumForTrack(lang).map(l => ({...l, status: "current" as const})),
         completedLessons: completed,
         totalLessons: TOTAL_LESSONS_PER_COURSE,
         percentage: Math.min(100, Math.round((completed / TOTAL_LESSONS_PER_COURSE) * 100)),
@@ -917,7 +918,7 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
     const cleanCorrect = targetCorrect.replace(/[¡!¿?,.]/g, "").replace(/\s+/g, " ").trim();
     const cleanUser = cleanAns.replace(/[¡!¿?,.]/g, "").replace(/\s+/g, " ").trim();
 
-    isCorrect = cleanUser === cleanCorrect || cleanAns.includes(cleanCorrect) || cleanCorrect.includes(cleanUser);
+    isCorrect = cleanCorrect.length > 0 && cleanUser === cleanCorrect;
     successMsg = `¡Excelente! Spot-on translation in ${langMeta.label}.`;
     failureMsg = `Check word order. Target: ${lecture.correct[req.language] || "Correct sentence"}`;
   }
@@ -928,7 +929,7 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
     // Check exact number or choice
     isCorrect =
       cleanAns === cleanCorrect ||
-      cleanAns.includes(cleanCorrect) ||
+
       cleanAns.replace("$", "").trim() === cleanCorrect;
     successMsg = `Spot-on calculation! You solved this ${langMeta.label} challenge.`;
     failureMsg = `Not quite. Expected: ${lecture.correct}`;

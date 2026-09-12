@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LearnPage } from "./pages/LearnPage";
-import { LessonPage } from "./pages/LessonPage";
+const LessonPage = lazy(() => import("./pages/LessonPage").then(m => ({ default: m.LessonPage })));
+function LessonRoute() { const { language, lessonId } = useParams(); return <Suspense fallback={<p className="p-8">Loading lesson…</p>}><LessonPage key={language + "/" + lessonId} /></Suspense>; }
 import { CompletePage } from "./pages/CompletePage";
 import type { LanguageId } from "./types/api";
 
@@ -23,7 +24,7 @@ export function App() {
               />
             }
           />
-          <Route path="/lesson/:language/:lessonId" element={<LessonPage />} />
+          <Route path="/lesson/:language/:lessonId" element={<LessonRoute />} />
           <Route path="/complete" element={<CompletePage />} />
         </Routes>
       </BrowserRouter>

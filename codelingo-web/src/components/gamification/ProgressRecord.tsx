@@ -137,24 +137,26 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
     }
   };
 
-  const currentStreak = dashboard?.streak.current ?? 4;
-  const longestStreak = dashboard?.streak.longest ?? 7;
-  const totalXp = dashboard?.user.totalXp ?? 120;
-  const userName = dashboard?.user.displayName ?? "Alex";
+  if (!dashboard) return <p className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 text-slate-600 dark:text-slate-300">Saved progress is not available yet.</p>;
+
+  const currentStreak = dashboard?.streak.current ?? 0;
+  const longestStreak = dashboard?.streak.longest ?? 0;
+  const totalXp = dashboard?.user.totalXp ?? 0;
+  const userName = dashboard?.user.displayName ?? "Demo";
 
   // Calculate overall stats across tracks
-  const totalCourses = dashboard?.courses.length ?? 8;
   const completedLessonsTotal =
-    dashboard?.courses.reduce((acc, c) => acc + c.completedLessons, 0) ?? 1;
-  const totalPossibleLessons = totalCourses * 10;
+    dashboard?.courses.filter(c => !c.preview).reduce((acc, c) => acc + c.completedLessons, 0) ?? 0;
+  const totalPossibleLessons = dashboard?.courses.filter(c => !c.preview).reduce((sum, c) => sum + c.totalLessons, 0) ?? 0;
   const overallPercentage = Math.round(
     (completedLessonsTotal / Math.max(1, totalPossibleLessons)) * 100
   );
 
   // Active track stats
   const activeCourse = dashboard?.courses.find((c) => c.language === currentLanguage);
-  const activeCompleted = activeCourse?.completedLessons ?? 1;
-  const activePercent = activeCourse?.percentage ?? 10;
+  const activeCompleted = activeCourse?.completedLessons ?? 0;
+  const activeTotal = activeCourse?.totalLessons ?? 0;
+  const activePercent = activeCourse?.percentage ?? 0;
   const activeLangMeta = SUPPORTED_LANGUAGES[currentLanguage] || SUPPORTED_LANGUAGES.csharp;
 
   const badgeStyle = getProgressBadgeStyle(activePercent);
@@ -172,7 +174,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
     {
       title: "Flame Keeper",
       desc: "Maintained a 4+ day streak",
-      unlocked: currentStreak >= 4,
+      unlocked: longestStreak >= 4,
       icon: Flame,
       color:
         "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800",
@@ -188,7 +190,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
     {
       title: "Polyglot Coder",
       desc: "Explored multiple programming tracks",
-      unlocked: totalCourses >= 3,
+      unlocked: (dashboard?.courses.filter(c => !c.preview && c.completedLessons > 0).length ?? 0) >= 2,
       icon: Trophy,
       color:
         "text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/40 border-sky-300 dark:border-sky-600",
@@ -241,7 +243,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{
-                  width: `${Math.max(10, activePercent)}%`,
+                  width: `${activePercent}%`,
                   background: getProgressGradient(activePercent),
                 }}
               />
@@ -366,13 +368,13 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
             className="text-lg sm:text-xl font-black transition-colors"
             style={{ color: getProgressColor(activePercent) }}
           >
-            {activeCompleted}/10
+            {activeCompleted}/{activeTotal}
           </span>
           <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mt-1 border border-slate-200/60 dark:border-slate-600/60">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
-                width: `${Math.max(10, activePercent)}%`,
+                width: `${activePercent}%`,
                 background: getProgressGradient(activePercent),
               }}
             />
@@ -656,8 +658,8 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                 ).map((langId) => {
                   const lang = SUPPORTED_LANGUAGES[langId];
                   const cData = dashboard?.courses.find((c) => c.language === langId);
-                  const count = cData?.completedLessons ?? (langId === "csharp" ? 1 : 0);
-                  const trackPercent = Math.round((count / 10) * 100);
+                  const count = cData?.completedLessons ?? 0;
+                  const trackPercent = cData?.percentage ?? 0;
                   const isCurrent = langId === currentLanguage;
 
                   return (
@@ -686,7 +688,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                             className="text-[10px] font-black"
                             style={{ color: getProgressColor(trackPercent) }}
                           >
-                            {count}/10
+                            {count}/{cData?.totalLessons ?? 0}
                           </span>
                         </div>
                       </div>
@@ -700,7 +702,7 @@ export const ProgressRecord: React.FC<ProgressRecordProps> = ({
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
-                            width: `${Math.max(8, trackPercent)}%`,
+                            width: `${trackPercent}%`,
                             background: getProgressGradient(trackPercent),
                           }}
                         />

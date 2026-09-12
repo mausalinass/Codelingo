@@ -1,3 +1,4 @@
+import { isPreviewTrack } from "../api/preview";
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -6,9 +7,9 @@ import confetti from "canvas-confetti";
 import { fetchAdaptiveLesson } from "../api/lessons";
 import { fetchPersonality } from "../api/personality";
 import { evaluateExercise } from "../api/evaluate";
-import { setDemoPersonality } from "../api/demo";
+import { setDemoPersonality, DEMO_CONTROLS_ENABLED } from "../api/demo";
 import { fetchDashboard } from "../api/dashboard";
-import { DEMO_USER_ID, SUPPORTED_LANGUAGES, getCurriculumForTrack } from "../lib/constants";
+import { DEMO_USER_ID, SUPPORTED_LANGUAGES } from "../lib/constants";
 
 import { LessonProgressBar } from "../components/lesson/LessonProgressBar";
 import { LouisCoach } from "../components/louis/LouisCoach";
@@ -23,7 +24,7 @@ import { DemoPersonalitySwitch } from "../components/demo/DemoPersonalitySwitch"
 import { ThemeToggle } from "../components/navigation/ThemeToggle";
 import { LessonTopicIcon, LanguageTrackIcon } from "../lib/icons";
 
-import type { LanguageId, PersonalityTrait } from "../types/api";
+import type { LanguageId, PersonalityTrait, EvaluateResponse } from "../types/api";
 import type { LouisMood, SubmitStatus } from "../types/lesson";
 
 export const LessonPage: React.FC = () => {
@@ -57,6 +58,8 @@ export const LessonPage: React.FC = () => {
     queryKey: ["adaptiveLesson", langId, lessonId, personality?.primaryTrait],
     queryFn: () => fetchAdaptiveLesson(langId, lessonId, DEMO_USER_ID),
   });
+
+  const [evaluation, setEvaluation] = useState<EvaluateResponse | null>(null);
 
   // Exercise answer state keyed to the active lesson mode
   const lessonKey = `${lesson?.exercise.id}-${lesson?.presentationMode}`;
@@ -98,7 +101,7 @@ export const LessonPage: React.FC = () => {
   // Submit and feedback states
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
   const [feedback, setFeedback] = useState<{ title: string; message: string } | undefined>();
-  const [streakIncreased, setStreakIncreased] = useState(false);
+  const [, setStreakIncreased] = useState(false);
 
   // Demo Personality Mutation
   const demoSwitchMutation = useMutation({
@@ -113,6 +116,7 @@ export const LessonPage: React.FC = () => {
   const evaluateMutation = useMutation({
     mutationFn: evaluateExercise,
     onSuccess: (data) => {
+      setEvaluation(data);
       if (data.correct) {
         setSubmitStatus("correct");
         setFeedback(data.feedback);
@@ -180,8 +184,9 @@ export const LessonPage: React.FC = () => {
       state: {
         language: langId,
         lessonTitle: lesson?.title || "Lesson Complete",
-        xpAwarded: 10,
-        newStreak: (dashboard?.streak.current ?? 4) + (streakIncreased ? 1 : 0),
+        xpAwarded: evaluation?.xpAwarded ?? 0,
+        newStreak: isPreviewTrack(langId) ? dashboard?.streak.current ?? 0 : evaluation?.streak.current ?? dashboard?.streak.current ?? 0,
+        preview: isPreviewTrack(langId),
       },
     });
   };
@@ -202,8 +207,7 @@ export const LessonPage: React.FC = () => {
   const mode = lesson?.presentationMode || "DEEP_EXPLANATION";
   const activeTrait = personality?.primaryTrait || "ANALYTICAL";
   const trackMeta = SUPPORTED_LANGUAGES[langId] || SUPPORTED_LANGUAGES.csharp;
-  const curriculum = getCurriculumForTrack(langId);
-  const lessonOrder = curriculum.find((l) => l.id === lessonId)?.order || 1;
+  const course = dashboard?.courses.find(c => c.language === langId);
 
   if (isLessonLoading) {
     return (
@@ -251,6 +255,7 @@ export const LessonPage: React.FC = () => {
       </header>
 
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-5">
+        {isPreviewTrack(langId) && <p role="status" className="p-3 border rounded-xl text-amber-800 dark:text-amber-200">Preview practice: not saved to your account; no XP or streak changes.</p>}
         {/* Lesson & Language Type Header Card */}
         <div className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
           <div className="flex items-center gap-3">
@@ -264,7 +269,7 @@ export const LessonPage: React.FC = () => {
                   {trackMeta.label}
                 </span>
                 <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">
-                  Lesson {lessonOrder} of {curriculum.length}
+                  Lesson {course?.lessons.find(l => l.id === lessonId)?.order ?? "—"} of {course?.totalLessons ?? "—"}
                 </span>
               </div>
               <h1 className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg leading-tight mt-0.5">
@@ -278,21 +283,22 @@ export const LessonPage: React.FC = () => {
         </div>
 
         {/* Floating Demo Personality Switcher for Judges */}
-        <DemoPersonalitySwitch
+        {DEMO_CONTROLS_ENABLED && <DemoPersonalitySwitch
           currentTrait={activeTrait}
-          onSelectTrait={(trait) => demoSwitchMutation.mutate(trait)}
-          isLoading={demoSwitchMutation.isPending}
-        />
+          onSelectTrait={(trait) => { setSubmitStatus("idle"); setFeedback(undefined); setEvaluation(null); setStreakIncreased(false); demoSwitchMutation.mutate(trait); }}
+          isLoading={demoSwitchMutation.isPending || evaluateMutation.isPending}
+        />}
+        {demoSwitchMutation.isError && <p role="alert" className="text-red-600">The personality change could not be saved. Check the connection or demo permissions.</p>}
 
         {/* Swell Personality Badge */}
         <PersonalityBadge
           trait={activeTrait}
           mode={mode}
-          source={personality?.source || "SWELL"}
+          source={personality?.source || "SWELL_MOCK"}
           score={
             personality?.scores[
               activeTrait.toLowerCase() as keyof typeof personality.scores
-            ] || 88
+            ] ?? 0
           }
         />
 
@@ -339,74 +345,13 @@ export const LessonPage: React.FC = () => {
           </div>
         )}
 
-        {/* 3. Programming: Adaptive Mode View Renderers */}
-        {lesson.exercise.type === "CODE" && mode === "DEEP_EXPLANATION" && (
-          <div className="flex flex-col gap-5 animate-in fade-in duration-200">
-            {/* Concept Card with Technical Deep Dive */}
-            <ConceptCard
-              title={lesson.title}
-              explanation={lesson.explanation}
-              visualSteps={lesson.visualSteps}
-            />
-
-            {/* CodeMirror Code Exercise */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs transition-colors">
-              <CodeExercise
-                prompt={lesson.exercise.prompt}
-                code={codeAnswer}
-                onChange={setCodeAnswer}
-                language={langId}
-                disabled={submitStatus === "correct"}
-              />
-            </div>
-          </div>
-        )}
-
-        {lesson.exercise.type !== "WORD_BANK" &&
-          lesson.exercise.type !== "MATH_INPUT" &&
-          mode === "PRACTICE_FIRST" && (
-            <div className="flex flex-col gap-5 animate-in fade-in duration-200">
-              {/* Quick Interactive Exercise */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs transition-colors">
-                <FillBlankExercise
-                  prompt={lesson.exercise.prompt}
-                  blankValue={blankAnswer}
-                  onChange={setBlankAnswer}
-                  language={langId}
-                  placeholder={lesson.exercise.placeholder}
-                  disabled={submitStatus === "correct"}
-                  hasError={submitStatus === "incorrect"}
-                />
-              </div>
-            </div>
-          )}
-
-        {lesson.exercise.type !== "WORD_BANK" &&
-          lesson.exercise.type !== "MATH_INPUT" &&
-          mode === "VISUAL_GUIDED" && (
-            <div className="flex flex-col gap-5 animate-in fade-in duration-200">
-              {/* Visual Flowchart Diagram */}
-              <ConceptCard
-                title={lesson.title}
-                explanation={lesson.explanation}
-                visualSteps={lesson.visualSteps}
-                isVisualMode={true}
-              />
-
-              {/* Guided Blank Challenge */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs transition-colors">
-                <FillBlankExercise
-                  prompt={lesson.exercise.prompt}
-                  blankValue={blankAnswer}
-                  onChange={setBlankAnswer}
-                  language={langId}
-                  placeholder={lesson.exercise.placeholder}
-                  disabled={submitStatus === "correct"}
-                  hasError={submitStatus === "incorrect"}
-                />
-              </div>
-            </div>
-          )}
+        {(lesson.exercise.type === "CODE" || lesson.exercise.type === "FILL_BLANK") && <>
+        {mode !== "PRACTICE_FIRST" && <ConceptCard title={lesson.title} explanation={lesson.explanation} visualSteps={lesson.visualSteps} isVisualMode={mode === "VISUAL_GUIDED"} />}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-xs">
+          {lesson.exercise.type === "CODE" ? <CodeExercise prompt={lesson.exercise.prompt} code={codeAnswer} onChange={setCodeAnswer} language={langId} disabled={submitStatus === "correct" || evaluateMutation.isPending} />
+          : <FillBlankExercise prompt={lesson.exercise.prompt} blankValue={blankAnswer} onChange={setBlankAnswer} language={langId} placeholder={lesson.exercise.placeholder} disabled={submitStatus === "correct" || evaluateMutation.isPending} hasError={submitStatus === "incorrect"} />}
+        </div>
+        </>}
       </main>
 
       {/* Bottom Feedback / Submit Sheet */}

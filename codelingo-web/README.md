@@ -1,32 +1,42 @@
-# React + TypeScript + Vite
+# Codelingo React frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + TypeScript + Vite, integrated with the ASP.NET API in ../backend. This is a shared-profile learning demo, not an authenticated user account service.
 
-Currently, two official plugins are available:
+## Local startup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Start PostgreSQL and the backend using ../backend/README.md, then:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm ci
+npm run dev -- --port 5173 --strictPort
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open http://localhost:5173. Development defaults to API http://localhost:5080. For another origin configure VITE_API_BASE_URL; see .env.example. The app never substitutes mock success for a failed API request. Network failures display an error and retain the typed answer for retry.
+
+## Integration rules
+
+- Catalog and completed/current/locked lesson states come from the dashboard API.
+- Eight languages, ten lessons per course; UI uses returned totals and IDs.
+- CODE/FILL_BLANK rendering follows exercise.type. All current backend exercises use CODE in every personality mode.
+- Demo personality POST sends primaryTrait and receives PersonalityResponse.
+- Completion XP/streak come directly from EvaluateResponse. Replays display +0 XP.
+- Demo profile dialog does not collect email/password or pretend to create accounts.
+- SWELL_MOCK is explicitly shown. Scores such as 0.88 render as 88%.
+- Demo switch controls are visible in Development and hidden in production. Do not embed Demo__ApiKey in VITE_* variables. A trusted server-side presenter tool is needed for protected production mutations.
+
+## Validation
+
+```sh
+npm run build
+npm run lint
+npx playwright install chromium
+npm run test:integration
+```
+
+The integration test requires both local servers. It resets the fixed demo user and leaves it reset. To use an installed Chrome set CHROME_PATH to its executable path; on this workstation C:\Program Files\Google\Chrome\Application\chrome.exe. Override FRONTEND_URL and API_BASE_URL if necessary. Test covers practical/visual code submission, wrong/correct/replay, persistent XP and streak, recarga, HTTP failure without fabricated success, demo profile and mobile overflow.
+
+## Deployment
+
+Set VITE_API_BASE_URL to your HTTPS API origin before npm run build, then host dist with an SPA fallback to index.html. Empty production API URL assumes a same-origin /api reverse proxy. Local .env files are ignored and are not committed. Configure backend FrontendOrigin to the actual frontend origin. Test the deployed frontend/API/database together before judging.
+
+Public registration, authentication and individual user data isolation are not implemented. Do not advertise a personal-account launch based on this demo.

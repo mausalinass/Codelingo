@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Flame, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
 import { LouisCoach } from "../components/louis/LouisCoach";
 
 interface CompleteLocationState {
+  preview?: boolean;
   language?: string;
   lessonTitle?: string;
   xpAwarded?: number;
@@ -17,9 +18,9 @@ export const CompletePage: React.FC = () => {
   const navigate = useNavigate();
   const state = (location.state as CompleteLocationState) || {};
 
-  const xpAwarded = state.xpAwarded ?? 10;
-  const newStreak = state.newStreak ?? 5;
-  const lessonTitle = state.lessonTitle ?? "Conditions Mastery";
+  const xpAwarded = state.xpAwarded ?? 0;
+  const newStreak = state.newStreak ?? 0;
+  const lessonTitle = state.lessonTitle ?? "Lesson";
 
   useEffect(() => {
     // Grand celebration fireworks
@@ -48,6 +49,8 @@ export const CompletePage: React.FC = () => {
     })();
   }, []);
 
+  if (state.xpAwarded === undefined || state.newStreak === undefined) return <Navigate to="/learn" replace />;
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4 sm:p-6 text-slate-900 dark:text-slate-100 selection:bg-red-500 selection:text-white transition-colors">
       <div className="w-full max-w-md flex flex-col items-center text-center gap-6">
@@ -61,7 +64,7 @@ export const CompletePage: React.FC = () => {
           <LouisCoach
             mood="celebrating"
             size="lg"
-            message="Outstanding work! Your streak is burning brighter than ever!"
+            message={state.preview ? "Preview practice complete. No account progress, XP or streak changes were saved." : "Nice work! Your saved lesson results are below."}
           />
         </motion.div>
 
