@@ -1,0 +1,94 @@
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import type { LanguageId } from "../../types/api";
+import { SUPPORTED_LANGUAGES } from "../../lib/constants";
+
+interface CourseSelectorProps {
+  currentLanguage: LanguageId;
+  onSelectLanguage: (language: LanguageId) => void;
+}
+
+export const CourseSelector: React.FC<CourseSelectorProps> = ({
+  currentLanguage,
+  onSelectLanguage,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const activeLang = SUPPORTED_LANGUAGES[currentLanguage] || SUPPORTED_LANGUAGES.csharp;
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all font-bold text-slate-800 shadow-xs active:scale-98 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-red-500/20"
+        aria-label="Select Programming Language"
+      >
+        <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold">
+          {activeLang.badge}
+        </span>
+        <span className="text-sm font-semibold tracking-tight">{activeLang.label}</span>
+        <ChevronDown
+          className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="absolute left-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+          <div className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+            Select Course Track
+          </div>
+          {(Object.keys(SUPPORTED_LANGUAGES) as LanguageId[]).map((langId) => {
+            const lang = SUPPORTED_LANGUAGES[langId];
+            const isSelected = langId === currentLanguage;
+            return (
+              <button
+                key={langId}
+                type="button"
+                onClick={() => {
+                  onSelectLanguage(langId);
+                  setIsOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors cursor-pointer ${
+                  isSelected
+                    ? "bg-red-50/80 text-red-600 font-bold"
+                    : "hover:bg-slate-50 text-slate-700"
+                }`}
+              >
+                <span
+                  className={`flex items-center justify-center w-7 h-7 rounded-lg font-mono text-xs font-bold transition-transform ${
+                    isSelected
+                      ? "bg-red-600 text-white shadow-xs scale-105"
+                      : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  {lang.badge}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold leading-snug">{lang.label}</div>
+                  <div className="text-xs text-slate-400 truncate">{lang.description}</div>
+                </div>
+                {isSelected && (
+                  <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
