@@ -62,15 +62,17 @@ export const LessonPage: React.FC = () => {
     error: lessonError,
   } = useQuery({
     queryKey: ["adaptiveLesson", langId, lessonId, personality?.primaryTrait],
-    queryFn: () => fetchAdaptiveLesson(langId, lessonId, DEMO_USER_ID),
+    queryFn: () => fetchAdaptiveLesson(langId, lessonId, DEMO_USER_ID, personality?.primaryTrait),
   });
 
   const [evaluation, setEvaluation] = useState<EvaluateResponse | null>(null);
   const [problemIndex, setProblemIndex] = useState(0);
   const [lessonStarted, setLessonStarted] = useState(false);
+  const activeProblem = lesson?.exercise.problems?.[problemIndex];
+  const activeExercise = lesson ? { ...lesson.exercise, ...activeProblem } : undefined;
 
   // Exercise answer state keyed to the active lesson mode
-  const lessonKey = `${lesson?.exercise.id}-p${problemIndex + 1}-${lesson?.presentationMode}`;
+  const lessonKey = `${activeProblem?.id ?? `${lesson?.exercise.id}-p${problemIndex + 1}`}-${lesson?.presentationMode}`;
   const [exerciseState, setExerciseState] = useState<{
     key: string;
     code: string;
@@ -86,7 +88,7 @@ export const LessonPage: React.FC = () => {
   const codeAnswer =
     exerciseState.key === lessonKey
       ? exerciseState.code
-      : lesson?.exercise.starterCode ?? "";
+      : activeExercise?.starterCode ?? "";
 
   const blankAnswer =
     exerciseState.key === lessonKey ? exerciseState.blank : "";
@@ -172,13 +174,13 @@ export const LessonPage: React.FC = () => {
 
   // Handle Check submission
   const handleCheck = () => {
-    if (!lesson) return;
+    if (!lesson || !activeExercise) return;
     setSubmitStatus("submitting");
 
     const activeAnswer =
-      lesson.exercise.type === "CODE"
+      activeExercise.type === "CODE"
         ? codeAnswer
-        : lesson.exercise.type === "WORD_BANK" || lesson.exercise.type === "MATH_INPUT"
+        : activeExercise.type === "WORD_BANK" || activeExercise.type === "MATH_INPUT"
         ? customAnswer.trim()
         : blankAnswer.trim();
 
@@ -186,7 +188,8 @@ export const LessonPage: React.FC = () => {
       userId: DEMO_USER_ID,
       language: langId,
       lessonId,
-      exerciseId: `${lesson.exercise.id}-p${problemIndex + 1}`,
+      exerciseId: activeProblem?.id ?? `${lesson.exercise.id}-p${problemIndex + 1}`,
+      presentationMode: lesson.presentationMode,
       answer: activeAnswer,
     });
   };
@@ -223,9 +226,9 @@ export const LessonPage: React.FC = () => {
   };
 
   const isAnswerEmpty =
-    lesson?.exercise.type === "CODE"
+    activeExercise?.type === "CODE"
       ? !codeAnswer.trim()
-      : lesson?.exercise.type === "WORD_BANK" || lesson?.exercise.type === "MATH_INPUT"
+      : activeExercise?.type === "WORD_BANK" || activeExercise?.type === "MATH_INPUT"
       ? !customAnswer.trim()
       : !blankAnswer.trim();
 
@@ -238,7 +241,7 @@ export const LessonPage: React.FC = () => {
     explanation: lesson.explanation,
     prompt: lesson.exercise.prompt,
   }) : null;
-  const taskGuidance = lesson ? getTaskGuidance(langId, lessonId, onboarding.uiLanguage, localizedLesson?.prompt ?? lesson.exercise.prompt) : null;
+  const taskGuidance = lesson ? getTaskGuidance(langId, lessonId, onboarding.uiLanguage, activeProblem?.prompt ?? localizedLesson?.prompt ?? lesson.exercise.prompt, activeProblem?.goal) : null;
 
   if (isLessonLoading) {
     return (
@@ -287,7 +290,7 @@ export const LessonPage: React.FC = () => {
       </header>
 
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col gap-5">
-        {isPreviewTrack(langId) && <p role="status" className="p-3 border rounded-xl text-amber-800 dark:text-amber-200">Preview practice: not saved to your account; no XP or streak changes.</p>}
+        {isPreviewTrack(langId) && <p role="status" className="p-3 border rounded-xl text-amber-800 dark:text-amber-200">Practice track: completing all 10 problems activates your daily streak on this device. This track does not award account XP yet.</p>}
         {/* Lesson & Language Type Header Card */}
         <div className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
           <div className="flex items-center gap-3">
@@ -337,6 +340,7 @@ export const LessonPage: React.FC = () => {
         {/* Louis Coach with Adaptive Message */}
         <LouisCoach
           mood={louisMood}
+          variantKey={`${langId}-${lessonId}-${problemIndex}-${mode}`}
           message={
             submitStatus === "correct"
               ? "Brilliant! You mastered this challenge!"
@@ -359,17 +363,18 @@ export const LessonPage: React.FC = () => {
           <p className="text-xs font-black uppercase tracking-widest text-amber-700 dark:text-amber-300">Louis · {taskGuidance.label}</p>
           <p className="mt-2 text-lg font-black text-slate-950 dark:text-white">{taskGuidance.goal}</p>
           {taskGuidance.hint && <p className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-300">{onboarding.uiLanguage === "es" ? "Pista de sintaxis" : onboarding.uiLanguage === "fr" ? "Indice de syntaxe" : "Syntax hint"}: <code className="rounded-lg bg-white px-2 py-1 font-mono text-red-600 dark:bg-slate-900 dark:text-red-300">{taskGuidance.hint}</code></p>}
+          {mode === "VISUAL_GUIDED" && activeProblem?.visualSteps && <div className="mt-3 grid gap-2 sm:grid-cols-3">{activeProblem.visualSteps.map((step, index) => <div key={step} className="rounded-xl border border-amber-200 bg-white/80 px-3 py-2 text-xs font-extrabold text-slate-700 dark:border-amber-800 dark:bg-slate-900/80 dark:text-slate-200"><span className="mr-1 text-red-600">{index + 1}.</span>{step}</div>)}</div>}
         </section>}
 
         {/* 1. Spoken Language: Duolingo Word Bank Exercise */}
-        {lesson.exercise.type === "WORD_BANK" && (
+        {activeExercise?.type === "WORD_BANK" && (
           <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-xs animate-in fade-in duration-200">
             <WordBankExercise
               key={lessonKey}
-              prompt={localizedLesson?.prompt ?? lesson.exercise.prompt}
-              targetSentence={lesson.exercise.targetSentence}
-              wordBank={lesson.exercise.wordBank}
-              audioText={lesson.exercise.audioText}
+              prompt={activeProblem?.prompt ?? localizedLesson?.prompt ?? lesson.exercise.prompt}
+              targetSentence={activeExercise.targetSentence}
+              wordBank={activeExercise.wordBank}
+              audioText={activeExercise.audioText}
               onChange={setCustomAnswer}
               disabled={submitStatus === "correct"}
               hasError={submitStatus === "incorrect"}
@@ -378,26 +383,26 @@ export const LessonPage: React.FC = () => {
         )}
 
         {/* 2. Mathematics: Duolingo Math Interactive Exercise */}
-        {lesson.exercise.type === "MATH_INPUT" && (
+        {activeExercise?.type === "MATH_INPUT" && (
           <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-xs animate-in fade-in duration-200">
             <MathExercise
               key={lessonKey}
-              prompt={localizedLesson?.prompt ?? lesson.exercise.prompt}
+              prompt={activeProblem?.prompt ?? localizedLesson?.prompt ?? lesson.exercise.prompt}
               value={customAnswer}
               onChange={setCustomAnswer}
               disabled={submitStatus === "correct"}
               hasError={submitStatus === "incorrect"}
-              choices={lesson.exercise.choices}
-              mathVisual={lesson.exercise.mathVisual}
-              placeholder={lesson.exercise.placeholder}
+              choices={activeExercise.choices}
+              mathVisual={activeExercise.mathVisual}
+              placeholder={activeExercise.placeholder}
             />
           </div>
         )}
 
-        {(lesson.exercise.type === "CODE" || lesson.exercise.type === "FILL_BLANK") && <>
+        {(activeExercise?.type === "CODE" || activeExercise?.type === "FILL_BLANK") && <>
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-xs">
-          {lesson.exercise.type === "CODE" ? <CodeExercise key={lessonKey} prompt={localizedLesson?.prompt ?? lesson.exercise.prompt} code={codeAnswer} onChange={setCodeAnswer} language={langId} disabled={submitStatus === "correct" || evaluateMutation.isPending} />
-          : <FillBlankExercise key={lessonKey} prompt={localizedLesson?.prompt ?? lesson.exercise.prompt} blankValue={blankAnswer} onChange={setBlankAnswer} language={langId} placeholder={lesson.exercise.placeholder} disabled={submitStatus === "correct" || evaluateMutation.isPending} hasError={submitStatus === "incorrect"} />}
+          {activeExercise.type === "CODE" ? <CodeExercise key={lessonKey} prompt={activeProblem?.prompt ?? localizedLesson?.prompt ?? lesson.exercise.prompt} code={codeAnswer} onChange={setCodeAnswer} language={langId} disabled={submitStatus === "correct" || evaluateMutation.isPending} />
+          : <FillBlankExercise key={lessonKey} prompt={activeProblem?.prompt ?? localizedLesson?.prompt ?? lesson.exercise.prompt} blankValue={blankAnswer} onChange={setBlankAnswer} language={langId} placeholder={activeExercise.placeholder} disabled={submitStatus === "correct" || evaluateMutation.isPending} hasError={submitStatus === "incorrect"} />}
         </div>
         </>}
         </>}

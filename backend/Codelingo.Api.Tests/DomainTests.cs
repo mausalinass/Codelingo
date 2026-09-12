@@ -80,6 +80,22 @@ public class DomainTests
         var visual = service.Build(lesson, new("SWELL_MOCK", "VISUAL", "VISUAL_GUIDED", new(0.35m, 0.48m, 0.91m)));
         Assert.Equal(analytical.Exercise.Id, practical.Exercise.Id); Assert.True(analytical.ShowExplanationFirst);
         Assert.Null(practical.Explanation); Assert.False(practical.ShowExplanationFirst); Assert.NotEmpty(visual.VisualSteps);
+        Assert.Equal(10, analytical.Exercise.Problems.Length);
+        Assert.Equal(10, analytical.Exercise.Problems.Select(problem => problem.Prompt).Distinct().Count());
+        Assert.NotEqual(analytical.Exercise.Problems[0].Prompt, practical.Exercise.Problems[0].Prompt);
+        Assert.Contains("INPUT", visual.Exercise.Problems[0].Prompt);
+    }
+    [Fact] public void EveryCodingLessonHasTenDistinctValidProblems()
+    {
+        var evaluator = new EvaluationService();
+        foreach (var lesson in new CurriculumCatalog().Lessons)
+        {
+            var problems = ProblemSet.CreateAll(lesson, "DEEP_EXPLANATION");
+            Assert.Equal(10, problems.Length);
+            Assert.Equal(10, problems.Select(problem => problem.Prompt).Distinct().Count());
+            Assert.Equal(10, problems.Select(problem => problem.Exercise.SampleSolution).Distinct().Count());
+            Assert.All(problems, problem => Assert.True(evaluator.Evaluate(problem.Exercise.SampleSolution, problem.Exercise)));
+        }
     }
     [Theory]
     [InlineData(0, "hello")][InlineData(1, "hello")][InlineData(2, "variables")][InlineData(3, "variables")][InlineData(4, "conditions")][InlineData(5, "functions")]

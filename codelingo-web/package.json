@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test:integration": "node scripts/integration-test.mjs",
     "test:product": "node scripts/product-upgrade-test.mjs",
-    "test:latest-fixes": "node scripts/latest-fixes-test.mjs"
+    "test:latest-fixes": "node scripts/latest-fixes-test.mjs",
+    "test:adaptive-session": "node scripts/adaptive-session-test.mjs"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.5",

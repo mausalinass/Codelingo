@@ -64,7 +64,7 @@ export const CompletePage: React.FC = () => {
           <LouisCoach
             mood="celebrating"
             size="lg"
-            message={state.preview ? "Preview practice complete. No account progress, XP or streak changes were saved." : "Nice work! Your saved lesson results are below."}
+            message={state.preview ? "Practice complete! Today's streak was saved on this device." : "Nice work! Your saved lesson results are below."}
           />
         </motion.div>
 

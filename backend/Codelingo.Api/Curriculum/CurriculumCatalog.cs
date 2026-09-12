@@ -13,11 +13,11 @@ public sealed class CurriculumCatalog
         var definitions = JsonSerializer.Deserialize<LessonDefinition[]>(stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
         var legacy = new[] { PythonLessons.All, JavaScriptLessons.All, CSharpLessons.All }.SelectMany(x => x).ToDictionary(x => (x.Language, x.Id));
         Lessons = definitions.Select(d => d with { Exercise = d.Exercise with {
-            RequiredPatterns = legacy.TryGetValue((d.Language, d.Id), out var original) ? original.Exercise.RequiredPatterns : [SnippetPattern(d.Exercise.SampleSolution)]
+            RequiredPatterns = legacy.TryGetValue((d.Language, d.Id), out var original) ? original.Exercise.RequiredPatterns : [ExactSnippetPattern(d.Exercise.SampleSolution)]
         }}).ToArray();
     }
     // Controlled token sequence, with flexible spacing outside quoted strings. Never executes code.
-    private static string SnippetPattern(string sample)
+    public static string ExactSnippetPattern(string sample)
     {
         var tokens = Regex.Matches(sample, "\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|[A-Za-z_][A-Za-z_0-9]*|[0-9]+|[^\\s]", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
         return @"\A\s*" + string.Join(@"\s*", tokens.Select(t => Regex.Escape(t.Value))) + @"\s*\z";

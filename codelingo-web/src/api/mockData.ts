@@ -8,6 +8,7 @@ import type {
   PersonalityTrait,
 } from "../types/api";
 import { DEMO_USER_ID, SUPPORTED_LANGUAGES, getCurriculumForTrack } from "../lib/constants";
+import { buildPreviewProblems, publicProblems } from "./previewProblems";
 
 // Global mutable mock state for seamless offline fallback / demo consistency
 export interface MockState {
@@ -768,6 +769,7 @@ export function getMockAdaptiveLesson(
 ): AdaptiveLessonResponse {
   const trait = traitOverride || mockState.personality;
   const langMeta = SUPPORTED_LANGUAGES[language] || SUPPORTED_LANGUAGES.csharp;
+  const presentationMode = trait === "VISUAL" ? "VISUAL_GUIDED" : trait === "PRACTICAL" ? "PRACTICE_FIRST" : "DEEP_EXPLANATION";
 
   // 1. Spoken Language Track (Duolingo Style Word Bank)
   if (langMeta.subject === "language") {
@@ -785,11 +787,11 @@ export function getMockAdaptiveLesson(
       italian: "Ciao! Enjoy learning authentic Italian dialogue and culture!",
     };
 
-    return {
+    const result: AdaptiveLessonResponse = {
       lessonId,
       language,
       personality: trait,
-      presentationMode: "PRACTICE_FIRST",
+      presentationMode,
       title: `${langMeta.label}: ${lecture.title}`,
       louisMessage: greetingsMap[language] || "Practice makes fluent! Build the translated sentence.",
       explanation: lecture.explanation,
@@ -798,7 +800,7 @@ export function getMockAdaptiveLesson(
         "2. Select vocabulary chips from word bank",
         "3. Check sentence syntax and word order",
       ],
-      showExplanationFirst: false,
+      showExplanationFirst: trait === "ANALYTICAL",
       exercise: {
         id: `${language}-${lessonId}-01`,
         type: "WORD_BANK",
@@ -808,16 +810,19 @@ export function getMockAdaptiveLesson(
         audioText,
       },
     };
+    result.exercise.problems = publicProblems(buildPreviewProblems(language, lessonId, presentationMode, result.exercise));
+    result.exercise.prompt = result.exercise.problems[0].prompt;
+    return result;
   }
 
   // 2. Mathematics Track (Duolingo Math Style)
   if (langMeta.subject === "math") {
     const lecture = MATH_LECTURES[lessonId] || MATH_LECTURES.math_addition;
-    return {
+    const result: AdaptiveLessonResponse = {
       lessonId,
       language,
       personality: trait,
-      presentationMode: "PRACTICE_FIRST",
+      presentationMode,
       title: `${langMeta.label}: ${lecture.title}`,
       louisMessage: "Let's crunch the numbers! Use logic and step-by-step arithmetic.",
       explanation: lecture.explanation,
@@ -826,7 +831,7 @@ export function getMockAdaptiveLesson(
         "2. Apply operation priority (PEMDAS)",
         "3. Compute final value & verify with keypad",
       ],
-      showExplanationFirst: false,
+      showExplanationFirst: trait === "ANALYTICAL",
       exercise: {
         id: `${language}-${lessonId}-01`,
         type: "MATH_INPUT",
@@ -836,6 +841,9 @@ export function getMockAdaptiveLesson(
         placeholder: "Enter number...",
       },
     };
+    result.exercise.problems = publicProblems(buildPreviewProblems(language, lessonId, presentationMode, result.exercise));
+    result.exercise.prompt = result.exercise.problems[0].prompt;
+    return result;
   }
 
   // 3. Programming Languages (Existing Coding Track)
@@ -905,6 +913,10 @@ export function getMockAdaptiveLesson(
 export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
   const cleanAns = req.answer.toLowerCase().replace(/\s+/g, " ").trim();
   const langMeta = SUPPORTED_LANGUAGES[req.language] || SUPPORTED_LANGUAGES.csharp;
+  const mode = req.presentationMode ?? "PRACTICE_FIRST";
+  const trait: PersonalityTrait = mode === "VISUAL_GUIDED" ? "VISUAL" : mode === "DEEP_EXPLANATION" ? "ANALYTICAL" : "PRACTICAL";
+  const activeLesson = getMockAdaptiveLesson(req.language, req.lessonId, trait);
+  const previewProblem = buildPreviewProblems(req.language, req.lessonId, mode, activeLesson.exercise).find(problem => problem.id === req.exerciseId);
 
   let isCorrect = false;
   let successMsg = "Outstanding! 🎉";
@@ -912,27 +924,25 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
 
   // Evaluate Spoken Language Answers
   if (langMeta.subject === "language") {
-    const lecture = LANGUAGE_LECTURES[req.lessonId] || LANGUAGE_LECTURES.lang_greetings;
-    const targetCorrect = (lecture.correct[req.language] || "").toLowerCase().trim();
+    const targetCorrect = (previewProblem?.correctAnswer || "").toLowerCase().trim();
     // Allow matching punctuation-free or exact
     const cleanCorrect = targetCorrect.replace(/[¡!¿?,.]/g, "").replace(/\s+/g, " ").trim();
     const cleanUser = cleanAns.replace(/[¡!¿?,.]/g, "").replace(/\s+/g, " ").trim();
 
     isCorrect = cleanCorrect.length > 0 && cleanUser === cleanCorrect;
     successMsg = `¡Excelente! Spot-on translation in ${langMeta.label}.`;
-    failureMsg = `Check word order. Target: ${lecture.correct[req.language] || "Correct sentence"}`;
+    failureMsg = `Check word order. Target: ${previewProblem?.correctAnswer || "Correct sentence"}`;
   }
   // Evaluate Math Answers
   else if (langMeta.subject === "math") {
-    const lecture = MATH_LECTURES[req.lessonId] || MATH_LECTURES.math_addition;
-    const cleanCorrect = lecture.correct.toLowerCase().trim();
+    const cleanCorrect = (previewProblem?.correctAnswer || "").toLowerCase().trim();
     // Check exact number or choice
     isCorrect =
       cleanAns === cleanCorrect ||
 
       cleanAns.replace("$", "").trim() === cleanCorrect;
     successMsg = `Spot-on calculation! You solved this ${langMeta.label} challenge.`;
-    failureMsg = `Not quite. Expected: ${lecture.correct}`;
+    failureMsg = `Not quite. Expected: ${previewProblem?.correctAnswer}`;
   }
   // Evaluate Coding Answers
   else {

@@ -7,6 +7,7 @@ interface LouisCoachProps {
   message: string;
   className?: string;
   size?: "sm" | "md" | "lg";
+  variantKey?: string;
 }
 
 export const LouisCoach: React.FC<LouisCoachProps> = ({
@@ -14,15 +15,18 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
   message,
   className = "",
   size = "md",
+  variantKey,
 }) => {
   const isCelebrating = mood === "celebrating";
   const isThinking = mood === "thinking";
   const isEncouraging = mood === "encouraging";
-  const louisImage = isCelebrating
-    ? "/louis-celebrating-2_5d.png"
+  const images = ["/louis-pointing-2_5d.png", "/louis-celebrating-2_5d.png", "/louis-thinking-2_5d.png"];
+  const variantIndex = variantKey ? [...variantKey].reduce((sum, character) => sum + character.charCodeAt(0), 0) % images.length : -1;
+  const louisImage = variantIndex >= 0 ? images[variantIndex] : isCelebrating
+    ? images[1]
     : isThinking
-      ? "/louis-thinking-2_5d.png"
-      : "/louis-pointing-2_5d.png";
+      ? images[2]
+      : images[0];
 
   const sizeClasses = {
     sm: "w-16 h-16",
@@ -100,7 +104,7 @@ export const LouisCoach: React.FC<LouisCoachProps> = ({
         initial={{ opacity: 0, y: 6, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.25 }}
-        className="relative flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 shadow-xs transition-colors"
+        className="relative flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3.5 shadow-xs dark:shadow-black/30 transition-colors"
       >
         {/* Pointer arrow to Louis */}
         <div className="absolute -left-2 top-6 w-3.5 h-3.5 bg-white dark:bg-slate-900 border-l border-b border-slate-200 dark:border-slate-800 rotate-45 transform" />

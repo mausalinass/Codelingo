@@ -20,18 +20,16 @@ export interface TaskGuidance {
   hint?: string;
 }
 
-export function getTaskGuidance(language: LanguageId, lessonId: string, locale: UiLanguage | null, originalPrompt: string): TaskGuidance {
+export function getTaskGuidance(language: LanguageId, lessonId: string, locale: UiLanguage | null, originalPrompt: string, explicitGoal?: string): TaskGuidance {
   const ui = locale === "es" || locale === "fr" ? locale : "en";
   const languageName = SUPPORTED_LANGUAGES[language].label;
 
   if (lessonId === "hello") {
-    const target = "Hello, Louis!";
+    const target = explicitGoal ?? "Hello, Louis!";
     return {
-      louisMessage: ui === "es"
-        ? `Escribe un programa en ${languageName} que muestre exactamente “${target}”.`
-        : ui === "fr"
-          ? `Écris un programme en ${languageName} qui affiche exactement « ${target} ».`
-          : `Write a ${languageName} program that displays exactly “${target}”.`,
+      louisMessage: explicitGoal
+        ? ui === "es" ? `Tu reto en ${languageName}: ${target}` : ui === "fr" ? `Ton défi en ${languageName} : ${target}` : `Your ${languageName} challenge: ${target}`
+        : ui === "es" ? `Escribe un programa en ${languageName} que muestre exactamente “${target}”.` : ui === "fr" ? `Écris un programme en ${languageName} qui affiche exactement « ${target} ».` : `Write a ${languageName} program that displays exactly “${target}”.`,
       label: ui === "es" ? "Texto que debe aparecer" : ui === "fr" ? "Texte à afficher" : "Required output",
       goal: target,
       hint: syntaxHints[language],
@@ -41,6 +39,6 @@ export function getTaskGuidance(language: LanguageId, lessonId: string, locale: 
   return {
     louisMessage: ui === "es" ? `Tu reto exacto: ${originalPrompt}` : ui === "fr" ? `Ton défi exact : ${originalPrompt}` : `Your exact task: ${originalPrompt}`,
     label: ui === "es" ? "Objetivo exacto" : ui === "fr" ? "Objectif exact" : "Exact task",
-    goal: originalPrompt,
+    goal: explicitGoal ?? originalPrompt,
   };
 }

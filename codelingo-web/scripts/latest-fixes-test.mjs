@@ -37,7 +37,7 @@ try {
 
   await page.goto(frontend + "/lesson/python/hello");
   await page.getByRole("button", { name: /START LESSON|COMENZAR LECCIÓN|COMMENCER LA LEÇON/ }).click();
-  await page.getByText("Hello, Louis!", { exact: true }).waitFor();
+  await page.getByText(/Display exactly "Hello, Louis!"/).first().waitFor();
   assert.ok(await page.getByText(/print\("texto"\)/).count(), "Python syntax hint should appear next to the required greeting");
   assert.ok(await page.getByText(/Hello, Louis!/).count() >= 2, "Louis and the task card should both state the exact greeting");
 

@@ -17,7 +17,9 @@ public sealed class EvaluationController(CodelingoDbContext db, CurriculumCatalo
         if (lesson is null) return NotFound(new { message = "Unknown language or lesson." });
         var validExerciseIds = Enumerable.Range(1, ProgressService.ProblemsPerLesson).Select(number => $"{lesson.Exercise.Id}-p{number}");
         if (!validExerciseIds.Contains(request.ExerciseId, StringComparer.Ordinal)) return NotFound(new { message = "Unknown exercise." });
-        var result = await progress.EvaluateAsync(request, lesson, ct);
+        var problemNumber = int.Parse(request.ExerciseId[(request.ExerciseId.LastIndexOf("-p", StringComparison.Ordinal) + 2)..]);
+        var problem = ProblemSet.Create(lesson, problemNumber, request.PresentationMode);
+        var result = await progress.EvaluateAsync(request, lesson with { Exercise = problem.Exercise }, ct);
         return result is null ? NotFound(new { message = "Unknown user." }) : Ok(result);
     }
 }

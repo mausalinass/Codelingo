@@ -111,6 +111,29 @@ export interface AdaptiveLessonResponse {
       dimensions?: string;
     };
     choices?: string[];
+    problems?: Array<{
+      id: string;
+      prompt: string;
+      goal: string;
+      starterCode?: string;
+      visualSteps?: string[];
+      targetSentence?: string;
+      wordBank?: string[];
+      audioText?: string;
+      choices?: string[];
+      mathVisual?: {
+        type: "fraction_pie" | "grid_array" | "equation" | "geometry_shape";
+        title?: string;
+        value?: string | number;
+        numerator?: number;
+        denominator?: number;
+        rows?: number;
+        cols?: number;
+        shape?: "triangle" | "rectangle" | "circle";
+        dimensions?: string;
+      };
+      placeholder?: string;
+    }>;
   };
 }
 
@@ -119,6 +142,7 @@ export interface EvaluateRequest {
   language: LanguageId;
   lessonId: string;
   exerciseId: string;
+  presentationMode?: LearningMode;
   answer: string;
 }
 

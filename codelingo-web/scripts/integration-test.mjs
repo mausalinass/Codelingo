@@ -12,9 +12,9 @@ await reset();
 const browser = await chromium.launch(process.env.CHROME_PATH ? {headless:true,executablePath:process.env.CHROME_PATH} : {headless:true});
 const page = await browser.newPage();
 const errors=[];page.on('pageerror',error=>errors.push(error.message));
-async function submitCorrectProblems(solution, firstProblem = 1) {
+async function submitCorrectProblems(solutions, firstProblem = 1) {
  for (let problem = firstProblem; problem <= 10; problem++) {
- await page.locator('.cm-content').fill(solution);
+ await page.locator('.cm-content').fill(solutions[problem - 1]);
   await page.waitForTimeout(80);
   const [, response] = await Promise.all([
    page.getByRole('button',{name:'Check',exact:true}).click(),
@@ -28,6 +28,19 @@ async function submitCorrectProblems(solution, firstProblem = 1) {
  await page.waitForURL('**/complete');
 }
 try {
+ const conditionSolutions = [
+  'if (age >= 70) { Console.WriteLine("Pass"); }',
+  'if (points >= 50) { Console.WriteLine("Ready"); }',
+  'if (level >= 3) { Console.WriteLine("Unlocked"); }',
+  'if (lives >= 5) { Console.WriteLine("Active"); }',
+  'if (coins >= 40) { Console.WriteLine("Qualified"); }',
+  'if (streak >= 7) { Console.WriteLine("On fire"); }',
+  'if (attempts >= 2) { Console.WriteLine("Retry"); }',
+  'if (lessons >= 10) { Console.WriteLine("Complete"); }',
+  'if (badges >= 6) { Console.WriteLine("Earned"); }',
+  'if (rank >= 9) { Console.WriteLine("Promoted"); }',
+ ];
+ const variableSolutions = ['int score = 100;', 'int points = 25;', 'int level = 3;', 'int lives = 5;', 'int coins = 40;', 'int streak = 7;', 'int attempts = 2;', 'int lessons = 10;', 'int badges = 6;', 'int rank = 9;'];
  await page.goto(frontend+'/learn');
  await page.getByText('1 / 10 lessons',{exact:false}).waitFor();
  await page.getByTitle('120 total XP').waitFor();
@@ -49,12 +62,11 @@ try {
  await page.getByText('Correct answer',{exact:true}).first().waitFor();
  await page.getByRole('button',{name:'Next Problem',exact:true}).click();
  await page.getByText('Problem 2 / 10',{exact:true}).waitFor();
- const solution='if (age >= 18) { Console.WriteLine("Adult"); }';
- await submitCorrectProblems(solution,2);
+ await submitCorrectProblems(conditionSolutions,2);
  await page.getByText('+10 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
  await page.goto(frontend+'/lesson/csharp/conditions');
  await page.getByRole('button',{name:'START LESSON',exact:true}).click();
- await submitCorrectProblems(solution);await page.getByText('+0 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
+ await submitCorrectProblems(conditionSolutions);await page.getByText('+0 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
  await page.goto(frontend+'/learn');await page.reload();
  await page.getByText('2 / 10 lessons',{exact:false}).waitFor();await page.getByTitle('130 total XP').waitFor();
  // Out-of-order completion must not mark Variables completed.
@@ -74,7 +86,7 @@ try {
  await page.unroute('**/api/evaluate');await page.getByRole('button',{name:'Retry Check',exact:true}).click();
  await page.getByRole('button',{name:'Continue',exact:true}).click();
  await page.getByText('Problem 2 / 10',{exact:true}).waitFor();
- await submitCorrectProblems('int score = 100;',2);await page.getByText('+10 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
+ await submitCorrectProblems(variableSolutions,2);await page.getByText('+10 XP',{exact:true}).waitFor();await page.getByText('1 DAY',{exact:true}).waitFor();
  await page.setViewportSize({width:390,height:844});await page.goto(frontend+'/learn');await page.getByText('3 / 10 lessons',{exact:false}).waitFor();
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),'Mobile page must not overflow horizontally');
  // New browser context avoids cached data when testing dashboard failure.
