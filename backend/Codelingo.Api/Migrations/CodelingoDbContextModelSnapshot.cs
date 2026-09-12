@@ -76,7 +76,7 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("exercise_attempts", null, t =>
                         {
-                            t.HasCheckConstraint("chk_attempt_language", "language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_attempt_language", "language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
                         });
                 });
 
@@ -129,7 +129,7 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("language_progress", null, t =>
                         {
-                            t.HasCheckConstraint("chk_progress_language", "language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_progress_language", "language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
                         });
                 });
 
@@ -175,7 +175,7 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("lesson_progress", null, t =>
                         {
-                            t.HasCheckConstraint("chk_lesson_language", "language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_lesson_language", "language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
                         });
                 });
 
@@ -280,7 +280,7 @@ namespace Codelingo.Api.Migrations
 
                     b.ToTable("users", null, t =>
                         {
-                            t.HasCheckConstraint("chk_active_language", "active_language IN ('python','javascript','csharp')");
+                            t.HasCheckConstraint("chk_active_language", "active_language IN ('python','javascript','typescript','csharp','go','rust','java','cpp')");
                         });
                 });
 

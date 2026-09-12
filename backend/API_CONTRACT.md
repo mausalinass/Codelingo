@@ -1,125 +1,86 @@
-# Codelingo frontend API contract
+# Codelingo API — expanded curriculum
 
-Base URL: http://localhost:5080. JSON uses camelCase. Demo user ID: `11111111-1111-1111-1111-111111111111`.
+Base URL locally: http://localhost:5080. Camel-case JSON. Demo user: `11111111-1111-1111-1111-111111111111`.
 
-| Method | Path | Purpose |
+## Catalog and supported IDs
+
+Eight languages: `python`, `javascript`, `typescript`, `csharp`, `go`, `rust`, `java`, `cpp`.
+
+Ten lessons in this order: `hello`, `variables`, `conditions`, `functions`, `loops`, `arrays`, `oop`, `async`, `errors`, `generics`.
+
+GET /api/lessons/catalog returns language groups with lesson id, title, and order. Curriculum is static/versioned in Curriculum/lessons.json. Do not infer IDs from display text. Sample solutions and validation rules are never sent to the frontend.
+
+## Endpoints
+
+| Method | Path | Result |
 |---|---|---|
-| GET | /api/users/{userId}/dashboard | Persisted XP, streak, courses |
-| GET | /api/users/{userId}/personality | Normalized mock Swell profile |
-| GET | /api/lessons/{language}/{lessonId}?userId={userId} | Adaptive lesson |
-| POST | /api/evaluate | Evaluate a complete answer; save attempt |
-| POST | /api/demo/users/{userId}/personality | Demo personality switch |
-| POST | /api/demo/users/{userId}/reset | Restore the fixed demo user |
-| GET | /health | Process liveness |
-| GET | /health/ready | Database connectivity (503 when unavailable) |
-
-Development explorer: /swagger/index.html. Schemas: /openapi/v1.json and /swagger/v1/swagger.json.
-
-## Identifiers and adaptation
-
-Language IDs: `python`, `javascript` (JavaScript/TypeScript route), `csharp`. Lesson IDs in order: `hello`, `conditions`, `loops`.
-
-| Trait | Learning/presentation mode | Presentation |
-|---|---|---|
-| ANALYTICAL | DEEP_EXPLANATION | Full explanation first |
-| PRACTICAL | PRACTICE_FIRST | explanation=null, showExplanationFirst=false |
-| VISUAL | VISUAL_GUIDED | Visual steps and shorter explanation |
-
-All modes currently return exercise.type=CODE. Submit the complete code answer, including in practical/visual modes. Fill-blank is a preference in the plan; CODE keeps answer submission unambiguous. Exercise identity and learning objective remain the same across traits. No Regex or raw provider payload is exposed.
-
-Exercise IDs: `py-hello-01`, `py-if-01`, `py-loop-01`; corresponding JavaScript IDs use `js-`, C# IDs use `cs-`. Use the ID returned in the lesson.
+| GET | /api/users/{userId}/dashboard | User, streak, eight courses with explicit lesson states |
+| GET | /api/users/{userId}/personality | Stored normalized Swell mock profile |
+| GET | /api/lessons/catalog | Public catalog, no answers |
+| GET | /api/lessons/{language}/{lessonId}?userId={userId} | Adaptive lesson and exercise |
+| POST | /api/evaluate | Persisted attempt, XP, progress and streak |
+| POST | /api/demo/users/{userId}/personality | Demo-only personality switch |
+| POST | /api/demo/users/{userId}/reset | Reset only the fixed demo user |
+| GET | /health | Liveness |
+| GET | /health/ready | PostgreSQL connectivity |
 
 ## Dashboard
 
-GET /api/users/{userId}/dashboard
+The response retains `user`, `streak`, `activeLanguage`, and `courses`. Every course now includes `lessons`:
 
 ```json
-{"user":{"id":"11111111-1111-1111-1111-111111111111","displayName":"Mauricio","totalXp":120},"streak":{"current":4,"longest":7},"activeLanguage":"csharp","courses":[{"language":"python","completedLessons":1,"totalLessons":3,"percentage":33.33},{"language":"javascript","completedLessons":0,"totalLessons":3,"percentage":0},{"language":"csharp","completedLessons":1,"totalLessons":3,"percentage":33.33}]}
+{
+  "language": "csharp",
+  "completedLessons": 1,
+  "totalLessons": 10,
+  "percentage": 10,
+  "lessons": [
+    {"id":"hello","title":"Hello World","description":"A string literal contains text.","order":1,"status":"completed"},
+    {"id":"variables","title":"Variables & Types","description":"A variable binds a name to a value.","order":2,"status":"current"}
+  ]
+}
 ```
 
-Initial C# path: hello complete, conditions current, loops next. The MVP does not enforce lesson locking server-side; the frontend may present sequential path access. Course percentages are numbers rounded to two decimal places. Seed global XP includes 100 historical/demo XP beyond the two seeded lesson rewards.
+The example abbreviates the lessons array; all ten are returned. States: completed, current (first incomplete), locked (later incomplete). Completed IDs remain accurate even if a lesson was completed out of order. Path locking is presentation guidance; the API allows direct lesson practice. Compute global progress from the sum of actual totalLessons. Never hard-code /3 or /10 in the UI.
+
+Seed/reset: Mauricio, totalXp=120, streak.current=4, streak.longest=7, activeLanguage=csharp; Python and C# hello completed, all other lessons incomplete. Global XP includes 100 historical/demo XP. C# now starts at 1/10 (10%), not 1/3. Completing conditions directly gives 2/10 (20%); variables remains current. Completing variables first and then conditions gives 3/10 (30%).
 
 ## Personality
-
-GET /api/users/{userId}/personality
 
 ```json
 {"source":"SWELL_MOCK","primaryTrait":"ANALYTICAL","learningMode":"DEEP_EXPLANATION","scores":{"analytical":0.88,"practical":0.41,"visual":0.52}}
 ```
 
-POST /api/demo/users/{userId}/personality with:
+Scores are fractions, so display 0.88 as 88%. Traits/modes: ANALYTICAL/DEEP_EXPLANATION, PRACTICAL/PRACTICE_FIRST, VISUAL/VISUAL_GUIDED. Ties prefer analytical, practical, then visual.
 
-```json
-{"primaryTrait":"PRACTICAL"}
-```
+Switch request: `{"primaryTrait":"PRACTICAL"}`. Response is the same PersonalityResponse shape above, with practical scores 0.35/0.91/0.48. It is not a success/personality object. Refetch personality and lesson after success; surface errors.
 
-Response:
+## Lesson and submission
 
-```json
-{"source":"SWELL_MOCK","primaryTrait":"PRACTICAL","learningMode":"PRACTICE_FIRST","scores":{"analytical":0.35,"practical":0.91,"visual":0.48}}
-```
+Adaptive response retains lessonId, language, personality, presentationMode, title, louisMessage, explanation, visualSteps, showExplanationFirst, and exercise {id,type,prompt,starterCode}. All current exercises are CODE. Practical hides explanation; visual shows guided steps. Choose the editor using exercise.type, not presentationMode.
 
-Refetch the lesson after switching. VISUAL scores are 0.35 analytical, 0.48 practical, 0.91 visual. Ties prefer ANALYTICAL, then PRACTICAL, then VISUAL. GET preserves the stored profile.
-
-## Adaptive lesson
-
-GET /api/lessons/csharp/conditions?userId=11111111-1111-1111-1111-111111111111
-
-```json
-{"lessonId":"conditions","language":"csharp","personality":"ANALYTICAL","presentationMode":"DEEP_EXPLANATION","title":"Making Decisions with if","louisMessage":"Let's inspect how a Boolean condition controls program flow.","explanation":"An if statement evaluates an expression that resolves to true or false. The >= operator compares the value on its left with the threshold on its right, including equality. Only when the comparison is true does the program enter the conditional block; otherwise it skips the block. Braces group statements into a block.","visualSteps":["Evaluate age >= 18","TRUE -> execute block","FALSE -> skip block"],"showExplanationFirst":true,"exercise":{"id":"cs-if-01","type":"CODE","prompt":"Print Adult when age is 18 or greater.","starterCode":"int age = 20;\n\n// Your code here"}}
-```
-
-Practical mode returns Louis's message "No lecture. Let's code it.", explanation=null, and showExplanationFirst=false.
-
-## Evaluate
-
-POST /api/evaluate
+POST /api/evaluate:
 
 ```json
 {"userId":"11111111-1111-1111-1111-111111111111","language":"csharp","lessonId":"conditions","exerciseId":"cs-if-01","answer":"if (age >= 18) { Console.WriteLine(\"Adult\"); }"}
 ```
 
-First correct completion after reset:
+After reset, the first correct conditions response:
 
 ```json
-{"correct":true,"xpAwarded":10,"feedback":{"title":"Correct!","message":"Nice work. Your condition checks whether age is at least 18."},"progress":{"lessonCompleted":true,"languagePercentage":66.67},"streak":{"previous":4,"current":5,"increased":true}}
+{"correct":true,"xpAwarded":10,"feedback":{"title":"Correct!","message":"Nice work. Your condition checks whether age is at least 18."},"progress":{"lessonCompleted":true,"languagePercentage":20},"streak":{"previous":4,"current":5,"increased":true}}
 ```
 
-Wrong answer before completion (HTTP 200):
+Wrong answers return 200 with correct=false and xpAwarded=0, without changing progress/streak. Correct replays return correct=true and xpAwarded=0. The completion screen must use the returned xpAwarded and streak.current; do not assume +10 or add another streak increment. Refetch dashboard after completion.
 
-```json
-{"correct":false,"xpAwarded":0,"feedback":{"title":"Try again","message":"Check the requested condition, output text, and punctuation, then try again."},"progress":{"lessonCompleted":false,"languagePercentage":33.33},"streak":{"previous":4,"current":4,"increased":false}}
-```
+Limit: 5,000 answer characters, 65,536 request bytes. Empty/whitespace input is a wrong answer; null/missing/overlong input is 400. Unknown user/language/lesson/exercise is 404. Oversized HTTP body is 413. Server failure is generic 500. Disabled or unauthorized demo routes return 404.
 
-Correct replay: correct=true, xpAwarded=0, lessonCompleted=true, unchanged progress/streak. A wrong replay also preserves completed state. Refetch dashboard after evaluation for authoritative global XP. Concurrent submissions are serialized by a PostgreSQL user row lock.
+Evaluation is controlled pattern/string matching and never executes code. Original nine exercises preserve the MVP patterns. Added exercises recognize the specified snippet token sequence with whitespace flexibility outside quoted strings. Names, literals, structure and required imports/declarations must match the prompt; arbitrary equivalent solutions are not guaranteed. This is a teaching demo, not a compiler or semantic correctness proof.
 
-Answers are limited to 5,000 characters and HTTP bodies to 65,536 bytes. Empty/whitespace answers are wrong answers (200); null/missing answers or overlong answers are malformed (400). Pattern matching is intentionally controlled and case-sensitive, not a compiler: code never executes and semantic equivalence is not guaranteed.
+## Demo and production
 
-Streak changes only on a first lesson completion. Dates use configured America/New_York, including seed yesterday; replays and same-day completions cannot increment it again. increased means the numeric streak grew; after a missed day it may reset to 1.
+Development demo controls are enabled by default. Outside Development, mutation requires Demo__Enabled=true and X-Demo-Key matching secret Demo__ApiKey. Never put that secret in public VITE_* configuration. Production frontend hides controls by default; a trusted presenter tool can switch personality. There is no signup/login: the frontend clearly identifies the shared demo profile and does not collect passwords.
 
-## Reset and errors
+Development CORS allows localhost and 127.0.0.1 on ports 5173, 5174, and 3000. Production requires exact FrontendOrigin. Set VITE_API_BASE_URL to the deployed HTTPS API origin when deploying frontend separately; an empty production value assumes a same-origin /api proxy.
 
-POST /api/demo/users/11111111-1111-1111-1111-111111111111/reset with `{}` returns:
-
-```json
-{"message":"Demo reset.","userId":"11111111-1111-1111-1111-111111111111"}
-```
-
-Restores 120 XP, streak 4/longest 7, last activity yesterday, C# 1/3, ANALYTICAL, and removes demo attempts. Only the fixed demo user can be reset.
-
-| Case | HTTP |
-|---|---|
-| Valid GET, correct or wrong answer | 200 |
-| Invalid/missing input or invalid trait | 400 |
-| Unknown user/language/lesson/exercise | 404 |
-| Demo endpoint disabled or key missing/wrong | 404 |
-| Body larger than 65,536 bytes | 413 |
-| Unexpected server error | 500 with generic message |
-
-Demo endpoints require Demo__Enabled=true. Development enables this by default. Outside Development, also require secret Demo__ApiKey and request header X-Demo-Key. Keep that secret out of public frontend bundles; use a trusted presenter tool or server-side proxy. Regular MVP endpoints use user IDs without authentication, so this is a hackathon API rather than an authenticated multi-user service.
-
-## CORS and startup
-
-Development allows http://localhost:5173, :5174, and :3000. Set FrontendOrigin for another exact origin. Production permits only configured FrontendOrigin. No wildcard or credentialed CORS.
-
-See [README.md](README.md) for PostgreSQL, configuration, and startup. On this workstation: run `powershell -NoProfile -File backend/scripts/start-postgres.ps1` if PostgreSQL is stopped, then `powershell -NoProfile -File backend/scripts/start-local.ps1`. The current local API uses port 5080; PostgreSQL uses loopback port 55432. The scripts locate ignored local credentials without printing them.
+Swagger: /swagger/index.html and /openapi/v1.json in Development. See README.md for startup and migrations.

@@ -17,25 +17,25 @@ function state(d, xp, streak, count, percentage) {
 }
 for (let run = 1; run <= 3; run++) {
   await request(demo + '/reset', {});
-  state(await dashboard(), 120, 4, 1, 33.33);
+  state(await dashboard(), 120, 4, 1, 10);
   const p = await request(user + '/personality'); assert.equal(p.primaryTrait, 'ANALYTICAL'); assert.equal(p.learningMode, 'DEEP_EXPLANATION');
   const lessonUrl = '/api/lessons/csharp/conditions?userId=' + id;
   const analytical = await request(lessonUrl); assert.equal(analytical.showExplanationFirst, true); assert.ok(analytical.explanation);
   const switched = await request(demo + '/personality', {primaryTrait:'PRACTICAL'}); assert.equal(switched.learningMode, 'PRACTICE_FIRST'); assert.equal(switched.scores.practical, 0.91);
   const practical = await request(lessonUrl); assert.equal(practical.presentationMode, 'PRACTICE_FIRST'); assert.equal(practical.explanation, null); assert.equal(practical.showExplanationFirst, false); assert.equal(practical.exercise.id, analytical.exercise.id);
   const wrong = await request('/api/evaluate', {...answer, answer:'if (age > 18) {}'}); assert.equal(wrong.correct, false); assert.equal(wrong.xpAwarded, 0);
-  state(await dashboard(), 120, 4, 1, 33.33);
-  const correct = await request('/api/evaluate', answer); assert.equal(correct.correct, true); assert.equal(correct.xpAwarded, 10); assert.equal(correct.progress.languagePercentage, 66.67); assert.deepEqual(correct.streak, { previous: 4, current: 5, increased: true });
+  state(await dashboard(), 120, 4, 1, 10);
+  const correct = await request('/api/evaluate', answer); assert.equal(correct.correct, true); assert.equal(correct.xpAwarded, 10); assert.equal(correct.progress.languagePercentage, 20); assert.deepEqual(correct.streak, { previous: 4, current: 5, increased: true });
   const replay = await request('/api/evaluate', answer); assert.equal(replay.xpAwarded, 0); assert.equal(replay.streak.increased, false);
-  state(await dashboard(), 130, 5, 2, 66.67);
-  console.log('PASS judge rehearsal ' + run + ': XP 120 -> 130; C# 1/3 -> 2/3; streak 4 -> 5; replay +0');
+  state(await dashboard(), 130, 5, 2, 20);
+  console.log('PASS judge rehearsal ' + run + ': XP 120 -> 130; C# 1/10 -> 2/10; streak 4 -> 5; replay +0');
 }
 await request(demo + '/reset', {});
 const concurrent = await Promise.all(Array.from({length: 12}, () => request('/api/evaluate', answer)));
-assert.equal(concurrent.reduce((n, x) => n + x.xpAwarded, 0), 10); state(await dashboard(), 130, 5, 2, 66.67);
+assert.equal(concurrent.reduce((n, x) => n + x.xpAwarded, 0), 10); state(await dashboard(), 130, 5, 2, 20);
 console.log('PASS 12 concurrent submissions award exactly 10 XP total');
 const loop = await request('/api/evaluate', {...answer, lessonId:'loops', exerciseId:'cs-loop-01', answer:'for (int i = 0; i < 3; i++) { Console.WriteLine(i); }'});
-assert.equal(loop.xpAwarded, 10); assert.equal(loop.streak.current, 5); assert.equal(loop.streak.increased, false); assert.equal(loop.progress.languagePercentage, 100);
+assert.equal(loop.xpAwarded, 10); assert.equal(loop.streak.current, 5); assert.equal(loop.streak.increased, false); assert.equal(loop.progress.languagePercentage, 30);
 await request('/api/evaluate', {...answer, answer:''});
 await request('/api/evaluate', {...answer, answer:'x'.repeat(5001)}, 400);
 await request('/api/evaluate', {...answer, answer:null}, 400);
@@ -56,5 +56,5 @@ const blockedCors = await fetch(base + '/health', {headers:{Origin:'https://untr
 assert.equal((await fetch(base + '/swagger/index.html')).status, 200);
 assert.equal((await fetch(base + '/openapi/v1.json')).status, 200);
 await request('/health/ready');
-await request(demo + '/reset', {}); state(await dashboard(), 120, 4, 1, 33.33);
+await request(demo + '/reset', {}); state(await dashboard(), 120, 4, 1, 10);
 console.log('PASS validation, visual lessons, same-day streak, CORS, OpenAPI, readiness; reset to judging state');

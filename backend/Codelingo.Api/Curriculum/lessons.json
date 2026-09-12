@@ -1,0 +1,1522 @@
+[
+  {
+    "id": "hello",
+    "language": "python",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Use print with the exact text Hello, Louis!.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-hello-01",
+      "prompt": "Use print with the exact text Hello, Louis!. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "print(\"Hello, Louis!\")"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "python",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Assign 100 to score.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-variables-01",
+      "prompt": "Assign 100 to score. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "score = 100"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "python",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Given score, print Pass when score >= 70.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-if-01",
+      "prompt": "Given score, print Pass when score >= 70. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "if score >= 70:\n    print(\"Pass\")"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "python",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Define add(a, b) returning a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-functions-01",
+      "prompt": "Define add(a, b) returning a + b. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "def add(a, b):\n    return a + b"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "python",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Use for i in range(3) and print i.",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-loop-01",
+      "prompt": "Use for i in range(3) and print i. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for i in range(3):\n    print(i)"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "python",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Create numbers = [1, 2, 3] and print its first item.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-arrays-01",
+      "prompt": "Create numbers = [1, 2, 3] and print its first item. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "numbers = [1, 2, 3]\nprint(numbers[0])"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "python",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Define Bird with __init__(self, name) assigning self.name = name.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-oop-01",
+      "prompt": "Define Bird with __init__(self, name) assigning self.name = name. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "class Bird:\n    def __init__(self, name):\n        self.name = name"
+    }
+  },
+  {
+    "id": "async",
+    "language": "python",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Import asyncio. Define async greet(), await asyncio.sleep(0), then return Hello.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-async-01",
+      "prompt": "Import asyncio. Define async greet(), await asyncio.sleep(0), then return Hello. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "import asyncio\nasync def greet():\n    await asyncio.sleep(0)\n    return \"Hello\""
+    }
+  },
+  {
+    "id": "errors",
+    "language": "python",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Try int(\"invalid\") in value, catch ValueError, and print Invalid number.",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-errors-01",
+      "prompt": "Try int(\"invalid\") in value, catch ValueError, and print Invalid number. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "try:\n    value = int(\"invalid\")\nexcept ValueError:\n    print(\"Invalid number\")"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "python",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. Python 3.11+. Preserve indentation.",
+    "visualSteps": [
+      "Import TypeVar; define T = TypeVar(\"T\") and identity(value: T) -> T returning value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "py-generics-01",
+      "prompt": "Import TypeVar; define T = TypeVar(\"T\") and identity(value: T) -> T returning value. Submit only this snippet; use the specified names and text. Python 3.11+. Preserve indentation.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "from typing import TypeVar\nT = TypeVar(\"T\")\ndef identity(value: T) -> T:\n    return value"
+    }
+  },
+  {
+    "id": "hello",
+    "language": "javascript",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Log Hello, Louis!.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-hello-01",
+      "prompt": "Log Hello, Louis!. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "console.log(\"Hello, Louis!\");"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "javascript",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Declare let score = 100.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-variables-01",
+      "prompt": "Declare let score = 100. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "let score = 100;"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "javascript",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Given score, log Pass when score >= 70.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-if-01",
+      "prompt": "Given score, log Pass when score >= 70. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "if (score >= 70) { console.log(\"Pass\"); }"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "javascript",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Define function add(a, b) returning a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-functions-01",
+      "prompt": "Define function add(a, b) returning a + b. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "function add(a, b) { return a + b; }"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "javascript",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Use let i = 0; i < 3; i++ and log i.",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-loop-01",
+      "prompt": "Use let i = 0; i < 3; i++ and log i. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for (let i = 0; i < 3; i++) { console.log(i); }"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "javascript",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Declare const numbers = [1, 2, 3] and log numbers[0].",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-arrays-01",
+      "prompt": "Declare const numbers = [1, 2, 3] and log numbers[0]. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "const numbers = [1, 2, 3];\nconsole.log(numbers[0]);"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "javascript",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Define class Bird with constructor(name) assigning this.name.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-oop-01",
+      "prompt": "Define class Bird with constructor(name) assigning this.name. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "class Bird { constructor(name) { this.name = name; } }"
+    }
+  },
+  {
+    "id": "async",
+    "language": "javascript",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Define async function greet() returning await Promise.resolve(\"Hello\").",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-async-01",
+      "prompt": "Define async function greet() returning await Promise.resolve(\"Hello\"). Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "async function greet() { return await Promise.resolve(\"Hello\"); }"
+    }
+  },
+  {
+    "id": "errors",
+    "language": "javascript",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Try JSON.parse(\"invalid\"), catch error, and log Invalid JSON.",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-errors-01",
+      "prompt": "Try JSON.parse(\"invalid\"), catch error, and log Invalid JSON. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "try { JSON.parse(\"invalid\"); } catch (error) { console.log(\"Invalid JSON\"); }"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "javascript",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+    "visualSteps": [
+      "Annotate identity(value) with JSDoc @template T @param {T} value @returns {T}, and return value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "js-generics-01",
+      "prompt": "Annotate identity(value) with JSDoc @template T @param {T} value @returns {T}, and return value. Submit only this snippet; use the specified names and text. JavaScript ES2022. JSDoc supplies editor type hints; it is not runtime type enforcement.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "/** @template T @param {T} value @returns {T} */\nfunction identity(value) { return value; }"
+    }
+  },
+  {
+    "id": "hello",
+    "language": "typescript",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Log Hello, Louis!.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-hello-01",
+      "prompt": "Log Hello, Louis!. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "console.log(\"Hello, Louis!\");"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "typescript",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Declare let score: number = 100.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-variables-01",
+      "prompt": "Declare let score: number = 100. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "let score: number = 100;"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "typescript",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Declare const score: number = 80; log Pass when score >= 70.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-if-01",
+      "prompt": "Declare const score: number = 80; log Pass when score >= 70. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "const score: number = 80;\nif (score >= 70) { console.log(\"Pass\"); }"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "typescript",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Define add(a: number, b: number): number returning a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-functions-01",
+      "prompt": "Define add(a: number, b: number): number returning a + b. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "function add(a: number, b: number): number { return a + b; }"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "typescript",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Use let i = 0; i < 3; i++ and log i.",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-loop-01",
+      "prompt": "Use let i = 0; i < 3; i++ and log i. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for (let i = 0; i < 3; i++) { console.log(i); }"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "typescript",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Declare const numbers: number[] = [1, 2, 3]; log numbers[0].",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-arrays-01",
+      "prompt": "Declare const numbers: number[] = [1, 2, 3]; log numbers[0]. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "const numbers: number[] = [1, 2, 3];\nconsole.log(numbers[0]);"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "typescript",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Define class Bird with an empty constructor(public name: string).",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-oop-01",
+      "prompt": "Define class Bird with an empty constructor(public name: string). Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "class Bird { constructor(public name: string) {} }"
+    }
+  },
+  {
+    "id": "async",
+    "language": "typescript",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Define async greet(): Promise<string> returning await Promise.resolve(\"Hello\").",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-async-01",
+      "prompt": "Define async greet(): Promise<string> returning await Promise.resolve(\"Hello\"). Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "async function greet(): Promise<string> { return await Promise.resolve(\"Hello\"); }"
+    }
+  },
+  {
+    "id": "errors",
+    "language": "typescript",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Try JSON.parse(\"invalid\"), catch error: unknown, and log Invalid JSON.",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-errors-01",
+      "prompt": "Try JSON.parse(\"invalid\"), catch error: unknown, and log Invalid JSON. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "try { JSON.parse(\"invalid\"); } catch (error: unknown) { console.log(\"Invalid JSON\"); }"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "typescript",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. TypeScript 5+. Standard Promise and console globals are available.",
+    "visualSteps": [
+      "Define identity<T>(value: T): T returning value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "ts-generics-01",
+      "prompt": "Define identity<T>(value: T): T returning value. Submit only this snippet; use the specified names and text. TypeScript 5+. Standard Promise and console globals are available.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "function identity<T>(value: T): T { return value; }"
+    }
+  },
+  {
+    "id": "hello",
+    "language": "csharp",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Print Hello, Louis! with Console.WriteLine.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-hello-01",
+      "prompt": "Print Hello, Louis! with Console.WriteLine. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "Console.WriteLine(\"Hello, Louis!\");"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "csharp",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Declare int score = 100.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-variables-01",
+      "prompt": "Declare int score = 100. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "int score = 100;"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "csharp",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Given age, print Adult when age >= 18.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-if-01",
+      "prompt": "Given age, print Adult when age >= 18. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "int age = 20;\n\n// Your code here",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "if (age >= 18) { Console.WriteLine(\"Adult\"); }"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "csharp",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Define int Add(int a, int b) returning a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-functions-01",
+      "prompt": "Define int Add(int a, int b) returning a + b. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "int Add(int a, int b) { return a + b; }"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "csharp",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Use int i = 0; i < 3; i++ and print i.",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-loop-01",
+      "prompt": "Use int i = 0; i < 3; i++ and print i. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for (int i = 0; i < 3; i++) { Console.WriteLine(i); }"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "csharp",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Declare int[] numbers = { 1, 2, 3 }; print numbers[0].",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-arrays-01",
+      "prompt": "Declare int[] numbers = { 1, 2, 3 }; print numbers[0]. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "int[] numbers = { 1, 2, 3 };\nConsole.WriteLine(numbers[0]);"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "csharp",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Define class Bird with public string Name { get; set; } initialized to Louis.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-oop-01",
+      "prompt": "Define class Bird with public string Name { get; set; } initialized to Louis. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "class Bird { public string Name { get; set; } = \"Louis\"; }"
+    }
+  },
+  {
+    "id": "async",
+    "language": "csharp",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Define async Task<string> GreetAsync() returning await Task.FromResult(\"Hello\").",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-async-01",
+      "prompt": "Define async Task<string> GreetAsync() returning await Task.FromResult(\"Hello\"). Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "async Task<string> GreetAsync() { return await Task.FromResult(\"Hello\"); }"
+    }
+  },
+  {
+    "id": "errors",
+    "language": "csharp",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Try int.Parse(\"invalid\"), catch FormatException, and print Invalid number.",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-errors-01",
+      "prompt": "Try int.Parse(\"invalid\"), catch FormatException, and print Invalid number. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "try { int.Parse(\"invalid\"); } catch (FormatException) { Console.WriteLine(\"Invalid number\"); }"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "csharp",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+    "visualSteps": [
+      "Define T Identity<T>(T value) returning value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cs-generics-01",
+      "prompt": "Define T Identity<T>(T value) returning value. Submit only this snippet; use the specified names and text. C# snippets: assume System and System.Threading.Tasks are imported, and a suitable class or method surrounds the snippet.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "T Identity<T>(T value) { return value; }"
+    }
+  },
+  {
+    "id": "hello",
+    "language": "go",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Use fmt.Println with Hello, Louis!.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-hello-01",
+      "prompt": "Use fmt.Println with Hello, Louis!. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "fmt.Println(\"Hello, Louis!\")"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "go",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Use score := 100.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-variables-01",
+      "prompt": "Use score := 100. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "score := 100"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "go",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Given score, use if score >= 70 to print Pass.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-if-01",
+      "prompt": "Given score, use if score >= 70 to print Pass. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "if score >= 70 { fmt.Println(\"Pass\") }"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "go",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Define func add(a int, b int) int returning a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-functions-01",
+      "prompt": "Define func add(a int, b int) int returning a + b. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "func add(a int, b int) int { return a + b }"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "go",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Use for i := 0; i < 3; i++ and fmt.Println(i).",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-loop-01",
+      "prompt": "Use for i := 0; i < 3; i++ and fmt.Println(i). Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for i := 0; i < 3; i++ { fmt.Println(i) }"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "go",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Declare numbers := []int{1, 2, 3}; print numbers[0].",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-arrays-01",
+      "prompt": "Declare numbers := []int{1, 2, 3}; print numbers[0]. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "numbers := []int{1, 2, 3}\nfmt.Println(numbers[0])"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "go",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Define type Bird struct with Name string.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-oop-01",
+      "prompt": "Define type Bird struct with Name string. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "type Bird struct { Name string }"
+    }
+  },
+  {
+    "id": "async",
+    "language": "go",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Create messages := make(chan string). Start a goroutine sending Hello, then print the received value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-async-01",
+      "prompt": "Create messages := make(chan string). Start a goroutine sending Hello, then print the received value. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "messages := make(chan string)\ngo func() { messages <- \"Hello\" }()\nfmt.Println(<-messages)"
+    }
+  },
+  {
+    "id": "errors",
+    "language": "go",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Assign value, err := strconv.Atoi(\"invalid\"). If err != nil print Invalid number; otherwise print value.",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-errors-01",
+      "prompt": "Assign value, err := strconv.Atoi(\"invalid\"). If err != nil print Invalid number; otherwise print value. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "value, err := strconv.Atoi(\"invalid\")\nif err != nil { fmt.Println(\"Invalid number\") } else { fmt.Println(value) }"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "go",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+    "visualSteps": [
+      "Define func identity[T any](value T) T returning value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "go-generics-01",
+      "prompt": "Define func identity[T any](value T) T returning value. Submit only this snippet; use the specified names and text. Go 1.18+. Assume package main and needed fmt/strconv imports; declarations belong at package level and statements inside main.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "func identity[T any](value T) T { return value }"
+    }
+  },
+  {
+    "id": "hello",
+    "language": "rust",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Use println! with Hello, Louis!.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-hello-01",
+      "prompt": "Use println! with Hello, Louis!. Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "println!(\"Hello, Louis!\");"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "rust",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Declare let score: i32 = 100.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-variables-01",
+      "prompt": "Declare let score: i32 = 100. Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "let score: i32 = 100;"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "rust",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Given score, print Pass when score >= 70.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-if-01",
+      "prompt": "Given score, print Pass when score >= 70. Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "if score >= 70 { println!(\"Pass\"); }"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "rust",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Define fn add(a: i32, b: i32) -> i32 with tail expression a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-functions-01",
+      "prompt": "Define fn add(a: i32, b: i32) -> i32 with tail expression a + b. Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "fn add(a: i32, b: i32) -> i32 { a + b }"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "rust",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Use for i in 0..3 and println!(\"{}\", i).",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-loop-01",
+      "prompt": "Use for i in 0..3 and println!(\"{}\", i). Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for i in 0..3 { println!(\"{}\", i); }"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "rust",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Declare let numbers = [1, 2, 3]; use println!(\"{}\", numbers[0]).",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-arrays-01",
+      "prompt": "Declare let numbers = [1, 2, 3]; use println!(\"{}\", numbers[0]). Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "let numbers = [1, 2, 3];\nprintln!(\"{}\", numbers[0]);"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "rust",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Define struct Bird with field name: String.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-oop-01",
+      "prompt": "Define struct Bird with field name: String. Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "struct Bird { name: String }"
+    }
+  },
+  {
+    "id": "async",
+    "language": "rust",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Define async fn greet() -> String; await std::future::ready(String::from(\"Hello\")) as the tail expression.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-async-01",
+      "prompt": "Define async fn greet() -> String; await std::future::ready(String::from(\"Hello\")) as the tail expression. Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "async fn greet() -> String { std::future::ready(String::from(\"Hello\")).await }"
+    }
+  },
+  {
+    "id": "errors",
+    "language": "rust",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Match \"invalid\".parse::<i32>(); print value for Ok(value), and Invalid number for Err(_).",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-errors-01",
+      "prompt": "Match \"invalid\".parse::<i32>(); print value for Ok(value), and Invalid number for Err(_). Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "match \"invalid\".parse::<i32>() { Ok(value) => println!(\"{}\", value), Err(_) => println!(\"Invalid number\") }"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "rust",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+    "visualSteps": [
+      "Define fn identity<T>(value: T) -> T using value as the tail expression.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "rs-generics-01",
+      "prompt": "Define fn identity<T>(value: T) -> T using value as the tail expression. Submit only this snippet; use the specified names and text. Rust edition 2021+. Async declarations use the standard library; running a future requires an executor, which is outside this exercise.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "fn identity<T>(value: T) -> T { value }"
+    }
+  },
+  {
+    "id": "hello",
+    "language": "java",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Use System.out.println with Hello, Louis!.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-hello-01",
+      "prompt": "Use System.out.println with Hello, Louis!. Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "System.out.println(\"Hello, Louis!\");"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "java",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Declare int score = 100.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-variables-01",
+      "prompt": "Declare int score = 100. Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "int score = 100;"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "java",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Given score, print Pass when score >= 70.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-if-01",
+      "prompt": "Given score, print Pass when score >= 70. Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "if (score >= 70) { System.out.println(\"Pass\"); }"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "java",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Define static int add(int a, int b) returning a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-functions-01",
+      "prompt": "Define static int add(int a, int b) returning a + b. Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "static int add(int a, int b) { return a + b; }"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "java",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Use int i = 0; i < 3; i++ and System.out.println(i).",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-loop-01",
+      "prompt": "Use int i = 0; i < 3; i++ and System.out.println(i). Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for (int i = 0; i < 3; i++) { System.out.println(i); }"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "java",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Declare int[] numbers = { 1, 2, 3 }; print numbers[0].",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-arrays-01",
+      "prompt": "Declare int[] numbers = { 1, 2, 3 }; print numbers[0]. Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "int[] numbers = { 1, 2, 3 };\nSystem.out.println(numbers[0]);"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "java",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Define class Bird with String name = \"Louis\".",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-oop-01",
+      "prompt": "Define class Bird with String name = \"Louis\". Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "class Bird { String name = \"Louis\"; }"
+    }
+  },
+  {
+    "id": "async",
+    "language": "java",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Declare CompletableFuture<String> greeting using supplyAsync(() -> \"Hello\"); print greeting.join().",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-async-01",
+      "prompt": "Declare CompletableFuture<String> greeting using supplyAsync(() -> \"Hello\"); print greeting.join(). Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "CompletableFuture<String> greeting = CompletableFuture.supplyAsync(() -> \"Hello\");\nSystem.out.println(greeting.join());"
+    }
+  },
+  {
+    "id": "errors",
+    "language": "java",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Try Integer.parseInt(\"invalid\"), catch NumberFormatException error, and print Invalid number.",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-errors-01",
+      "prompt": "Try Integer.parseInt(\"invalid\"), catch NumberFormatException error, and print Invalid number. Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "try { Integer.parseInt(\"invalid\"); } catch (NumberFormatException error) { System.out.println(\"Invalid number\"); }"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "java",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+    "visualSteps": [
+      "Define static <T> T identity(T value) returning value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "java-generics-01",
+      "prompt": "Define static <T> T identity(T value) returning value. Submit only this snippet; use the specified names and text. Java 17+. Assume java.util.concurrent.CompletableFuture is imported; place methods/fields in an appropriate class.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "static <T> T identity(T value) { return value; }"
+    }
+  },
+  {
+    "id": "hello",
+    "language": "cpp",
+    "title": "Hello World",
+    "conceptExplanation": "A string literal contains text. Pass the exact greeting to the language output function. Quotation marks delimit the text but are not part of the printed greeting. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Use std::cout << \"Hello, Louis!\".",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-hello-01",
+      "prompt": "Use std::cout << \"Hello, Louis!\". Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "std::cout << \"Hello, Louis!\";"
+    }
+  },
+  {
+    "id": "variables",
+    "language": "cpp",
+    "title": "Variables & Types",
+    "conceptExplanation": "A variable binds a name to a value. Declare score with the integer value 100. Statically typed languages describe its type explicitly or infer it from the initializer. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Declare int score = 100.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-variables-01",
+      "prompt": "Declare int score = 100. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "int score = 100;"
+    }
+  },
+  {
+    "id": "conditions",
+    "language": "cpp",
+    "title": "Making Decisions with if",
+    "conceptExplanation": "A Boolean condition selects whether a block runs. The >= comparison includes the boundary value. Print the requested text only when the threshold is met. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Given score, output Pass when score >= 70.",
+      "TRUE -> execute block; FALSE -> skip block",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-if-01",
+      "prompt": "Given score, output Pass when score >= 70. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "if (score >= 70) { std::cout << \"Pass\"; }"
+    }
+  },
+  {
+    "id": "functions",
+    "language": "cpp",
+    "title": "Functions & Methods",
+    "conceptExplanation": "A function accepts named parameters and produces a result. Add the two parameters rather than returning a fixed example. Return transfers the result back to the caller. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Define int add(int a, int b) returning a + b.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-functions-01",
+      "prompt": "Define int add(int a, int b) returning a + b. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "int add(int a, int b) { return a + b; }"
+    }
+  },
+  {
+    "id": "loops",
+    "language": "cpp",
+    "title": "Loops & Iteration",
+    "conceptExplanation": "A loop repeats a block. Start at zero, continue while the counter is less than three, and advance once per iteration. The visited values are 0, 1 and 2. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Use int i = 0; i < 3; i++ and output i.",
+      "Visit 0, 1, then 2",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-loop-01",
+      "prompt": "Use int i = 0; i < 3; i++ and output i. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "for (int i = 0; i < 3; i++) { std::cout << i; }"
+    }
+  },
+  {
+    "id": "arrays",
+    "language": "cpp",
+    "title": "Arrays & Collections",
+    "conceptExplanation": "A collection stores multiple values. Index zero identifies the first value. Declare numbers with 1, 2 and 3 in that order, then output numbers[0]. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Declare std::vector<int> numbers = { 1, 2, 3 }; output numbers[0].",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-arrays-01",
+      "prompt": "Declare std::vector<int> numbers = { 1, 2, 3 }; output numbers[0]. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "std::vector<int> numbers = { 1, 2, 3 };\nstd::cout << numbers[0];"
+    }
+  },
+  {
+    "id": "oop",
+    "language": "cpp",
+    "title": "Structs & Classes",
+    "conceptExplanation": "A class or struct groups related data. Bird models a bird with a name. The exact declaration depends on whether the language uses fields, properties or a constructor. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Define struct Bird with std::string name = \"Louis\"; end the struct with a semicolon.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-oop-01",
+      "prompt": "Define struct Bird with std::string name = \"Louis\"; end the struct with a semicolon. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "struct Bird { std::string name = \"Louis\"; };"
+    }
+  },
+  {
+    "id": "async",
+    "language": "cpp",
+    "title": "Async & Concurrency",
+    "conceptExplanation": "Asynchronous work and concurrency let a program coordinate operations that may finish later. Creating a future or coroutine is separate from waiting for its result. This exercise is a declaration or snippet; it is not executed here. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Declare auto greeting = std::async(std::launch::async, []() { return std::string(\"Hello\"); }); output greeting.get().",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-async-01",
+      "prompt": "Declare auto greeting = std::async(std::launch::async, []() { return std::string(\"Hello\"); }); output greeting.get(). Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "auto greeting = std::async(std::launch::async, []() { return std::string(\"Hello\"); });\nstd::cout << greeting.get();"
+    }
+  },
+  {
+    "id": "errors",
+    "language": "cpp",
+    "title": "Error Handling",
+    "conceptExplanation": "Parsing invalid input can fail. Handle the specific failure path and show a helpful message. Some languages use exceptions, while Go and Rust use explicit error values. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Try std::stoi(\"invalid\"), catch const std::invalid_argument& error, and output Invalid number.",
+      "Handle failure without an unhandled exception",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-errors-01",
+      "prompt": "Try std::stoi(\"invalid\"), catch const std::invalid_argument& error, and output Invalid number. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "try { std::stoi(\"invalid\"); } catch (const std::invalid_argument& error) { std::cout << \"Invalid number\"; }"
+    }
+  },
+  {
+    "id": "generics",
+    "language": "cpp",
+    "title": "Generics & Type Parameters",
+    "conceptExplanation": "A generic identity function returns the same value and preserves its type. T denotes the caller-selected type, rather than a specific integer or string type. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+    "visualSteps": [
+      "Declare template <typename T> T identity(T value) returning value.",
+      "Follow the syntax and names in the prompt",
+      "Check the result against the requested objective"
+    ],
+    "exercise": {
+      "id": "cpp-generics-01",
+      "prompt": "Declare template <typename T> T identity(T value) returning value. Submit only this snippet; use the specified names and text. C++17. Assume iostream, string, vector, future and stdexcept headers as needed; declarations and statements go in a suitable scope.",
+      "starterCode": "",
+      "requiredPatterns": [],
+      "xpReward": 10,
+      "sampleSolution": "template <typename T> T identity(T value) { return value; }"
+    }
+  }
+]

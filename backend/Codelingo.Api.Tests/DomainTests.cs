@@ -18,6 +18,24 @@ public class DomainTests
         { "csharp", "conditions", "if (age >= 18) { Console.WriteLine(\"Adult\"); }" },
         { "csharp", "loops", "for (int i = 0; i < 3; i++) { Console.WriteLine(i); }" }
     };
+    public static IEnumerable<object[]> AllSolutions() => new CurriculumCatalog().Lessons.Select(l => new object[] { l.Language, l.Id, l.Exercise.SampleSolution });
+    [Theory, MemberData(nameof(AllSolutions))]
+    public void AcceptsAllEightySolutions(string language, string id, string answer)
+    {
+        var exercise = new CurriculumCatalog().Find(language, id)!.Exercise;
+        var evaluator = new EvaluationService();
+        Assert.True(evaluator.Evaluate(answer, exercise));
+        Assert.True(evaluator.Evaluate("  \r\n" + answer.Replace("\n", "\r\n") + "\r\n ", exercise));
+        Assert.False(evaluator.Evaluate("18", exercise));
+        Assert.False(evaluator.Evaluate("wrong answer", exercise));
+    }
+    [Fact] public void CatalogHasEightyDistinctExercises()
+    {
+        var catalog = new CurriculumCatalog();
+        Assert.Equal(80, catalog.Lessons.Count);
+        Assert.Equal(80, catalog.Lessons.Select(x => x.Exercise.Id).Distinct().Count());
+        Assert.All(CurriculumCatalog.Languages, language => Assert.Equal(10, catalog.ForLanguage(language).Length));
+    }
     [Theory, MemberData(nameof(Solutions))]
     public void AcceptsRehearsedSolutions(string language, string id, string answer) => Assert.True(new EvaluationService().Evaluate(answer, new CurriculumCatalog().Find(language, id)!.Exercise));
     [Theory]

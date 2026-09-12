@@ -12,7 +12,7 @@ builder.Services.AddScoped<StreakService>(); builder.Services.AddScoped<DemoSeed
 builder.Services.AddScoped<ISwellPersonalityProvider, MockSwellPersonalityProvider>(); builder.Services.AddScoped<PersonalityService>();
 var connection = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<CodelingoDbContext>(o => o.UseNpgsql(connection ?? "Host=localhost;Port=5432;Database=codelingo;Username=codelingo"));
-var origins = builder.Environment.IsDevelopment() ? new[] { "http://localhost:5173", "http://localhost:5174", "http://localhost:3000" } : Array.Empty<string>();
+var origins = builder.Environment.IsDevelopment() ? new[] { "http://localhost:5173", "http://localhost:5174", "http://localhost:3000", "http://127.0.0.1:5173", "http://127.0.0.1:5174", "http://127.0.0.1:3000" } : Array.Empty<string>();
 if (!string.IsNullOrWhiteSpace(builder.Configuration["FrontendOrigin"])) origins = [.. origins, builder.Configuration["FrontendOrigin"]!];
 builder.Services.AddCors(o => o.AddPolicy("Frontend", p => { if (origins.Length > 0) p.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod(); }));
 var app = builder.Build();

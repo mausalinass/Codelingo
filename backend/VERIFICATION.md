@@ -1,23 +1,21 @@
-# Backend verification
+# Integrated backend/frontend verification
 
-Validated locally on 2026-09-11, Windows, .NET SDK 10.0.400, PostgreSQL 17.11.
+Validated locally on 2026-09-12 with .NET SDK 10.0.400, PostgreSQL 17.11, Node 24 and Chrome.
 
-- Build: passed, zero warnings/errors.
-- Unit tests: 29 passed (nine curriculum solutions, incorrect/oversize answers, personality/ties, rounded progress, streak dates, local date near UTC midnight, adaptive modes).
-- EF migration InitialCreate: generated and applied; no pending model changes.
-- Seed: 1 user, 3 language rows, 9 lesson rows, 1 personality profile; starting XP 120, streak 4, C# 33.33%.
-- Full judge flow: passed three consecutive reset/rehearsal cycles.
-- Each cycle: analytical lesson -> practical switch -> hidden explanation -> wrong answer +0 -> correct +10 -> C# 66.67% -> streak 5 -> replay +0 -> persisted dashboard.
-- Concurrent test: 12 simultaneous correct submissions, exactly 10 total awarded XP.
-- Same-day next lesson: +10 XP, streak remains 5, course reaches 100%.
-- Validation: null/oversize/invalid UUID 400; unknown user/language/lesson/exercise 404; invalid trait 400; empty answer valid wrong result.
-- All nine lessons expose VISUAL_GUIDED with steps and no Regex internals.
-- Development CORS: expected origin accepted, unrelated origin not allowed.
-- Swagger and OpenAPI returned 200; database readiness passed.
-- Production configuration: demo mutations reject absent/wrong key; accept correct key; Swagger disabled; configured frontend origin allowed.
+- Backend build: zero warnings/errors; 110 unit tests passed.
+- Curriculum: 8 languages × 10 lessons, unique exercise IDs. Tests cover all 80 reference snippets, CRLF/whitespace, incorrect answers, personality, percentages and local-date streaks.
+- PostgreSQL ExpandCurriculum migration: applied. Exact pre/post comparison preserved global XP, existing completed-row UUIDs and streak. Eight route rows and 80 lesson rows now exist for the demo user. Backup saved under ignored .runtime/before-expansion.dump.
+- Live HTTP: three consecutive reset/judge flows passed with new percentages (10% -> 20%), XP 120 -> 130, streak 4 -> 5, replay +0.
+- Concurrency: 12 simultaneous correct requests award exactly 10 XP combined.
+- All 80 lessons: live wrong/correct/replay requests passed. Eight persisted courses reached 100%, global XP 900, streak 5; reset afterward.
+- Browser: analytical -> practical and visual modes render CODE correctly; incorrect/correct answers and replays use real API responses; completion shows +10 then +0 and streak 5.
+- Browser reload: saved XP/progress remain. Out-of-order completion preserves the correct current lesson.
+- HTTP failure in browser: error shown, answer retained, no fabricated XP; retry succeeds after recovery.
+- Dashboard API outage: visible error, no simulated lesson links.
+- Demo profile: no email/password collection or fake signup.
+- Mobile: 390px viewport passes horizontal overflow test after navigation wrapping fix.
+- Frontend TypeScript/Vite build and Oxlint passed. Vite reports a non-blocking large lesson/editor chunk; the lesson route is lazy-loaded.
 
-Reproduce with the commands in README.md and scripts/smoke.mjs. The smoke suite leaves the demo in its initial state.
+Reproduction: backend/scripts/smoke.mjs, backend/scripts/curriculum-smoke.mjs and codelingo-web/scripts/integration-test.mjs. Tests deliberately reset the fixed demo user and should not run during judging.
 
-Public deployment and deployed React integration remain unverified pending a hosting destination and production configuration.
-
-- Process restart: XP 130, C# 66.67%, streak 5 survived API restart with startup initialization enabled; demo reset afterward.
+Scope: verified shared-profile demo. Public hosting, deployed cross-origin integration and real user authentication remain outside these local checks. The project should not be advertised as supporting private personal accounts.

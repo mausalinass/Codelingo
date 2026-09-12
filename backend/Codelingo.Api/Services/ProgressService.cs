@@ -4,7 +4,7 @@ using Codelingo.Api.Dtos;
 using Codelingo.Api.Models;
 using Microsoft.EntityFrameworkCore;
 namespace Codelingo.Api.Services;
-public sealed class ProgressService(CodelingoDbContext db, EvaluationService evaluator, StreakService dates)
+public sealed class ProgressService(CodelingoDbContext db, EvaluationService evaluator, StreakService dates, CurriculumCatalog catalog)
 {
     public static decimal Percentage(int completed, int total) => total <= 0 ? 0 : Math.Round(completed * 100m / total, 2, MidpointRounding.AwayFromZero);
     public async Task<EvaluateResponse?> EvaluateAsync(EvaluateRequest request, LessonDefinition lesson, CancellationToken ct)
@@ -33,9 +33,13 @@ public sealed class ProgressService(CodelingoDbContext db, EvaluationService eva
             progress.Xp += awarded;
             // Count persisted completions before adding the newly completed lesson.
             progress.CompletedLessons = await db.LessonProgress.CountAsync(x => x.UserId == user.Id && x.Language == request.Language && x.IsCompleted, ct) + 1;
-            progress.TotalLessons = 3;
+            progress.TotalLessons = catalog.ForLanguage(request.Language).Length;
             progress.CompletionPercentage = Percentage(progress.CompletedLessons, progress.TotalLessons);
-            progress.CurrentLesson = Math.Min(progress.CompletedLessons + 1, 3);
+            var completedIds = await db.LessonProgress.Where(x => x.UserId == user.Id && x.Language == request.Language && x.IsCompleted).Select(x => x.LessonId).ToListAsync(ct);
+            completedIds.Add(request.LessonId);
+            var route = catalog.ForLanguage(request.Language);
+            var firstIncomplete = Array.FindIndex(route, x => !completedIds.Contains(x.Id));
+            progress.CurrentLesson = firstIncomplete < 0 ? route.Length : firstIncomplete + 1;
             progress.UpdatedAt = now;
             StreakService.Apply(streak, dates.Today, now);
         }

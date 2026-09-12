@@ -1,8 +1,9 @@
 using Codelingo.Api.Models;
+using Codelingo.Api.Curriculum;
 using Codelingo.Api.Services;
 using Microsoft.EntityFrameworkCore;
 namespace Codelingo.Api.Data;
-public sealed class DemoSeed(CodelingoDbContext db, StreakService dates)
+public sealed class DemoSeed(CodelingoDbContext db, StreakService dates, CurriculumCatalog catalog)
 {
     public static readonly Guid UserId = Guid.Parse("11111111-1111-1111-1111-111111111111");
     public async Task EnsureAsync(CancellationToken ct = default)
@@ -28,11 +29,12 @@ public sealed class DemoSeed(CodelingoDbContext db, StreakService dates)
         user.DisplayName = "Mauricio"; user.Email = "demo@codelingo.dev"; user.ActiveLanguage = "csharp"; user.TotalXp = 120; user.UpdatedAt = now;
         db.UserStreaks.Add(new() { UserId = UserId, CurrentStreak = 4, LongestStreak = 7, LastActivityDate = dates.Today.AddDays(-1) });
         var profile = new SwellProfile { UserId = UserId }; PersonalityService.Apply(profile, MockSwellPersonalityProvider.ForTrait("ANALYTICAL")); db.SwellProfiles.Add(profile);
-        foreach (var language in new[] { "python", "javascript", "csharp" })
+        foreach (var language in CurriculumCatalog.Languages)
         {
-            var completed = language != "javascript";
-            db.LanguageProgress.Add(new() { UserId = UserId, Language = language, CompletedLessons = completed ? 1 : 0, Xp = completed ? 10 : 0, CurrentLesson = completed ? 2 : 1, CompletionPercentage = completed ? 33.33m : 0 });
-            foreach (var lesson in new[] { "hello", "conditions", "loops" })
+            var completed = language is "python" or "csharp";
+            var route = catalog.ForLanguage(language);
+            db.LanguageProgress.Add(new() { UserId = UserId, Language = language, TotalLessons = route.Length, CompletedLessons = completed ? 1 : 0, Xp = completed ? 10 : 0, CurrentLesson = completed ? 2 : 1, CompletionPercentage = completed ? ProgressService.Percentage(1, route.Length) : 0 });
+            foreach (var lesson in route.Select(x => x.Id))
                 db.LessonProgress.Add(new() { UserId = UserId, Language = language, LessonId = lesson, IsCompleted = completed && lesson == "hello", XpAwarded = completed && lesson == "hello" ? 10 : 0, CompletedAt = completed && lesson == "hello" ? now : null });
         }
         await db.SaveChangesAsync(ct); await tx.CommitAsync(ct);
