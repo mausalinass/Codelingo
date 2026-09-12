@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDashboard } from "../api/dashboard";
 import { fetchPersonality } from "../api/personality";
-import { DEMO_USER_ID, SUPPORTED_LANGUAGES } from "../lib/constants";
+import { DEMO_USER_ID, SUPPORTED_LANGUAGES, LESSON_TEMPLATES } from "../lib/constants";
 import { AppShell } from "../components/layout/AppShell";
 import { LearningPath } from "../components/path/LearningPath";
 import { LouisCoach } from "../components/louis/LouisCoach";
@@ -33,17 +33,8 @@ export const LearnPage: React.FC<LearnPageProps> = ({
   // Derive completed lessons for active language
   const courseData = dashboard?.courses.find((c) => c.language === selectedLanguage);
   const completedCount = courseData?.completedLessons ?? 1;
-  const totalCount = courseData?.totalLessons ?? 8;
-  const completedLessonIds = [
-    "hello",
-    "variables",
-    "conditions",
-    "functions",
-    "loops",
-    "arrays",
-    "oop",
-    "async",
-  ].slice(0, completedCount);
+  const totalCount = courseData?.totalLessons ?? 10;
+  const completedLessonIds = LESSON_TEMPLATES.map((l) => l.id).slice(0, completedCount);
 
   return (
     <AppShell

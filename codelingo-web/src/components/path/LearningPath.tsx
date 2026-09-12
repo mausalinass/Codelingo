@@ -19,6 +19,8 @@ const OFFSETS = [
   "translate-x-12",
   "-translate-x-4",
   "-translate-x-12",
+  "translate-x-6",
+  "-translate-x-6",
 ];
 
 export const LearningPath: React.FC<LearningPathProps> = ({

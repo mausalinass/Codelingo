@@ -37,7 +37,7 @@ export const mockState: MockState = {
   },
 };
 
-export const TOTAL_LESSONS_PER_COURSE = 8;
+export const TOTAL_LESSONS_PER_COURSE = 10;
 
 export function getMockDashboard(): DashboardResponse {
   const getCompletedCount = (lang: LanguageId) =>
@@ -341,6 +341,64 @@ const LECTURE_DATABASE: Record<string, LectureDetail> = {
     },
     correctKeyword: "await",
   },
+  errors: {
+    title: "Error Handling & Recovery",
+    topic: "Try/catch, Result types & panic recovery",
+    analyticalMsg: "Examine how stack unwinding, exceptions, and algebraic Result types isolate failure states.",
+    practicalMsg: "Handle the potential error gracefully using try/catch or pattern matching.",
+    visualMsg: "Think of a safety net: if a function slips and drops an error, catch prevents the crash!",
+    analyticalExplanation:
+      "Modern languages handle exceptional execution paths via either exception unwinding or explicit monadic types (Result/Option).",
+    visualSteps: [
+      "1. Execute Protected Instruction Block",
+      "2. Catch Raised Exception or Intercept Err",
+      "3. Execute Recovery & Cleanup Handlers",
+    ],
+    placeholder: "catch (Exception ex)",
+    prompts: {
+      default: "Add the catch or error checking block to prevent an unhandled crash.",
+    },
+    starters: {
+      csharp: 'try {\n    RiskyAction();\n} catch (Exception ex) {\n    Console.WriteLine(ex.Message);\n}',
+      javascript: 'try {\n    riskyAction();\n} catch (err) {\n    console.error(err.message);\n}',
+      typescript: 'try {\n    riskyAction();\n} catch (err: unknown) {\n    console.error(err);\n}',
+      python: 'try:\n    risky_action()\nexcept Exception as e:\n    print(e)',
+      rust: 'match risky_action() {\n    Ok(val) => println!("{}", val),\n    Err(e) => eprintln!("{}", e),\n}',
+      go: 'if err != nil {\n    log.Fatal(err)\n}',
+      cpp: 'try {\n    riskyAction();\n} catch (const std::exception& e) {\n    std::cerr << e.what();\n}',
+      java: 'try {\n    riskyAction();\n} catch (Exception e) {\n    e.printStackTrace();\n}',
+    },
+    correctKeyword: "catch",
+  },
+  generics: {
+    title: "Generics, Type Parameters & Traits",
+    topic: "Monomorphization, type safety & parameterized reuse",
+    analyticalMsg: "Analyze compile-time monomorphization and interface constraints on type parameters.",
+    practicalMsg: "Define a generic container <T> that stores any type safely.",
+    visualMsg: "Picture a modular plug adapter that fits any shape or type of cable seamlessly.",
+    analyticalExplanation:
+      "Generics enable code reuse with compile-time type checking, avoiding runtime casting overhead through specialized instantiation.",
+    visualSteps: [
+      "1. Declare Generic Parameter <T>",
+      "2. Bind Concrete Type at Call Site",
+      "3. Compile Specialized Type-Safe Assembly",
+    ],
+    placeholder: "<T>",
+    prompts: {
+      default: "Define the generic type parameter <T> on the struct, class, or function.",
+    },
+    starters: {
+      csharp: 'public class Box<T> {\n    public T Value { get; set; }\n}',
+      javascript: 'function identity(value) {\n    return value;\n}',
+      typescript: 'function identity<T>(value: T): T {\n    return value;\n}',
+      python: 'from typing import TypeVar\nT = TypeVar("T")\ndef identity(val: T) -> T:\n    return val',
+      rust: 'struct Box<T> {\n    value: T,\n}',
+      go: 'type Box[T any] struct {\n    value T\n}',
+      cpp: 'template <typename T>\nclass Box {\npublic:\n    T value;\n};',
+      java: 'public class Box<T> {\n    private T value;\n}',
+    },
+    correctKeyword: "T",
+  },
 };
 
 export function getMockAdaptiveLesson(
@@ -429,7 +487,11 @@ export function evaluateMockExercise(req: EvaluateRequest): EvaluateResponse {
     cleanAns.includes("hello") ||
     cleanAns.includes("a + b") ||
     cleanAns.includes("louis") ||
-    cleanAns.includes("await");
+    cleanAns.includes("await") ||
+    cleanAns.includes("catch") ||
+    cleanAns.includes("except") ||
+    cleanAns.includes("box") ||
+    cleanAns.includes("<t>");
 
   if (isCorrect) {
     const prevStreak = mockState.streakCurrent;

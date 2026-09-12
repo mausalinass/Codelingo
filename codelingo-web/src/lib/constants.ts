@@ -136,4 +136,16 @@ export const LESSON_TEMPLATES = [
     description: "Tasks, promises & threads",
     order: 8,
   },
+  {
+    id: "errors",
+    title: "9. Error Handling",
+    description: "Try/catch, Result types & recovery",
+    order: 9,
+  },
+  {
+    id: "generics",
+    title: "10. Generics & Traits",
+    description: "Type parameters, interfaces & reuse",
+    order: 10,
+  },
 ];
